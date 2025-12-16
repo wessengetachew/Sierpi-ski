@@ -227,6 +227,88 @@
             flex: 1;
         }
         
+        .export-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border: 2px solid #00bcd4;
+            border-radius: 15px;
+            padding: 30px;
+            z-index: 10000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            display: none;
+            min-width: 400px;
+        }
+        
+        .export-dialog.active {
+            display: block;
+        }
+        
+        .export-dialog h3 {
+            color: #00bcd4;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        
+        .export-option {
+            margin: 15px 0;
+        }
+        
+        .export-dialog select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid #00bcd4;
+            color: white;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .export-dialog .checkbox-group {
+            margin: 15px 0;
+        }
+        
+        .export-dialog .checkbox-group label {
+            display: flex;
+            align-items: center;
+            color: white;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+        
+        .export-dialog .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .export-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .export-actions button {
+            flex: 1;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 9999;
+            display: none;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
         .explanation {
             background: rgba(0,0,0,0.5);
             padding: 20px;
@@ -287,65 +369,38 @@
             box-shadow: 0 4px 8px rgba(0,188,212,0.4);
         }
         
-        .export-dialog {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border: 2px solid #00bcd4;
-            border-radius: 15px;
-            padding: 30px;
-            z-index: 10000;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-            display: none;
-            min-width: 400px;
-        }
-        
-        .export-dialog.active {
-            display: block;
-        }
-        
-        .export-dialog h3 {
-            color: #00bcd4;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 1.5em;
-        }
-        
-        .export-option {
-            margin: 15px 0;
-        }
-        
-        .export-dialog select {
-            width: 100%;
-            padding: 10px;
+        .pattern-analysis {
             background: rgba(0,0,0,0.3);
-            border: 1px solid #00bcd4;
-            color: white;
-            border-radius: 5px;
-            margin-top: 5px;
-        }
-        
-        .export-actions {
-            display: flex;
-            gap: 10px;
+            padding: 20px;
+            border-radius: 10px;
             margin-top: 20px;
+            border: 1px solid rgba(0,188,212,0.3);
         }
         
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 9999;
-            display: none;
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
         }
         
-        .overlay.active {
-            display: block;
+        .pattern-item {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(0,188,212,0.2);
+        }
+        
+        .formula-display {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.2em;
+            color: #00ff00;
+            border: 1px solid rgba(0,255,0,0.3);
         }
     </style>
 </head>
@@ -354,17 +409,18 @@
         <h1>Sierpiński 6ab ± a ± b Problem Explorer</h1>
         <p class="subtitle">Interactive exploration of integers that cannot be expressed as 6ab ± a ± b</p>
         
-        <div class="explanation">
+        <div class="explanation" id="mainExplanation">
             <h3>Mathematical Background</h3>
             <p>The Sierpiński problem (1964) asks: Are there infinitely many positive integers that cannot be expressed in any of the four forms:</p>
             <ul>
-                <li><strong>6ab + a + b</strong> = (3a + 1)(2b + 1) - 1</li>
-                <li><strong>6ab + a - b</strong> = (3a + 1)(2b - 1) - 1</li>
-                <li><strong>6ab - a + b</strong> = (3a - 1)(2b + 1) - 1</li>
-                <li><strong>6ab - a - b</strong> = (3a - 1)(2b - 1) - 1</li>
+                <li><strong>6ab + a + b</strong></li>
+                <li><strong>6ab + a - b</strong></li>
+                <li><strong>6ab - a + b</strong></li>
+                <li><strong>6ab - a - b</strong></li>
             </ul>
-            <p><strong>Status:</strong> This problem remains UNSOLVED - one of mathematics' enduring mysteries.</p>
-            <p><strong>First uncovered numbers:</strong> 2, 3, 7, 8, 12, 18, 27, 28, 30, 32, 33, 35, 42, 43, 45, 47, 48, 50...</p>
+            <p>These forms arise from the modular lattice projection: <strong>(3a ± 1)(2b ± 1) - 1</strong> where a must be even to ensure factors remain in visible residue classes {1,5} mod 6.</p>
+            <p>The problem remains <strong>unsolved</strong> - we don't know if the set of uncovered numbers is finite or infinite.</p>
+            <button onclick="toggleExplanation('mainExplanation')">Hide Explanation</button>
         </div>
         
         <div class="tabs">
@@ -374,7 +430,6 @@
             <div class="tab" onclick="switchTab('statistics')">Statistics</div>
             <div class="tab" onclick="switchTab('patterns')">Pattern Analysis</div>
             <div class="tab" onclick="switchTab('formulas')">Formula Explorer</div>
-            <div class="tab" onclick="switchTab('visualization3d')">3D Visualization</div>
         </div>
         
         <div id="coverage" class="tab-content active">
@@ -452,12 +507,19 @@
                     </select>
                 </div>
                 <div class="control-group">
+                    <label>
+                        <input type="checkbox" id="showAllLabels" onchange="updateLattice()"> 
+                        Show All Point Labels
+                    </label>
+                </div>
+                <div class="control-group">
                     <button onclick="updateLattice()">Update Lattice</button>
                 </div>
             </div>
             
             <div class="visualization-container">
                 <canvas id="latticeCanvas" width="800" height="600"></canvas>
+                <canvas id="latticeStructure" width="800" height="600"></canvas>
             </div>
         </div>
         
@@ -515,6 +577,11 @@
         </div>
         
         <div id="patterns" class="tab-content">
+            <div class="explanation">
+                <h3>Pattern Analysis</h3>
+                <p>This section analyzes recurring patterns in uncovered numbers and their properties.</p>
+            </div>
+            
             <div class="controls">
                 <div class="control-group">
                     <label>Pattern Type:</label>
@@ -536,17 +603,26 @@
             
             <canvas id="patternCanvas" width="800" height="400"></canvas>
             
-            <div class="results">
+            <div class="pattern-analysis" id="patternResults">
                 <h3>Pattern Results</h3>
-                <div id="patternResults"></div>
+                <div class="pattern-grid" id="patternGrid"></div>
             </div>
         </div>
         
         <div id="formulas" class="tab-content">
+            <div class="explanation">
+                <h3>Formula Explorer</h3>
+                <p>Explore how specific values decompose into the four forms 6ab ± a ± b</p>
+            </div>
+            
             <div class="controls">
                 <div class="control-group">
                     <label>Test Number n:</label>
                     <input type="number" id="testNumber" value="35" min="1" max="10000">
+                </div>
+                <div class="control-group">
+                    <label>Show Labels for All Points:</label>
+                    <input type="checkbox" id="showAllLabels" checked>
                 </div>
                 <div class="control-group">
                     <label>Maximum Search:</label>
@@ -557,42 +633,16 @@
                 </div>
             </div>
             
+            <div class="formula-display" id="currentFormula">
+                Testing n = 35
+            </div>
+            
             <canvas id="formulaCanvas" width="800" height="600"></canvas>
             
             <div class="results">
                 <h3>Decomposition Results</h3>
                 <div id="formulaResults"></div>
             </div>
-        </div>
-        
-        <div id="visualization3d" class="tab-content">
-            <div class="controls">
-                <div class="control-group">
-                    <label>Form:</label>
-                    <select id="form3d">
-                        <option value="++">6ab + a + b</option>
-                        <option value="+-">6ab + a - b</option>
-                        <option value="-+">6ab - a + b</option>
-                        <option value="--">6ab - a - b</option>
-                        <option value="all">All Forms Combined</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label>Max a:</label>
-                    <input type="range" id="maxA3d" min="10" max="50" value="20" step="2">
-                    <span id="maxA3dValue">20</span>
-                </div>
-                <div class="control-group">
-                    <label>Max b:</label>
-                    <input type="range" id="maxB3d" min="10" max="50" value="20">
-                    <span id="maxB3dValue">20</span>
-                </div>
-                <div class="control-group">
-                    <button onclick="render3D()">Render 3D</button>
-                </div>
-            </div>
-            
-            <canvas id="canvas3d" width="800" height="600"></canvas>
         </div>
         
         <div class="export-buttons">
@@ -608,16 +658,60 @@
         <h3>Export Options</h3>
         
         <div class="export-option">
+            <label>Select Canvas:</label>
+            <select id="exportCanvas">
+                <option value="current">Current Active Canvas</option>
+                <option value="coverage">Coverage Map</option>
+                <option value="lattice">Lattice Structure</option>
+                <option value="statistics">Statistics</option>
+                <option value="patterns">Pattern Analysis</option>
+                <option value="formulas">Formula Explorer</option>
+                <option value="all">All Canvases (Grid)</option>
+            </select>
+        </div>
+        
+        <div class="export-option">
             <label>Resolution:</label>
             <select id="exportResolution">
                 <option value="1080">1080p (1920×1080)</option>
                 <option value="2k">2K (2560×1440)</option>
                 <option value="4k">4K (3840×2160)</option>
+                <option value="8k">8K (7680×4320)</option>
             </select>
+        </div>
+        
+        <div class="export-option">
+            <label>Background:</label>
+            <select id="exportBackground">
+                <option value="black">Black</option>
+                <option value="white">White</option>
+                <option value="transparent">Transparent</option>
+                <option value="gradient">Original Gradient</option>
+            </select>
+        </div>
+        
+        <div class="checkbox-group">
+            <label>
+                <input type="checkbox" id="includeLegend" checked>
+                Include Legend
+            </label>
+            <label>
+                <input type="checkbox" id="includeTitle" checked>
+                Include Title & Attribution
+            </label>
+            <label>
+                <input type="checkbox" id="includeStats" checked>
+                Include Statistics
+            </label>
+            <label>
+                <input type="checkbox" id="includeTimestamp" checked>
+                Include Timestamp
+            </label>
         </div>
         
         <div class="export-actions">
             <button onclick="executeExport()">Export PNG</button>
+            <button onclick="exportCSV()">Export CSV</button>
             <button onclick="closeExportDialog()">Cancel</button>
         </div>
     </div>
@@ -682,6 +776,12 @@
                 div.textContent = n;
                 listEl.appendChild(div);
             });
+            if (uncovered.length > 100) {
+                const div = document.createElement('div');
+                div.className = 'uncovered-num';
+                div.textContent = `... and ${uncovered.length - 100} more`;
+                listEl.appendChild(div);
+            }
             
             // Draw visualization
             const canvas = document.getElementById('coverageCanvas');
@@ -694,11 +794,22 @@
             const cellWidth = canvas.width / cols;
             const cellHeight = canvas.height / rows;
             
+            // Clear and populate canvas data for clicking
+            canvasData.coverage = [];
+            
             for (let n = 1; n <= maxN; n++) {
                 const col = (n - 1) % cols;
                 const row = Math.floor((n - 1) / cols);
-                const x = col * cellWidth;
-                const y = row * cellHeight;
+                const x = col * cellWidth + cellWidth/2;
+                const y = row * cellHeight + cellHeight/2;
+                
+                canvasData.coverage.push({
+                    n: n,
+                    x: x,
+                    y: y,
+                    covered: covered.has(n),
+                    representations: representations.get(n)?.length || 0
+                });
                 
                 if (mode === 'binary') {
                     ctx.fillStyle = covered.has(n) ? '#00ff00' : '#ff0000';
@@ -706,7 +817,7 @@
                     const count = representations.get(n)?.length || 0;
                     const intensity = Math.min(count / 10, 1);
                     ctx.fillStyle = `rgba(0, 188, 212, ${intensity})`;
-                } else {
+                } else { // heatmap
                     if (covered.has(n)) {
                         const count = representations.get(n)?.length || 0;
                         const hue = 180 - count * 10;
@@ -716,8 +827,11 @@
                     }
                 }
                 
-                ctx.fillRect(x, y, cellWidth - 1, cellHeight - 1);
+                ctx.fillRect(col * cellWidth, row * cellHeight, cellWidth - 1, cellHeight - 1);
             }
+            
+            // Setup click handler
+            setupCanvasClick('coverageCanvas', 'coverage');
         }
         
         function updateLattice() {
@@ -730,7 +844,27 @@
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            for (let a = 2; a <= maxA; a += 2) {
+            // Draw grid
+            ctx.strokeStyle = 'rgba(0, 188, 212, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 20; i++) {
+                const x = i * canvas.width / 20;
+                const y = i * canvas.height / 20;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Calculate values and draw points
+            const points = [];
+            canvasData.lattice = []; // Clear lattice click data
+            
+            for (let a = 2; a <= maxA; a += 2) { // Only even values
                 for (let b = 1; b <= maxB; b++) {
                     let value;
                     if (form === '++') value = 6*a*b + a + b;
@@ -742,14 +876,139 @@
                         const x = (a / maxA) * canvas.width * 0.9 + canvas.width * 0.05;
                         const y = canvas.height - ((b / maxB) * canvas.height * 0.9 + canvas.height * 0.05);
                         
+                        // Store clickable data
+                        canvasData.lattice.push({a, b, value, x, y});
+                        
+                        // Color based on value magnitude
                         const hue = (value % 360);
                         ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
                         ctx.beginPath();
                         ctx.arc(x, y, 3, 0, 2 * Math.PI);
                         ctx.fill();
+                        
+                        // Add labels for values if requested
+                        const showLabels = document.getElementById('showAllLabels');
+                        if (showLabels && showLabels.checked) {
+                            ctx.fillStyle = 'white';
+                            ctx.font = '10px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(`${value}`, x, y - 5);
+                            ctx.font = '8px Arial';
+                            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                            ctx.fillText(`(${a},${b})`, x, y + 12);
+                        }
+                        
+                        points.push({a, b, value, x, y});
                     }
                 }
             }
+            
+            // Draw the structure canvas
+            const structCanvas = document.getElementById('latticeStructure');
+            const sCtx = structCanvas.getContext('2d');
+            sCtx.fillStyle = '#000';
+            sCtx.fillRect(0, 0, structCanvas.width, structCanvas.height);
+            
+            // Add title
+            sCtx.fillStyle = '#00bcd4';
+            sCtx.font = 'bold 16px Arial';
+            sCtx.textAlign = 'center';
+            sCtx.fillText('Lattice Structure: ' + 
+                (form === '++' ? '6ab + a + b' :
+                 form === '+-' ? '6ab + a - b' :
+                 form === '-+' ? '6ab - a + b' : '6ab - a - b'),
+                structCanvas.width/2, 30);
+            
+            // Draw background grid
+            sCtx.strokeStyle = 'rgba(0, 188, 212, 0.1)';
+            sCtx.lineWidth = 0.5;
+            for (let i = 0; i <= 20; i++) {
+                const x = i * structCanvas.width / 20;
+                const y = i * structCanvas.height / 20;
+                sCtx.beginPath();
+                sCtx.moveTo(x, 50);
+                sCtx.lineTo(x, structCanvas.height - 20);
+                sCtx.stroke();
+                sCtx.beginPath();
+                sCtx.moveTo(20, y);
+                sCtx.lineTo(structCanvas.width - 20, y);
+                sCtx.stroke();
+            }
+            
+            // Draw axes
+            sCtx.strokeStyle = '#00bcd4';
+            sCtx.lineWidth = 2;
+            sCtx.beginPath();
+            sCtx.moveTo(40, structCanvas.height - 40);
+            sCtx.lineTo(structCanvas.width - 20, structCanvas.height - 40);
+            sCtx.moveTo(40, structCanvas.height - 40);
+            sCtx.lineTo(40, 50);
+            sCtx.stroke();
+            
+            // Draw lattice points with connections
+            const latticePoints = [];
+            for (let a = 2; a <= Math.min(maxA, 20); a += 2) {
+                for (let b = 1; b <= Math.min(maxB, 20); b++) {
+                    const x = (a / 20) * (structCanvas.width - 80) + 40;
+                    const y = structCanvas.height - 40 - (b / 20) * (structCanvas.height - 90);
+                    latticePoints.push({a, b, x, y});
+                }
+            }
+            
+            // Draw connections
+            sCtx.strokeStyle = 'rgba(0, 188, 212, 0.3)';
+            sCtx.lineWidth = 1;
+            latticePoints.forEach(p1 => {
+                latticePoints.forEach(p2 => {
+                    if ((Math.abs(p1.a - p2.a) === 2 && p1.b === p2.b) ||
+                        (p1.a === p2.a && Math.abs(p1.b - p2.b) === 1)) {
+                        sCtx.beginPath();
+                        sCtx.moveTo(p1.x, p1.y);
+                        sCtx.lineTo(p2.x, p2.y);
+                        sCtx.stroke();
+                    }
+                });
+            });
+            
+            // Draw points with glow
+            latticePoints.forEach(p => {
+                // Glow effect
+                const gradient = sCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 10);
+                gradient.addColorStop(0, 'rgba(0, 188, 212, 0.8)');
+                gradient.addColorStop(1, 'rgba(0, 188, 212, 0)');
+                sCtx.fillStyle = gradient;
+                sCtx.beginPath();
+                sCtx.arc(p.x, p.y, 10, 0, 2 * Math.PI);
+                sCtx.fill();
+                
+                // Point
+                sCtx.fillStyle = '#00bcd4';
+                sCtx.beginPath();
+                sCtx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
+                sCtx.fill();
+                
+                // Label for small values
+                if (p.a <= 8 && p.b <= 5) {
+                    sCtx.fillStyle = 'white';
+                    sCtx.font = '10px Arial';
+                    sCtx.textAlign = 'center';
+                    sCtx.fillText(`(${p.a},${p.b})`, p.x, p.y - 8);
+                }
+            });
+            
+            // Axis labels
+            sCtx.fillStyle = 'white';
+            sCtx.font = '12px Arial';
+            sCtx.textAlign = 'center';
+            sCtx.fillText('a (even values)', structCanvas.width/2, structCanvas.height - 10);
+            sCtx.save();
+            sCtx.translate(15, structCanvas.height/2);
+            sCtx.rotate(-Math.PI/2);
+            sCtx.fillText('b', 0, 0);
+            sCtx.restore();
+            
+            // Setup click handler
+            setupCanvasClick('latticeCanvas', 'lattice');
         }
         
         function analyzeGaps() {
@@ -758,85 +1017,323 @@
             const depth = parseInt(document.getElementById('gapDepth').value);
             
             const {covered, uncovered} = computeCoverage(end, depth);
+            
             const gapsInRange = uncovered.filter(n => n >= start && n <= end);
+            const consecutiveGaps = [];
+            
+            for (let i = 0; i < gapsInRange.length - 1; i++) {
+                if (gapsInRange[i + 1] === gapsInRange[i] + 1) {
+                    let j = i;
+                    while (j < gapsInRange.length - 1 && gapsInRange[j + 1] === gapsInRange[j] + 1) {
+                        j++;
+                    }
+                    consecutiveGaps.push({
+                        start: gapsInRange[i],
+                        end: gapsInRange[j],
+                        length: j - i + 1
+                    });
+                    i = j;
+                }
+            }
             
             const resultsEl = document.getElementById('gapResults');
             resultsEl.innerHTML = `
                 <div class="result-item">
                     <strong>Range:</strong> ${start} - ${end}<br>
+                    <strong>Total numbers in range:</strong> ${end - start + 1}<br>
                     <strong>Uncovered in range:</strong> ${gapsInRange.length}<br>
-                    <strong>First few:</strong> ${gapsInRange.slice(0, 10).join(', ')}
+                    <strong>Coverage rate:</strong> ${((1 - gapsInRange.length / (end - start + 1)) * 100).toFixed(2)}%
+                </div>
+                <div class="result-item">
+                    <strong>Consecutive gap sequences:</strong> ${consecutiveGaps.length}<br>
+                    <strong>Longest gap sequence:</strong> ${
+                        consecutiveGaps.length > 0 ? 
+                        `${consecutiveGaps.reduce((max, g) => g.length > max.length ? g : max).start}-${
+                            consecutiveGaps.reduce((max, g) => g.length > max.length ? g : max).end
+                        } (length: ${consecutiveGaps.reduce((max, g) => g.length > max.length ? g : max).length})` : 
+                        'None'
+                    }
+                </div>
+                <div class="result-item">
+                    <strong>Gap modulo 6 distribution:</strong><br>
+                    ${[0,1,2,3,4,5].map(m => {
+                        const count = gapsInRange.filter(n => n % 6 === m).length;
+                        return `mod ${m}: ${count} numbers`;
+                    }).join('<br>')}
                 </div>
             `;
+            
+            if (gapsInRange.length > 0 && gapsInRange.length <= 50) {
+                resultsEl.innerHTML += `
+                    <div class="result-item">
+                        <strong>All uncovered numbers in range:</strong><br>
+                        ${gapsInRange.join(', ')}
+                    </div>
+                `;
+            }
         }
         
         function runStatistics() {
-            // Simplified statistics function
+            const type = document.getElementById('analysisType').value;
+            const param = parseInt(document.getElementById('analysisParam').value);
+            
             const canvas = document.getElementById('statsCanvas');
             const ctx = canvas.getContext('2d');
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            ctx.fillStyle = '#00bcd4';
-            ctx.font = '20px Arial';
-            ctx.fillText('Statistics visualization', 50, 50);
-        }
-        
-        function analyzePatterns() {
-            const canvas = document.getElementById('patternCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const resultsEl = document.getElementById('statsResults');
             
-            ctx.fillStyle = '#00bcd4';
-            ctx.font = '20px Arial';
-            ctx.fillText('Pattern analysis', 50, 50);
-        }
-        
-        function exploreFormula() {
-            const n = parseInt(document.getElementById('testNumber').value);
-            const maxSearch = parseInt(document.getElementById('formulaMax').value);
-            
-            const canvas = document.getElementById('formulaCanvas');
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            const solutions = [];
-            for (let a = 1; a <= maxSearch; a++) {
-                for (let b = 1; b <= maxSearch; b++) {
-                    if (6*a*b + a + b === n) solutions.push({a, b, form: '++'});
-                    if (6*a*b + a - b === n) solutions.push({a, b, form: '+-'});
-                    if (6*a*b - a + b === n) solutions.push({a, b, form: '-+'});
-                    if (6*a*b - a - b === n) solutions.push({a, b, form: '--'});
+            if (type === 'density') {
+                // Compute density function
+                const windowSize = 50;
+                const densities = [];
+                
+                for (let center = windowSize; center <= param; center += windowSize) {
+                    const {covered} = computeCoverage(center + windowSize/2, Math.ceil(Math.sqrt(center)));
+                    let count = 0;
+                    for (let n = center - windowSize/2; n <= center + windowSize/2; n++) {
+                        if (covered.has(n)) count++;
+                    }
+                    densities.push({
+                        x: center,
+                        density: count / (windowSize + 1)
+                    });
                 }
+                
+                // Draw density graph
+                ctx.strokeStyle = '#00bcd4';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                densities.forEach((d, i) => {
+                    const x = (d.x / param) * canvas.width * 0.9 + canvas.width * 0.05;
+                    const y = canvas.height - (d.density * canvas.height * 0.8 + canvas.height * 0.1);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+                
+                resultsEl.innerHTML = `
+                    <div class="result-item">
+                        <strong>Density Analysis (window size: ${windowSize})</strong><br>
+                        Average density: ${(densities.reduce((sum, d) => sum + d.density, 0) / densities.length).toFixed(4)}<br>
+                        Min density: ${Math.min(...densities.map(d => d.density)).toFixed(4)}<br>
+                        Max density: ${Math.max(...densities.map(d => d.density)).toFixed(4)}
+                    </div>
+                `;
+                
+            } else if (type === 'modular') {
+                // Modular distribution analysis
+                const {covered} = computeCoverage(param, Math.ceil(Math.sqrt(param)));
+                const modCounts = [0, 0, 0, 0, 0, 0];
+                const modUncovered = [0, 0, 0, 0, 0, 0];
+                
+                for (let n = 1; n <= param; n++) {
+                    const mod = n % 6;
+                    modCounts[mod]++;
+                    if (!covered.has(n)) {
+                        modUncovered[mod]++;
+                    }
+                }
+                
+                // Draw bar chart
+                const barWidth = canvas.width / 8;
+                for (let m = 0; m < 6; m++) {
+                    const x = (m + 1) * barWidth;
+                    const coveredHeight = (modCounts[m] - modUncovered[m]) / modCounts[m] * canvas.height * 0.7;
+                    const uncoveredHeight = modUncovered[m] / modCounts[m] * canvas.height * 0.7;
+                    
+                    // Covered portion
+                    ctx.fillStyle = '#00ff00';
+                    ctx.fillRect(x, canvas.height - coveredHeight - 50, barWidth * 0.8, coveredHeight);
+                    
+                    // Uncovered portion
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(x, canvas.height - coveredHeight - uncoveredHeight - 50, barWidth * 0.8, uncoveredHeight);
+                    
+                    // Label
+                    ctx.fillStyle = 'white';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`mod ${m}`, x + barWidth * 0.4, canvas.height - 20);
+                }
+                
+                resultsEl.innerHTML = `
+                    <div class="result-item">
+                        <strong>Modular Distribution (n ≤ ${param})</strong><br>
+                        ${[0,1,2,3,4,5].map(m => 
+                            `mod ${m}: ${modCounts[m]} total, ${modUncovered[m]} uncovered (${(modUncovered[m]/modCounts[m]*100).toFixed(2)}%)`
+                        ).join('<br>')}
+                    </div>
+                `;
+                
+            } else if (type === 'growth') {
+                // Growth rate analysis
+                const points = [];
+                for (let n = 100; n <= param; n += 100) {
+                    const {uncovered} = computeCoverage(n, Math.ceil(Math.sqrt(n)));
+                    points.push({
+                        n: n,
+                        count: uncovered.length,
+                        rate: uncovered.length / n
+                    });
+                }
+                
+                // Draw growth curve
+                ctx.strokeStyle = '#00bcd4';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                points.forEach((p, i) => {
+                    const x = (p.n / param) * canvas.width * 0.9 + canvas.width * 0.05;
+                    const y = canvas.height - (p.rate * canvas.height * 0.8 + canvas.height * 0.1);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
+                
+                resultsEl.innerHTML = `
+                    <div class="result-item">
+                        <strong>Growth Rate Analysis</strong><br>
+                        At n=${param}: ${points[points.length-1].count} uncovered (${(points[points.length-1].rate*100).toFixed(2)}%)<br>
+                        Trend: ${points.length > 1 && points[points.length-1].rate < points[0].rate ? 'Decreasing' : 'Stable/Increasing'}
+                    </div>
+                `;
+                
+            } else if (type === 'range') {
+                // Coverage by range analysis - FIXED VERSION
+                const ranges = [];
+                const step = Math.floor(param / 10);
+                
+                for (let start = 1; start <= param; start += step) {
+                    const end = Math.min(start + step - 1, param);
+                    // Use appropriate search depth for the range
+                    const searchDepth = Math.max(100, Math.ceil(Math.sqrt(end) * 2));
+                    const {covered} = computeCoverage(end, searchDepth);
+                    
+                    let coveredInRange = 0;
+                    let uncoveredInRange = [];
+                    
+                    for (let n = start; n <= end; n++) {
+                        if (covered.has(n)) {
+                            coveredInRange++;
+                        } else {
+                            uncoveredInRange.push(n);
+                        }
+                    }
+                    
+                    const total = end - start + 1;
+                    ranges.push({
+                        start: start,
+                        end: end,
+                        total: total,
+                        covered: coveredInRange,
+                        uncovered: total - coveredInRange,
+                        uncoveredList: uncoveredInRange,
+                        rate: coveredInRange / total
+                    });
+                }
+                
+                // Draw range comparison bars
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                const barWidth = (canvas.width - 100) / ranges.length;
+                const maxHeight = canvas.height - 100;
+                
+                // Draw grid lines
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= 10; i++) {
+                    const y = 50 + (maxHeight * i / 10);
+                    ctx.beginPath();
+                    ctx.moveTo(50, y);
+                    ctx.lineTo(canvas.width - 50, y);
+                    ctx.stroke();
+                    
+                    // Y-axis labels
+                    ctx.fillStyle = 'white';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`${(100 - i * 10)}%`, 45, y + 3);
+                }
+                
+                ranges.forEach((r, i) => {
+                    const x = 50 + i * barWidth;
+                    const barHeight = r.rate * maxHeight;
+                    
+                    // Gradient fill for bars
+                    const gradient = ctx.createLinearGradient(0, 50 + maxHeight - barHeight, 0, 50 + maxHeight);
+                    gradient.addColorStop(0, '#00bcd4');
+                    gradient.addColorStop(1, '#006064');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x + barWidth * 0.1, 50 + maxHeight - barHeight, barWidth * 0.8, barHeight);
+                    
+                    // Range label
+                    ctx.fillStyle = 'white';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.save();
+                    ctx.translate(x + barWidth * 0.5, canvas.height - 20);
+                    ctx.rotate(-Math.PI / 4);
+                    ctx.fillText(`${r.start}-${r.end}`, 0, 0);
+                    ctx.restore();
+                    
+                    // Coverage percentage on top of bar
+                    ctx.fillStyle = '#00ff00';
+                    ctx.font = 'bold 11px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(`${(r.rate * 100).toFixed(1)}%`, x + barWidth * 0.5, 50 + maxHeight - barHeight - 5);
+                });
+                
+                // Title
+                ctx.fillStyle = '#00bcd4';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Coverage Analysis by Range', canvas.width / 2, 30);
+                
+                // Generate detailed results
+                let htmlResults = `
+                    <div class="result-item">
+                        <strong>Coverage Analysis by Range</strong><br>
+                        <strong>Total range:</strong> 1 - ${param}<br>
+                        <strong>Range size:</strong> ${step} numbers per range<br><br>
+                `;
+                
+                ranges.forEach(r => {
+                    htmlResults += `
+                        <strong>Range ${r.start}-${r.end}:</strong><br>
+                        &nbsp;&nbsp;• Covered: ${r.covered}/${r.total} (${(r.rate * 100).toFixed(2)}%)<br>
+                        &nbsp;&nbsp;• Uncovered: ${r.uncovered} numbers<br>
+                    `;
+                    
+                    // Show first few uncovered numbers if not too many
+                    if (r.uncoveredList.length > 0 && r.uncoveredList.length <= 20) {
+                        htmlResults += `&nbsp;&nbsp;• Uncovered numbers: ${r.uncoveredList.join(', ')}<br>`;
+                    } else if (r.uncoveredList.length > 20) {
+                        htmlResults += `&nbsp;&nbsp;• First 10 uncovered: ${r.uncoveredList.slice(0, 10).join(', ')}...<br>`;
+                    }
+                    htmlResults += '<br>';
+                });
+                
+                // Add summary statistics
+                const avgCoverage = ranges.reduce((sum, r) => sum + r.rate, 0) / ranges.length;
+                const minCoverage = Math.min(...ranges.map(r => r.rate));
+                const maxCoverage = Math.max(...ranges.map(r => r.rate));
+                const minRange = ranges.find(r => r.rate === minCoverage);
+                const maxRange = ranges.find(r => r.rate === maxCoverage);
+                
+                htmlResults += `
+                        <strong>Summary Statistics:</strong><br>
+                        &nbsp;&nbsp;• Average coverage: ${(avgCoverage * 100).toFixed(2)}%<br>
+                        &nbsp;&nbsp;• Best coverage: ${(maxCoverage * 100).toFixed(2)}% (range ${maxRange.start}-${maxRange.end})<br>
+                        &nbsp;&nbsp;• Worst coverage: ${(minCoverage * 100).toFixed(2)}% (range ${minRange.start}-${minRange.end})<br>
+                        &nbsp;&nbsp;• Total uncovered: ${ranges.reduce((sum, r) => sum + r.uncovered, 0)} numbers
+                    </div>
+                `;
+                
+                resultsEl.innerHTML = htmlResults;
             }
-            
-            const resultsEl = document.getElementById('formulaResults');
-            if (solutions.length === 0) {
-                resultsEl.innerHTML = `<div class="result-item">n = ${n} is UNCOVERED</div>`;
-            } else {
-                resultsEl.innerHTML = `<div class="result-item">n = ${n} has ${solutions.length} representations</div>`;
-            }
-        }
-        
-        function render3D() {
-            const canvas = document.getElementById('canvas3d');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#00bcd4';
-            ctx.font = '20px Arial';
-            ctx.fillText('3D Visualization', 50, 50);
-            
-            // Update display values safely
-            const maxA3dValue = document.getElementById('maxA3dValue');
-            const maxB3dValue = document.getElementById('maxB3dValue');
-            if (maxA3dValue) maxA3dValue.textContent = document.getElementById('maxA3d').value;
-            if (maxB3dValue) maxB3dValue.textContent = document.getElementById('maxB3d').value;
         }
         
         function switchTab(tabName) {
@@ -846,15 +1343,592 @@
             event.target.classList.add('active');
             document.getElementById(tabName).classList.add('active');
             
+            // Initialize tab if needed
             if (tabName === 'coverage') {
                 updateCoverage();
             } else if (tabName === 'lattice') {
                 updateLattice();
-            } else if (tabName === 'visualization3d') {
-                render3D();
+            } else if (tabName === 'patterns') {
+                analyzePatterns();
+            } else if (tabName === 'formulas') {
+                exploreFormula();
             }
         }
         
+        function exportPNG() {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            let canvas;
+            
+            if (activeTab === 'coverage') {
+                canvas = document.getElementById('coverageCanvas');
+            } else if (activeTab === 'lattice') {
+                canvas = document.getElementById('latticeCanvas');
+            } else if (activeTab === 'statistics') {
+                canvas = document.getElementById('statsCanvas');
+            }
+            
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = `sierpinski-${activeTab}-${Date.now()}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            }
+        }
+        
+        function exportData() {
+            const maxN = parseInt(document.getElementById('maxN').value);
+            const maxAB = parseInt(document.getElementById('maxAB').value);
+            const {covered, uncovered, representations} = computeCoverage(maxN, maxAB);
+            
+            const data = {
+                parameters: {maxN, maxAB},
+                statistics: {
+                    total: maxN,
+                    covered: covered.size,
+                    uncovered: uncovered.length,
+                    coverageRate: covered.size / maxN
+                },
+                uncoveredNumbers: uncovered,
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const link = document.createElement('a');
+            link.download = `sierpinski-data-${Date.now()}.json`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+        
+        function exportReport() {
+            const maxN = parseInt(document.getElementById('maxN').value);
+            const maxAB = parseInt(document.getElementById('maxAB').value);
+            const {covered, uncovered} = computeCoverage(maxN, maxAB);
+            
+            const report = `Sierpiński 6ab ± a ± b Problem Analysis Report
+Generated: ${new Date().toLocaleString()}
+By: Wessen Getachew (@7dview)
+
+PARAMETERS
+==========
+Maximum N: ${maxN}
+Maximum a,b: ${maxAB}
+
+COVERAGE STATISTICS
+==================
+Total numbers analyzed: ${maxN}
+Numbers covered: ${covered.size}
+Numbers uncovered: ${uncovered.length}
+Coverage rate: ${(covered.size / maxN * 100).toFixed(2)}%
+
+UNCOVERED NUMBERS (First 100)
+=============================
+${uncovered.slice(0, 100).join(', ')}
+${uncovered.length > 100 ? `\n... and ${uncovered.length - 100} more` : ''}
+
+MODULAR DISTRIBUTION
+===================
+${[0,1,2,3,4,5].map(m => {
+    const inMod = uncovered.filter(n => n % 6 === m).length;
+    return `mod ${m}: ${inMod} uncovered numbers`;
+}).join('\n')}
+
+MATHEMATICAL FRAMEWORK
+=====================
+The problem explores integers that cannot be expressed in any of the four forms:
+• 6ab + a + b
+• 6ab + a - b  
+• 6ab - a + b
+• 6ab - a - b
+
+These arise from the modular lattice projection:
+(3a ± 1)(2b ± 1) - 1 with a even
+
+The restriction to even a ensures factors remain in visible residue classes {1,5} mod 6.
+`;
+            
+            const blob = new Blob([report], {type: 'text/plain'});
+            const link = document.createElement('a');
+            link.download = `sierpinski-report-${Date.now()}.txt`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+        
+        
+        // Store click data for canvases
+        let canvasData = {
+            coverage: [],
+            lattice: [],
+            formula: []
+        };
+        
+        // Add click handler for canvases
+        function setupCanvasClick(canvasId, dataKey) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            canvas.style.cursor = 'crosshair';
+            
+            // Remove existing listener if any
+            if (canvas._clickHandler) {
+                canvas.removeEventListener('click', canvas._clickHandler);
+            }
+            
+            // Create new click handler
+            canvas._clickHandler = function(event) {
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                
+                // Find closest point
+                let closestPoint = null;
+                let minDist = Infinity;
+                
+                canvasData[dataKey].forEach(point => {
+                    const dist = Math.sqrt((point.x - x)**2 + (point.y - y)**2);
+                    if (dist < minDist && dist < 15) { // 15px click radius
+                        minDist = dist;
+                        closestPoint = point;
+                    }
+                });
+                
+                if (closestPoint) {
+                    showPointInfo(closestPoint, x, y);
+                }
+            };
+            
+            canvas.addEventListener('click', canvas._clickHandler);
+        }
+        
+        // Show point information tooltip
+        function showPointInfo(point, mouseX, mouseY) {
+            // Remove existing tooltip
+            const existingTooltip = document.getElementById('canvasTooltip');
+            if (existingTooltip) {
+                existingTooltip.remove();
+            }
+            
+            // Create new tooltip
+            const tooltip = document.createElement('div');
+            tooltip.id = 'canvasTooltip';
+            tooltip.className = 'tooltip';
+            
+            // Get the canvas position
+            const canvas = event.target;
+            const rect = canvas.getBoundingClientRect();
+            tooltip.style.left = (rect.left + mouseX + 10) + 'px';
+            tooltip.style.top = (rect.top + mouseY - 40) + 'px';
+            
+            if (point.n !== undefined) {
+                // Coverage map point
+                tooltip.innerHTML = `<strong>n = ${point.n}</strong><br>Covered: ${point.covered ? '<span style="color:#00ff00">Yes</span>' : '<span style="color:#ff0000">No</span>'}`;
+                if (point.representations && point.representations > 0) {
+                    tooltip.innerHTML += `<br>Representations: ${point.representations}`;
+                }
+            } else if (point.value !== undefined && point.form === undefined) {
+                // Lattice point
+                tooltip.innerHTML = `<strong>(a,b) = (${point.a}, ${point.b})</strong><br>Value: ${point.value}`;
+                const form = document.getElementById('latticeForm').value;
+                const formText = form === '++' ? '6ab + a + b' :
+                               form === '+-' ? '6ab + a - b' :
+                               form === '-+' ? '6ab - a + b' : '6ab - a - b';
+                tooltip.innerHTML += `<br>Form: ${formText}`;
+            } else if (point.form !== undefined) {
+                // Formula point
+                const formText = point.form === '++' ? '6ab + a + b' :
+                               point.form === '+-' ? '6ab + a - b' :
+                               point.form === '-+' ? '6ab - a + b' : '6ab - a - b';
+                tooltip.innerHTML = `<strong>(a,b) = (${point.a}, ${point.b})</strong><br>${formText} = ${point.value}`;
+            }
+            
+            document.body.appendChild(tooltip);
+            
+            // Remove tooltip after 5 seconds or on next click
+            setTimeout(() => {
+                if (document.getElementById('canvasTooltip')) {
+                    document.getElementById('canvasTooltip').remove();
+                }
+            }, 5000);
+        }
+        
+        // New Pattern Analysis functions
+        function analyzePatterns() {
+            const type = document.getElementById('patternType').value;
+            const limit = parseInt(document.getElementById('patternLimit').value);
+            const {uncovered} = computeCoverage(limit, Math.ceil(Math.sqrt(limit)));
+            
+            const canvas = document.getElementById('patternCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const gridEl = document.getElementById('patternGrid');
+            gridEl.innerHTML = '';
+            
+            // Draw axes
+            ctx.strokeStyle = '#00bcd4';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(40, canvas.height - 40);
+            ctx.lineTo(canvas.width - 20, canvas.height - 40);
+            ctx.moveTo(40, canvas.height - 40);
+            ctx.lineTo(40, 20);
+            ctx.stroke();
+            
+            if (type === 'arithmetic') {
+                // Find arithmetic progressions in uncovered numbers
+                const progressions = [];
+                for (let i = 0; i < uncovered.length - 2; i++) {
+                    const diff = uncovered[i + 1] - uncovered[i];
+                    let count = 2;
+                    let j = i + 1;
+                    while (j < uncovered.length - 1 && uncovered[j + 1] - uncovered[j] === diff) {
+                        count++;
+                        j++;
+                    }
+                    if (count >= 3) {
+                        progressions.push({
+                            start: uncovered[i],
+                            diff: diff,
+                            length: count,
+                            terms: uncovered.slice(i, i + count)
+                        });
+                        i = j;
+                    }
+                }
+                
+                // Visualize progressions on canvas
+                ctx.fillStyle = '#00bcd4';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Arithmetic Progressions in Uncovered Numbers', canvas.width/2, 15);
+                
+                // Draw progressions as lines
+                progressions.slice(0, 20).forEach((p, idx) => {
+                    const y = 50 + idx * 15;
+                    const startX = (p.start / limit) * (canvas.width - 80) + 40;
+                    const endX = (p.terms[p.terms.length-1] / limit) * (canvas.width - 80) + 40;
+                    
+                    // Draw progression line
+                    ctx.strokeStyle = `hsl(${idx * 20}, 100%, 50%)`;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(startX, y);
+                    ctx.lineTo(endX, y);
+                    ctx.stroke();
+                    
+                    // Draw points
+                    p.terms.forEach(term => {
+                        const x = (term / limit) * (canvas.width - 80) + 40;
+                        ctx.fillStyle = `hsl(${idx * 20}, 100%, 50%)`;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                        ctx.fill();
+                    });
+                });
+                
+                // Display results
+                progressions.forEach(p => {
+                    const div = document.createElement('div');
+                    div.className = 'pattern-item';
+                    div.innerHTML = `
+                        <strong>Arithmetic Progression</strong><br>
+                        Start: ${p.start}, Difference: ${p.diff}, Length: ${p.length}<br>
+                        Terms: ${p.terms.join(', ')}
+                    `;
+                    gridEl.appendChild(div);
+                });
+                
+            } else if (type === 'prime') {
+                // Analyze prime patterns
+                const isPrime = n => {
+                    if (n < 2) return false;
+                    for (let i = 2; i * i <= n; i++) {
+                        if (n % i === 0) return false;
+                    }
+                    return true;
+                };
+                
+                const primeUncovered = uncovered.filter(isPrime);
+                const compositeUncovered = uncovered.filter(n => !isPrime(n) && n > 1);
+                
+                // Visualize prime distribution
+                ctx.fillStyle = '#00bcd4';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Prime vs Composite Uncovered Numbers', canvas.width/2, 15);
+                
+                // Draw bar chart
+                const barWidth = 100;
+                const primeHeight = (primeUncovered.length / uncovered.length) * (canvas.height - 100);
+                const compositeHeight = (compositeUncovered.length / uncovered.length) * (canvas.height - 100);
+                
+                // Prime bar
+                ctx.fillStyle = '#00ff00';
+                ctx.fillRect(canvas.width/2 - barWidth - 20, canvas.height - 40 - primeHeight, barWidth, primeHeight);
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Prime', canvas.width/2 - barWidth/2 - 20, canvas.height - 20);
+                ctx.fillText(`${primeUncovered.length}`, canvas.width/2 - barWidth/2 - 20, canvas.height - 45 - primeHeight);
+                
+                // Composite bar
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(canvas.width/2 + 20, canvas.height - 40 - compositeHeight, barWidth, compositeHeight);
+                ctx.fillStyle = 'white';
+                ctx.fillText('Composite', canvas.width/2 + barWidth/2 + 20, canvas.height - 20);
+                ctx.fillText(`${compositeUncovered.length}`, canvas.width/2 + barWidth/2 + 20, canvas.height - 45 - compositeHeight);
+                
+                const div = document.createElement('div');
+                div.className = 'pattern-item';
+                div.innerHTML = `
+                    <strong>Prime Analysis</strong><br>
+                    Total uncovered: ${uncovered.length}<br>
+                    Prime uncovered: ${primeUncovered.length} (${(primeUncovered.length/uncovered.length*100).toFixed(2)}%)<br>
+                    Composite uncovered: ${compositeUncovered.length}<br>
+                    First 10 prime uncovered: ${primeUncovered.slice(0, 10).join(', ')}
+                `;
+                gridEl.appendChild(div);
+                
+            } else if (type === 'twins') {
+                // Find twin uncovered pairs (differ by 2)
+                const twins = [];
+                for (let i = 0; i < uncovered.length - 1; i++) {
+                    if (uncovered[i + 1] - uncovered[i] === 2) {
+                        twins.push([uncovered[i], uncovered[i + 1]]);
+                    }
+                }
+                
+                // Visualize twin pairs
+                ctx.fillStyle = '#00bcd4';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Twin Uncovered Pairs (differ by 2)', canvas.width/2, 15);
+                
+                // Draw twin connections
+                const maxShow = Math.min(twins.length, 30);
+                for (let i = 0; i < maxShow; i++) {
+                    const y = 50 + i * ((canvas.height - 100) / maxShow);
+                    const x1 = (twins[i][0] / limit) * (canvas.width - 80) + 40;
+                    const x2 = (twins[i][1] / limit) * (canvas.width - 80) + 40;
+                    
+                    // Draw connecting line
+                    ctx.strokeStyle = `hsl(${i * 12}, 100%, 50%)`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y);
+                    ctx.lineTo(x2, y);
+                    ctx.stroke();
+                    
+                    // Draw points
+                    ctx.fillStyle = `hsl(${i * 12}, 100%, 50%)`;
+                    ctx.beginPath();
+                    ctx.arc(x1, y, 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(x2, y, 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Label
+                    ctx.fillStyle = 'white';
+                    ctx.font = '10px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`(${twins[i][0]}, ${twins[i][1]})`, x2 + 10, y + 3);
+                }
+                
+                const div = document.createElement('div');
+                div.className = 'pattern-item';
+                div.innerHTML = `
+                    <strong>Twin Uncovered Pairs</strong><br>
+                    Found ${twins.length} twin pairs<br>
+                    First 10 pairs: ${twins.slice(0, 10).map(t => `(${t[0]}, ${t[1]})`).join(', ')}
+                `;
+                gridEl.appendChild(div);
+                
+            } else if (type === 'clusters') {
+                // Analyze clustering
+                const gaps = [];
+                for (let i = 0; i < uncovered.length - 1; i++) {
+                    gaps.push(uncovered[i + 1] - uncovered[i]);
+                }
+                const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+                const maxGap = Math.max(...gaps);
+                const minGap = Math.min(...gaps);
+                
+                // Visualize gap distribution
+                ctx.fillStyle = '#00bcd4';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Gap Distribution Between Uncovered Numbers', canvas.width/2, 15);
+                
+                // Create histogram of gaps
+                const gapCounts = {};
+                gaps.forEach(g => {
+                    gapCounts[g] = (gapCounts[g] || 0) + 1;
+                });
+                
+                const uniqueGaps = Object.keys(gapCounts).map(Number).sort((a, b) => a - b);
+                const maxCount = Math.max(...Object.values(gapCounts));
+                
+                uniqueGaps.forEach((gap, i) => {
+                    const x = (i / uniqueGaps.length) * (canvas.width - 80) + 40;
+                    const height = (gapCounts[gap] / maxCount) * (canvas.height - 100);
+                    const barWidth = Math.max(2, (canvas.width - 80) / uniqueGaps.length - 2);
+                    
+                    ctx.fillStyle = gap === minGap ? '#00ff00' : gap === maxGap ? '#ff0000' : '#00bcd4';
+                    ctx.fillRect(x, canvas.height - 40 - height, barWidth, height);
+                });
+                
+                // Draw average line
+                ctx.strokeStyle = '#ffff00';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                const avgY = canvas.height - 40 - (avgGap / maxGap) * (canvas.height - 100);
+                ctx.beginPath();
+                ctx.moveTo(40, avgY);
+                ctx.lineTo(canvas.width - 20, avgY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                
+                ctx.fillStyle = '#ffff00';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'left';
+                ctx.fillText(`Avg: ${avgGap.toFixed(1)}`, canvas.width - 70, avgY - 5);
+                
+                const div = document.createElement('div');
+                div.className = 'pattern-item';
+                div.innerHTML = `
+                    <strong>Cluster Analysis</strong><br>
+                    Average gap: ${avgGap.toFixed(2)}<br>
+                    Maximum gap: ${maxGap}<br>
+                    Minimum gap: ${minGap}<br>
+                    Gap variance: ${(gaps.reduce((sum, g) => sum + (g - avgGap)**2, 0) / gaps.length).toFixed(2)}
+                `;
+                gridEl.appendChild(div);
+            }
+        }
+        
+        // Formula Explorer functions
+        function exploreFormula() {
+            const n = parseInt(document.getElementById('testNumber').value);
+            const maxSearch = parseInt(document.getElementById('formulaMax').value);
+            
+            document.getElementById('currentFormula').textContent = `Testing n = ${n}`;
+            
+            const canvas = document.getElementById('formulaCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const solutions = [];
+            canvasData.formula = []; // Clear formula click data
+            
+            // Check all four forms
+            for (let a = 1; a <= maxSearch; a++) {
+                for (let b = 1; b <= maxSearch; b++) {
+                    if (6*a*b + a + b === n) solutions.push({a, b, form: '++', value: 6*a*b + a + b});
+                    if (6*a*b + a - b === n) solutions.push({a, b, form: '+-', value: 6*a*b + a - b});
+                    if (6*a*b - a + b === n) solutions.push({a, b, form: '-+', value: 6*a*b - a + b});
+                    if (6*a*b - a - b === n) solutions.push({a, b, form: '--', value: 6*a*b - a - b});
+                }
+            }
+            
+            // Draw coordinate grid
+            ctx.strokeStyle = 'rgba(0, 188, 212, 0.2)';
+            ctx.lineWidth = 1;
+            const step = Math.min(maxSearch / 10, 10);
+            for (let i = 0; i <= maxSearch; i += step) {
+                const x = (i / maxSearch) * canvas.width * 0.9 + canvas.width * 0.05;
+                const y = canvas.height - ((i / maxSearch) * canvas.height * 0.9 + canvas.height * 0.05);
+                
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height * 0.05);
+                ctx.lineTo(x, canvas.height * 0.95);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(canvas.width * 0.05, y);
+                ctx.lineTo(canvas.width * 0.95, y);
+                ctx.stroke();
+            }
+            
+            // Draw solutions
+            const formColors = {
+                '++': '#00ff00',
+                '+-': '#ff00ff',
+                '-+': '#ffff00',
+                '--': '#ff0000'
+            };
+            
+            solutions.forEach(s => {
+                const x = (s.a / maxSearch) * canvas.width * 0.9 + canvas.width * 0.05;
+                const y = canvas.height - ((s.b / maxSearch) * canvas.height * 0.9 + canvas.height * 0.05);
+                
+                // Store clickable data
+                canvasData.formula.push({...s, x, y});
+                
+                ctx.fillStyle = formColors[s.form];
+                ctx.beginPath();
+                ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                ctx.fillStyle = 'white';
+                ctx.font = '10px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(`(${s.a},${s.b})`, x, y - 8);
+            });
+            
+            // Setup click handler
+            setupCanvasClick('formulaCanvas', 'formula');
+            
+            // Draw legend
+            let legendY = 30;
+            Object.entries(formColors).forEach(([form, color]) => {
+                ctx.fillStyle = color;
+                ctx.fillRect(canvas.width - 150, legendY, 20, 15);
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'left';
+                const formText = form === '++' ? '6ab + a + b' :
+                                form === '+-' ? '6ab + a - b' :
+                                form === '-+' ? '6ab - a + b' : '6ab - a - b';
+                ctx.fillText(formText, canvas.width - 125, legendY + 11);
+                legendY += 20;
+            });
+            
+            // Update results
+            const resultsEl = document.getElementById('formulaResults');
+            if (solutions.length === 0) {
+                resultsEl.innerHTML = `
+                    <div class="result-item">
+                        <strong style="color: #ff0000;">n = ${n} is UNCOVERED</strong><br>
+                        Cannot be expressed as 6ab ± a ± b for any a, b ≤ ${maxSearch}
+                    </div>
+                `;
+            } else {
+                resultsEl.innerHTML = `
+                    <div class="result-item">
+                        <strong style="color: #00ff00;">n = ${n} is COVERED</strong><br>
+                        Found ${solutions.length} representation(s):<br><br>
+                        ${solutions.map(s => {
+                            const formText = s.form === '++' ? '+' : s.form === '+-' ? '+,-' : s.form === '-+' ? '-,+' : '-';
+                            return `6·${s.a}·${s.b} ${formText.includes('+') ? '+' : '-'} ${s.a} ${formText.includes(',+') || formText === '+' ? '+' : '-'} ${s.b} = ${n}`;
+                        }).join('<br>')}
+                    </div>
+                `;
+            }
+        }
+        
+        // Helper function to toggle explanations
+        function toggleExplanation(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === 'none') {
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
+        }
+        
+        // Export Dialog Functions
         function showExportDialog() {
             document.getElementById('exportDialog').classList.add('active');
             document.getElementById('exportOverlay').classList.add('active');
@@ -865,85 +1939,143 @@
             document.getElementById('exportOverlay').classList.remove('active');
         }
         
+        // Comprehensive Export Function with 4K/8K support
         function executeExport() {
+            const canvasOption = document.getElementById('exportCanvas').value;
             const resolution = document.getElementById('exportResolution').value;
+            const background = document.getElementById('exportBackground').value;
+            const includeLegend = document.getElementById('includeLegend').checked;
+            const includeTitle = document.getElementById('includeTitle').checked;
+            const includeStats = document.getElementById('includeStats').checked;
+            const includeTimestamp = document.getElementById('includeTimestamp').checked;
             
+            // Determine dimensions
             let width, height;
             switch(resolution) {
                 case '1080': width = 1920; height = 1080; break;
                 case '2k': width = 2560; height = 1440; break;
                 case '4k': width = 3840; height = 2160; break;
+                case '8k': width = 7680; height = 4320; break;
             }
             
+            // Create export canvas
             const exportCanvas = document.createElement('canvas');
+            const ctx = exportCanvas.getContext('2d');
             exportCanvas.width = width;
             exportCanvas.height = height;
-            const ctx = exportCanvas.getContext('2d');
             
-            // Draw export
-            ctx.fillStyle = '#1e3c72';
-            ctx.fillRect(0, 0, width, height);
+            // Background
+            if (background === 'gradient') {
+                const grad = ctx.createLinearGradient(0, 0, width, height);
+                grad.addColorStop(0, '#1e3c72');
+                grad.addColorStop(1, '#2a5298');
+                ctx.fillStyle = grad;
+            } else {
+                ctx.fillStyle = background === 'white' ? 'white' : background === 'black' ? 'black' : 'transparent';
+            }
+            if (background !== 'transparent') ctx.fillRect(0, 0, width, height);
             
-            ctx.fillStyle = '#00bcd4';
-            ctx.font = '40px Arial';
-            ctx.textAlign = 'center';
-            ctx.fillText('Sierpiński 6ab ± a ± b Problem', width/2, 100);
+            // Get canvases
+            let sources = [];
+            const activeTab = document.querySelector('.tab-content.active')?.id;
             
-            // Get active canvas
-            const activeTab = document.querySelector('.tab-content.active');
-            const sourceCanvas = activeTab.querySelector('canvas');
-            if (sourceCanvas) {
-                ctx.drawImage(sourceCanvas, 50, 150, width - 100, height - 200);
+            if (canvasOption === 'current' && activeTab) {
+                if (activeTab === 'coverage') sources.push(document.getElementById('coverageCanvas'));
+                else if (activeTab === 'lattice') {
+                    sources.push(document.getElementById('latticeCanvas'));
+                    const struct = document.getElementById('latticeStructure');
+                    if (struct) sources.push(struct);
+                }
+                else if (activeTab === 'statistics') sources.push(document.getElementById('statsCanvas'));
+                else if (activeTab === 'patterns') sources.push(document.getElementById('patternCanvas'));
+                else if (activeTab === 'formulas') sources.push(document.getElementById('formulaCanvas'));
+            } else if (canvasOption === 'all') {
+                ['coverageCanvas', 'latticeCanvas', 'latticeStructure', 'statsCanvas', 'patternCanvas', 'formulaCanvas']
+                    .forEach(id => {
+                        const c = document.getElementById(id);
+                        if (c) sources.push(c);
+                    });
+            } else {
+                const c = document.getElementById(canvasOption + 'Canvas');
+                if (c) sources.push(c);
             }
             
-            exportCanvas.toBlob(function(blob) {
+            sources = sources.filter(s => s);
+            if (!sources.length) return;
+            
+            // Layout
+            const titleHeight = includeTitle ? 150 : 0;
+            const contentHeight = height - titleHeight;
+            
+            if (sources.length > 2) {
+                const cols = Math.ceil(Math.sqrt(sources.length));
+                const rows = Math.ceil(sources.length / cols);
+                const cw = width / cols;
+                const ch = contentHeight / rows;
+                
+                sources.forEach((src, i) => {
+                    const x = (i % cols) * cw;
+                    const y = titleHeight + Math.floor(i / cols) * ch;
+                    ctx.drawImage(src, x + 10, y + 10, cw - 20, ch - 20);
+                });
+            } else if (sources.length === 2) {
+                sources.forEach((src, i) => {
+                    ctx.drawImage(src, i * width/2 + 10, titleHeight + 10, width/2 - 20, contentHeight - 20);
+                });
+            } else {
+                ctx.drawImage(sources[0], 10, titleHeight + 10, width - 20, contentHeight - 20);
+            }
+            
+            // Title
+            if (includeTitle) {
+                ctx.fillStyle = background === 'white' ? '#1e3c72' : '#00bcd4';
+                ctx.font = `bold ${width * 0.02}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText('Sierpiński 6ab ± a ± b Problem Explorer', width/2, 50);
+                ctx.font = `${width * 0.012}px Arial`;
+                ctx.fillText('By: Wessen Getachew (@7dview)', width/2, 90);
+            }
+            
+            // Timestamp
+            if (includeTimestamp) {
+                ctx.fillStyle = background === 'white' ? '#666' : '#aaa';
+                ctx.font = `${width * 0.008}px Arial`;
+                ctx.textAlign = 'right';
+                ctx.fillText(new Date().toLocaleString(), width - 20, height - 20);
+            }
+            
+            // Download
+            exportCanvas.toBlob(blob => {
                 const link = document.createElement('a');
-                link.download = `sierpinski-${resolution}.png`;
+                link.download = `sierpinski-${resolution}-${Date.now()}.png`;
                 link.href = URL.createObjectURL(blob);
                 link.click();
                 closeExportDialog();
             });
         }
         
-        function exportData() {
+        // CSV Export
+        function exportCSV() {
             const maxN = parseInt(document.getElementById('maxN').value);
             const maxAB = parseInt(document.getElementById('maxAB').value);
-            const {covered, uncovered} = computeCoverage(maxN, maxAB);
+            const {covered, uncovered, representations} = computeCoverage(maxN, maxAB);
             
-            const data = {
-                parameters: {maxN, maxAB},
-                uncoveredCount: uncovered.length,
-                uncoveredNumbers: uncovered,
-                timestamp: new Date().toISOString()
-            };
+            let csv = 'n,covered,num_representations,forms\n';
+            for (let n = 1; n <= maxN; n++) {
+                const reps = representations.get(n) || [];
+                csv += `${n},${covered.has(n) ? 1 : 0},${reps.length},"${reps.join('; ')}"\n`;
+            }
             
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+            const blob = new Blob([csv], {type: 'text/csv'});
             const link = document.createElement('a');
-            link.download = `sierpinski-data.json`;
+            link.download = `sierpinski-data-${Date.now()}.csv`;
             link.href = URL.createObjectURL(blob);
             link.click();
-        }
-        
-        function exportReport() {
-            const maxN = parseInt(document.getElementById('maxN').value);
-            const {covered, uncovered} = computeCoverage(maxN, 50);
-            
-            const report = `Sierpiński Problem Report
-Range: 1-${maxN}
-Uncovered: ${uncovered.length}
-First uncovered: ${uncovered.slice(0, 20).join(', ')}`;
-            
-            const blob = new Blob([report], {type: 'text/plain'});
-            const link = document.createElement('a');
-            link.download = 'sierpinski-report.txt';
-            link.href = URL.createObjectURL(blob);
-            link.click();
+            closeExportDialog();
         }
         
         // Initialize on load
-        window.addEventListener('DOMContentLoaded', function() {
-            updateCoverage();
-        });
+        updateCoverage();
     </script>
 </body>
-</html>
+    </html>
