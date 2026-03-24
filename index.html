@@ -1,267 +1,147 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Prime Discovery Engine — Wessen Getachew</title>
+    <title>The Getachew Discovery Engine: Animated Growth</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
-        :root {
-            --bg: #0a0a0c;
-            --gold: #e8a830;
-            --teal: #28c8b8;
-            --ink: #ede8df;
-            --glass: rgba(255, 255, 255, 0.05);
-        }
-        body {
-            background: var(--bg);
-            color: var(--ink);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        header {
-            width: 100%;
-            padding: 2rem;
-            text-align: center;
-            border-bottom: 1px solid var(--glass);
-            background: linear-gradient(to bottom, #111, var(--bg));
-        }
-        h1 { color: var(--gold); margin: 0; font-size: 1.8rem; letter-spacing: 2px; }
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            width: 95%;
-            max-width: 1400px;
-            margin-top: 20px;
-        }
-        .panel {
-            background: var(--glass);
-            border: 1px solid rgba(232, 168, 48, 0.2);
-            border-radius: 12px;
-            padding: 20px;
-            position: relative;
-        }
-        .full-width { grid-column: span 2; }
-        #control-panel {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        input, button {
-            background: #1a1a1f;
-            border: 1px solid var(--gold);
-            color: white;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-        }
-        button { cursor: pointer; background: var(--gold); color: black; font-weight: bold; }
-        button:hover { opacity: 0.8; }
-        #plot-area { height: 500px; width: 100%; }
-        .stat-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .stat-value { font-size: 2.5rem; color: var(--teal); font-family: 'JetBrains Mono', monospace; }
-        .stat-label { color: var(--gold); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-        .explanation {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: #aaa;
-            margin-top: 10px;
-        }
-        #equator-viz {
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        :root { --bg: #0c0b0f; --gold: #e8a830; --teal: #28c8b8; --ink: #ede8df; }
+        body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; }
+        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
+        .sidebar { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid var(--gold); height: 85vh; overflow-y: auto; }
+        .main-viz { display: flex; flex-direction: column; gap: 20px; }
+        .card { background: #16151e; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--teal); }
+        h1, h2 { color: var(--gold); margin-top: 0; }
+        #plot-area { height: 600px; background: #000; border-radius: 12px; }
+        .stats-bar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .big-num { font-family: monospace; font-size: 1.5rem; color: var(--teal); }
+        button { width: 100%; padding: 15px; background: var(--gold); border: none; font-weight: bold; cursor: pointer; border-radius: 5px; margin-bottom: 10px; }
+        .progress-container { width: 100%; background: #222; height: 10px; border-radius: 5px; margin: 10px 0; }
+        #progress-bar { width: 0%; height: 100%; background: var(--teal); border-radius: 5px; transition: width 0.1s; }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>DISCOVERY ENGINE: THE JUMP IDENTITY</h1>
-    <p>Visualizing the $1/\sqrt{N}$ Stability Corridor & Prime Densities</p>
-</header>
-
-<div id="control-panel">
-    <div>
-        <label>Target N (Billions Allowed):</label>
-        <input type="number" id="target-n" value="1000000" step="100000">
-    </div>
-    <button onclick="runSimulation()">RUN QUANTUM PROBE</button>
-</div>
-
-<div class="dashboard">
-    <div class="panel stat-card">
-        <div class="stat-label">Theoretical Target (J)</div>
-        <div class="stat-value">0.7731566</div>
-        <div class="explanation">The fixed limit where the sum of all Prime Zeta values converges.</div>
-    </div>
-
-    <div class="panel stat-card">
-        <div class="stat-label">Stability Index (√N · Error)</div>
-        <div id="stability-val" class="stat-value">0.0000</div>
-        <div class="explanation">If this remains < 1.0, the Riemann Hypothesis is visually confirmed in this range.</div>
+<div class="grid">
+    <div class="sidebar">
+        <h1>Research Context</h1>
+        <div class="card">
+            <h2>1. The Jump Identity</h2>
+            <p>Every prime <i>p</i> creates a discrete drop in modular connectivity. The magnitude is <b>1/(p(p-1))</b>.</p>
+        </div>
+        <div class="card">
+            <h2>2. The Corridor</h2>
+            <p>The Gold Zone is the <b>1/√N</b> boundary. If the Teal line stays inside, the Riemann Hypothesis is supported.</p>
+        </div>
+        <div class="card">
+            <h2>3. Critical Symmetry</h2>
+            <p>The system is balanced at the 1/2 equator. This tool shows the "Energy" of prime distribution across that line.</p>
+        </div>
+        <div class="card">
+            <h2>Data Log</h2>
+            <div id="data-log" style="font-family: monospace; font-size: 0.75rem; height: 200px; overflow-y: auto;">
+                Awaiting animation start...
+            </div>
+        </div>
     </div>
 
-    <div class="panel full-width">
-        <div class="stat-label">Stability Corridor Plot (The RH Test)</div>
+    <div class="main-viz">
+        <div class="stats-bar">
+            <div class="card">
+                <span style="font-size: 0.7rem;">CURRENT N</span><br>
+                <span id="stat-n" class="big-num">0</span>
+            </div>
+            <div class="card">
+                <span style="font-size: 0.7rem;">JUMP SUM J(N)</span><br>
+                <span id="stat-j" class="big-num">0.000000</span>
+            </div>
+            <div class="card">
+                <span style="font-size: 0.7rem;">STABILITY INDEX</span><br>
+                <span id="stat-stable" class="big-num">0.000</span>
+            </div>
+        </div>
+
+        <button onclick="startAnimation()">PLAY GROWTH ANIMATION</button>
+        <div class="progress-container"><div id="progress-bar"></div></div>
+        
         <div id="plot-area"></div>
-        <div class="explanation">
-            <strong>The Gold Zone:</strong> The safe "Square Root Corridor". <br>
-            <strong>The Teal Line:</strong> Your Jump Sum J(N). As long as it stays in the Gold, the primes are perfectly balanced.
-        </div>
-    </div>
-
-    <div class="panel">
-        <div class="stat-label">Geometric Equator (1/2 Midline)</div>
-        <canvas id="equator-canvas" width="400" height="400"></canvas>
-        <div class="explanation">
-            The diameter (length 2) is the limit of $1 + 1/2 + 1/4 \dots$. The red dots represent the "Lifting Barriers" at the equator.
-        </div>
-    </div>
-
-    <div class="panel">
-        <div class="stat-label">Radical Proximity Logic</div>
-        <div id="radical-output" style="font-family: monospace; font-size: 0.8rem; max-height: 300px; overflow-y: auto;">
-            Ready to compute prime factor footprints...
-        </div>
     </div>
 </div>
 
 <script>
-    const J_TARGET = 0.773156669049795;
+const J_TARGET = 0.773156669049795;
+let animationId = null;
 
-    function isPrime(num) {
-        for(let i = 2, s = Math.sqrt(num); i <= s; i++)
-            if(num % i === 0) return false; 
-        return num > 1;
-    }
+function isPrime(num) {
+    if (num < 2) return false;
+    for (let i = 2, s = Math.sqrt(num); i <= s; i++)
+        if (num % i === 0) return false;
+    return true;
+}
 
-    function runSimulation() {
-        const N = parseInt(document.getElementById('target-n').value);
-        let currentJ = 0;
-        let xData = [];
-        let yData = [];
-        let upperLimit = [];
-        let lowerLimit = [];
+async function startAnimation() {
+    const N_LIMIT = 50000; // Animation limit for smooth playback
+    let currentJ = 0;
+    let x = [];
+    let y = [];
+    let upper = [];
+    let lower = [];
+    const log = document.getElementById('data-log');
+    log.innerHTML = "<b>N | Jump Sum | Stability</b><br>";
 
-        // For massive N, we sample to prevent UI lock
-        const step = Math.max(1, Math.floor(N / 200));
+    // Initialize Plot
+    const layout = {
+        paper_bgcolor: 'black', plot_bgcolor: 'black',
+        font: { color: '#ede8df' },
+        xaxis: { title: 'N (Range)', gridcolor: '#222' },
+        yaxis: { title: 'Cumulative Jumps', gridcolor: '#222', range: [0.75, 0.79] },
+        margin: { t: 10, b: 40, l: 60, r: 20 }
+    };
+    Plotly.newPlot('plot-area', [{x: [0], y: [0], name: 'J(N)', line: {color: '#28c8b8'}}], layout);
 
-        for (let i = 2; i <= N; i++) {
-            if (isPrime(i)) {
-                currentJ += (1 / (i * (i - 1)));
-            }
-            
-            if (i % step === 0 || i === N) {
-                const error = J_TARGET - currentJ;
-                const scaledError = Math.sqrt(i) * error;
-                
-                xData.push(i);
-                yData.push(currentJ);
-                
-                // Define the 1/sqrt(N) corridor
-                upperLimit.push(J_TARGET + (1 / Math.sqrt(i)));
-                lowerLimit.push(J_TARGET - (1 / Math.sqrt(i)));
-                
-                if (i === N) {
-                    document.getElementById('stability-val').innerText = scaledError.toFixed(6);
-                }
-            }
+    for (let i = 2; i <= N_LIMIT; i++) {
+        if (isPrime(i)) {
+            currentJ += (1 / (i * (i - 1)));
         }
 
-        renderPlot(xData, yData, upperLimit, lowerLimit);
-        drawEquator();
+        // Update data every 100 steps for performance
+        if (i % 250 === 0 || i === N_LIMIT) {
+            x.push(i);
+            y.push(currentJ);
+            upper.push(J_TARGET + (1 / Math.sqrt(i)));
+            lower.push(J_TARGET - (1 / Math.sqrt(i)));
+
+            const stability = Math.sqrt(i) * Math.abs(J_TARGET - currentJ);
+            
+            // UI Updates
+            document.getElementById('stat-n').innerText = i.toLocaleString();
+            document.getElementById('stat-j').innerText = currentJ.toFixed(6);
+            document.getElementById('stat-stable').innerText = stability.toFixed(4);
+            document.getElementById('progress-bar').style.width = (i / N_LIMIT * 100) + "%";
+            
+            if(i % 2500 === 0) {
+                log.innerHTML += `${i} | ${currentJ.toFixed(5)} | ${stability.toFixed(3)}<br>`;
+                log.scrollTop = log.scrollHeight;
+            }
+
+            // Frame Update
+            Plotly.animate('plot-area', {
+                data: [
+                    {x: x, y: upper, fill: null, line: {color: 'rgba(232,168,48,0.1)'}},
+                    {x: x, y: lower, fill: 'tonexty', fillcolor: 'rgba(232,168,48,0.1)', line: {color: 'rgba(232,168,48,0.1)'}},
+                    {x: x, y: y}
+                ]
+            }, {
+                transition: { duration: 0 },
+                frame: { duration: 0, redraw: false }
+            });
+
+            await new Promise(r => setTimeout(r, 10)); // Control playback speed
+        }
     }
-
-    function renderPlot(x, y, upper, lower) {
-        const traceJ = {
-            x: x, y: y,
-            mode: 'lines',
-            name: 'Jump Sum J(N)',
-            line: {color: '#28c8b8', width: 3}
-        };
-
-        const traceUpper = {
-            x: x, y: upper,
-            fill: null,
-            mode: 'lines',
-            line: {color: 'rgba(232, 168, 48, 0.1)'},
-            showlegend: false
-        };
-
-        const traceLower = {
-            x: x, y: lower,
-            fill: 'tonexty',
-            fillcolor: 'rgba(232, 168, 48, 0.1)',
-            mode: 'lines',
-            name: 'Stability Corridor',
-            line: {color: 'rgba(232, 168, 48, 0.1)'}
-        };
-
-        const layout = {
-            paper_bgcolor: 'rgba(0,0,0,0)',
-            plot_bgcolor: 'rgba(0,0,0,0)',
-            font: { color: '#ede8df' },
-            xaxis: { title: 'Number Range (N)', gridcolor: '#222' },
-            yaxis: { title: 'Cumulative Jump Value', gridcolor: '#222' },
-            margin: { t: 20, b: 40, l: 60, r: 20 }
-        };
-
-        Plotly.newPlot('plot-area', [traceUpper, traceLower, traceJ], layout);
-    }
-
-    function drawEquator() {
-        const canvas = document.getElementById('equator-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0,0,400,400);
-        
-        // Draw Circle
-        ctx.beginPath();
-        ctx.arc(200, 200, 150, 0, Math.PI * 2);
-        ctx.strokeStyle = '#444';
-        ctx.stroke();
-
-        // Draw Diameter (The 2-Unit Line)
-        ctx.beginPath();
-        ctx.moveTo(50, 200);
-        ctx.lineTo(350, 200);
-        ctx.strokeStyle = 'rgba(232, 168, 48, 0.5)';
-        ctx.setLineDash([5, 5]);
-        ctx.stroke();
-        ctx.setLineDash([]);
-
-        // Highlight the 1/2 point (Critical Line intersection)
-        ctx.fillStyle = '#e05050';
-        ctx.beginPath();
-        ctx.arc(50, 200, 5, 0, Math.PI*2); // Edge
-        ctx.arc(350, 200, 5, 0, Math.PI*2); // Edge
-        ctx.fill();
-        
-        ctx.fillStyle = '#28c8b8';
-        ctx.font = '12px monospace';
-        ctx.fillText("Equator Barrier (1/2)", 140, 190);
-    }
-
-    // Initial load
-    window.onload = () => {
-        drawEquator();
-        runSimulation();
-    };
+}
 </script>
-
 </body>
 </html>
