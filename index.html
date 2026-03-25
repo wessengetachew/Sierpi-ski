@@ -180,8 +180,11 @@ body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex
 .paper-hero{
   background:linear-gradient(160deg,#0f0d18 0%,#0a0910 50%,#0d0b14 100%);
   border-bottom:1px solid var(--border);
-  padding:80px 52px 60px;
+  padding:40px 28px 48px;
   position:relative;overflow:hidden;
+}
+@media(min-width:700px){
+  .paper-hero{padding:72px 52px 60px;}
 }
 .paper-hero::before{
   content:'';position:absolute;top:-120px;right:-80px;
@@ -195,12 +198,12 @@ body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex
   color:rgba(212,168,67,.04);line-height:1;pointer-events:none;
   white-space:nowrap;
 }
-.pw{max-width:800px;margin:0 auto;padding:0 0 120px;}
+.pw{max-width:800px;margin:0 auto;padding:0 0 80px;}
 .ptitle{
-  font-family:var(--display);font-size:clamp(28px,4vw,52px);
-  font-weight:400;line-height:1.08;
+  font-family:var(--display);font-size:clamp(22px,5vw,52px);
+  font-weight:400;line-height:1.1;
   color:var(--ink);margin-bottom:10px;
-  max-width:800px;
+  max-width:800px;word-wrap:break-word;
 }
 .psub{
   font-size:16px;color:var(--ink3);font-style:italic;
@@ -209,7 +212,7 @@ body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex
 .pmeta{
   font-family:var(--mono);font-size:9px;color:var(--ink4);
   letter-spacing:.12em;text-transform:uppercase;
-  margin-bottom:52px;display:flex;align-items:center;gap:20px;
+  margin-bottom:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
 }
 .pmeta::after{content:'';flex:1;height:1px;background:var(--border);}
 .hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;}
@@ -223,7 +226,8 @@ body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex
 .badge-coral{border-color:var(--coral);color:var(--coral);opacity:.7;}
 
 /* ── Paper body styles ── */
-.paper-body{padding:60px 52px 0;}
+.paper-body{padding:32px 20px 0;}
+@media(min-width:700px){.paper-body{padding:52px 52px 0;}}
 h2{margin:64px 0 0;}
 .sn{font-family:var(--mono);font-size:9px;color:var(--gold2);
   letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:6px;}
@@ -525,16 +529,15 @@ ul li strong,ol li strong{color:var(--ink);}
    ANALYSIS PAGE
 ═══════════════════════════════════════ */
 #analysis-pg{overflow-y:auto;background:var(--black);}
-.an-wrap{max-width:1200px;margin:0 auto;padding:40px 40px 100px;}
-.an-hero{margin-bottom:36px;}
+.an-wrap{max-width:860px;margin:0 auto;padding:16px 20px 60px;}
+.an-hero{margin-bottom:20px;}
 .an-title{font-family:var(--display);font-size:clamp(26px,4vw,48px);
   font-weight:400;color:var(--ink);line-height:1.1;margin-bottom:8px;}
 .an-title em{color:var(--teal);font-style:italic;}
 .an-sub{font-family:var(--serif);font-size:15px;color:var(--ink3);
   line-height:1.7;max-width:700px;border-left:3px solid var(--teal);padding-left:18px;}
-.an-layout{display:grid;grid-template-columns:280px 1fr;gap:24px;min-height:600px;}
-@media(max-width:800px){.an-layout{grid-template-columns:1fr;}}
-.an-sidebar{display:flex;flex-direction:column;gap:14px;}
+
+/* an-sidebar removed */
 .an-card{background:var(--card);border:1px solid var(--border2);padding:18px;
   border-left:3px solid var(--teal);}
 .an-card.gold{border-left-color:var(--gold);}
@@ -592,6 +595,23 @@ ul li strong,ol li strong{color:var(--ink);}
   min-height:0;
 }
 #app.visible{opacity:1;}
+
+.an-section-lbl{
+  font-family:var(--mono);font-size:8px;letter-spacing:.18em;
+  color:var(--gold);text-transform:uppercase;
+  margin:28px 0 10px;padding-bottom:8px;
+  border-bottom:1px solid var(--border2);
+}
+.an-chart-row{display:grid;gap:14px;margin-bottom:4px;}
+.an-chart-card{
+  background:var(--card);border:1px solid var(--border2);
+  padding:12px 14px;
+}
+.an-chart-title{
+  font-family:var(--mono);font-size:8px;color:var(--ink4);
+  letter-spacing:.05em;margin-bottom:8px;line-height:1.4;
+}
+.an-chart-plot{height:320px;}
 </style>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 </head>
@@ -1435,7 +1455,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
   <div class="an-hero">
     <div class="an-title">Live Analysis — <em>All Numerical Objects</em></div>
-    <p class="an-sub">Ten interactive charts covering every mathematical object in the paper: C(x), D(x), f_p(x), J(N) with √N corridor, stability index, φ(M)/M, P(k) prime zeta values, c(m) coefficients, log C series, and the J_χ character family. Static charts load immediately. Hit Play to animate the live convergence series.</p>
+    <p class="an-sub">All 11 charts animate together. Hit Play — every chart fills live from prime 2 upward: convergence, stability, C(x), D(x), local factors, discrete rates, P(k) series, c(m) coefficients, log C series, and the J_χ character family.</p>
   </div>
 
   <!-- Controls row -->
@@ -1472,7 +1492,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
   <!-- ── Row 1: Live convergence charts ── -->
   <div class="an-section-lbl">Live Convergence — J(N), D₀(N), T(N), J_χ₄(N)</div>
-  <div class="an-chart-row" style="grid-template-columns:1fr 1fr;">
+  <div class="an-chart-row" style="grid-template-columns:1fr;">
     <div class="an-chart-card">
       <div class="an-chart-title">J(N) with √N corridor → J ≈ 0.7732</div>
       <div id="an-plot-1" class="an-chart-plot"></div>
@@ -1485,7 +1505,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
   <!-- ── Row 2: C(x) and D(x) ── -->
   <div class="an-section-lbl">The Continuous Functions C(x) and D(x)</div>
-  <div class="an-chart-row" style="grid-template-columns:1fr 1fr;">
+  <div class="an-chart-row" style="grid-template-columns:1fr;">
     <div class="an-chart-card">
       <div class="an-chart-title">C(x) = ∏ f_p(x) — lift survival function</div>
       <div id="an-plot-3" class="an-chart-plot"></div>
@@ -1507,7 +1527,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
   <!-- ── Row 4: Discrete C(M) and φ(M)/M ── -->
   <div class="an-section-lbl">Discrete Survival Rates and Totient Density</div>
-  <div class="an-chart-row" style="grid-template-columns:1fr 1fr;">
+  <div class="an-chart-row" style="grid-template-columns:1fr;">
     <div class="an-chart-card">
       <div class="an-chart-title">C(M) per ring M (teal bars) and φ(M)/M (gold line)</div>
       <div id="an-plot-5" class="an-chart-plot"></div>
@@ -1520,7 +1540,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
   <!-- ── Row 5: P(k) and c(m) ── -->
   <div class="an-section-lbl">Prime Zeta Values P(k) and the c(m) Coefficients</div>
-  <div class="an-chart-row" style="grid-template-columns:1fr 1fr;">
+  <div class="an-chart-row" style="grid-template-columns:1fr;">
     <div class="an-chart-card">
       <div class="an-chart-title">P(k) = Σ_p p⁻ᵏ and partial sums → J = Σ P(k)</div>
       <div id="an-plot-6" class="an-chart-plot"></div>
@@ -1533,7 +1553,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
   <!-- ── Row 6: log C series and J_χ family ── -->
   <div class="an-section-lbl">Series Convergence and Character Family</div>
-  <div class="an-chart-row" style="grid-template-columns:1fr 1fr;">
+  <div class="an-chart-row" style="grid-template-columns:1fr;">
     <div class="an-chart-card">
       <div class="an-chart-title">log C = Σ P(2k)/k·(1−2ᵏ) — series converging to log C</div>
       <div id="an-plot-9" class="an-chart-plot"></div>
@@ -1549,1191 +1569,423 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
 
 <script>
 /* ════════════════════════════════════════
-   FULL ANALYSIS ENGINE — All Objects
-   C(x), D(x), f_p(x), J(N), D₀, T,
-   √N stability, φ(M)/M, P(k) series,
-   c(m) coefficients, J_χ family
+   ANALYSIS ENGINE — all charts live
 ════════════════════════════════════════ */
 (function(){
+'use strict';
 
 /* ── Constants ── */
-var J_INF  = 0.77315663699919;
-var D0_INF = 0.55169326530612;
-var T_INF  = 0.22146337169307;
-var JC4    = -0.14390254792143;
-var C_INF  = 0.53071180624590;
-var LOG_Z2 = Math.log(Math.PI*Math.PI/6); // log ζ(2) ≈ 0.4977
+var J_INF = 0.77315663699919;
+var C_INF = 0.53071180624590;
+var LOG_C = Math.log(0.53071180624590);
 
-/* ── Sieve primes ── */
-var _primes = (function(){
-  var s=new Uint8Array(100002),out=[];
+/* ── Sieve to 100k ── */
+var PRIMES = (function(){
+  var s = new Uint8Array(100002), out = [];
   s[0]=s[1]=1;
   for(var i=2;i<=316;i++) if(!s[i]) for(var j=i*i;j<=100001;j+=i) s[j]=1;
   for(var i=2;i<=100001;i++) if(!s[i]) out.push(i);
   return out;
 })();
 
-function isPrime(n){ return _primes.indexOf(n)>=0 || (n>2&&n%2!==0&&(function(){for(var i=3;i*i<=n;i+=2)if(n%i===0)return false;return true;})()); }
-
-/* ── Math helpers ── */
+/* ── Helpers ── */
 function phi(n){var r=n,p=2,t=n;while(p*p<=t){if(t%p===0){r-=Math.floor(r/p);while(t%p===0)t=Math.floor(t/p);}p++;}if(t>1)r-=Math.floor(r/t);return r;}
-function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
-function chi4(p){return p===2?0:(p%4===1?1:-1);}
-function chi3(p){if(p%3===0)return 0;return p%3===1?1:-1;}
-function chi5(p){if(p%5===0)return 0;var r=p%5;return r===1||r===4?1:-1;}
-
-/* ── C(x): lift survival function ── */
-var _primesFull = _primes.slice(0, 200); // first 200 primes for C(x)
+function mob(n){if(n===1)return 1;var f=[],t=n;for(var p=2;p*p<=t;p++){if(t%p===0){f.push(p);t=Math.floor(t/p);if(t%p===0)return 0;}}if(t>1)f.push(t);return f.length%2===0?1:-1;}
+function cm(m){var s=0;for(var n=1;n<=m;n++)if(m%n===0&&m/n>=2)s+=mob(n)/n;return s;}
+function chi4(p){return p===2?0:p%4===1?1:-1;}
+function chi3(p){return p%3===0?0:p%3===1?1:-1;}
+function chi5(p){if(p%5===0)return 0;var r=p%5;return(r===1||r===4)?1:-1;}
 function Cx(x){
   var r=1;
-  for(var i=0;i<_primesFull.length;i++){
-    var p=_primesFull[i];
-    if(p<=x+1) r*=p/(p+1);
-    else r*=(p*p-x-1)/(p*p-1);
+  for(var i=0;i<Math.min(PRIMES.length,500);i++){
+    var p=PRIMES[i];
+    r *= (p<=x+1) ? p/(p+1) : (p*p-x-1)/(p*p-1);
   }
   return r;
 }
 
-/* ── D(x): log-derivative of C(x) ── */
-function Dx(x){
-  var s=0;
-  for(var i=0;i<_primesFull.length;i++){
-    var p=_primesFull[i];
-    if(p>x+1) s+=1/(p*p-x-1);
-  }
-  return -s;
-}
-
-/* ── c(m) coefficients ── */
-function mobius(n){
-  if(n===1)return 1;
-  var factors=[],tmp=n;
-  for(var p=2;p*p<=tmp;p++){
-    if(tmp%p===0){factors.push(p);tmp=Math.floor(tmp/p);if(tmp%p===0)return 0;}
-  }
-  if(tmp>1)factors.push(tmp);
-  return factors.length%2===0?1:-1;
-}
-function cm(m){
-  var s=0;
-  for(var n=1;n<=m;n++){
-    if(m%n===0 && m/n>=2){s+=mobius(n)/n;}
-  }
-  return s;
-}
-
-/* ── Animation state ── */
-var _running=false,_paused=false,_frameId=null;
-var _idx=0,_curJ=0,_curD0=0,_curT=0,_curChi=0;
-var _xs=[],_jy=[],_d0y=[],_ty=[],_cy=[],_stab=[];
-var _upper=[],_lower=[],_jx=[],_jsizes=[],_csvRows=[];
+/* ── State ── */
+var _run=false,_pause=false,_fid=null,_idx=0;
+/* sums */
+var J=0,D0=0,T=0,X4=0,X3=0,X5=0;
+/* chart 1+2 series */
+var xs=[],jy=[],d0y=[],ty=[],c4y=[],stab=[],up=[],lo=[];
+/* chart 4 jump markers */
+var jmpX=[],jmpY=[];
+/* chart 5 bars (track up to 120) */
+var cm5x=[],cm5y=[],phi5y=[];
+/* chart 6 P(k) array k=2..20 */
+var Pk=new Array(19).fill(0);
+/* chart 7 c(m) revealed */
+var cm7x=[],cm7y=[];
+/* chart 8 jump bar */
+var jbX=[],jbY=[];
+/* chart 9 logC series k=1..15 */
+var logC_t=new Array(15).fill(0);
+/* chart 10 J_chi series */
+var c10x=[],c10j=[],c10_3=[],c10_4=[],c10_5=[];
+/* csv */
+var CSV=[];
 
 var SPEEDS=[180,60,20,6,1];
-var SPEED_LABELS=['Slow','Normal','Fast','Very Fast','Max'];
-var BATCH=[1,3,8,20,60];
+var BATCHES=[1,3,8,20,60];
+var SLABELS=['Slow','Normal','Fast','Very Fast','Max'];
 
 document.getElementById('an-speed').oninput=function(){
-  document.getElementById('an-speed-lbl').textContent=SPEED_LABELS[+this.value];
+  document.getElementById('an-speed-lbl').textContent=SLABELS[+this.value];
 };
 
-/* ── Plot config ── */
-var BG='#030208',GRID='rgba(255,255,255,0.06)';
-function bLayout(title,yLabel,xLabel,extra){
-  var L={
-    paper_bgcolor:BG,plot_bgcolor:BG,
-    font:{color:'#ede6d8',family:'DM Mono,monospace',size:10},
-    margin:{t:36,b:44,l:70,r:20},
-    legend:{bgcolor:'rgba(0,0,0,0)',bordercolor:'rgba(255,255,255,0.12)',
-            borderwidth:1,x:0.01,y:0.99,xanchor:'left',yanchor:'top'},
-    title:{text:title,font:{size:11,color:'#d4a843'},x:0.02,xanchor:'left'},
-    xaxis:{gridcolor:GRID,zerolinecolor:GRID,title:{text:xLabel,font:{size:9}}},
-    yaxis:{gridcolor:GRID,zerolinecolor:GRID,title:{text:yLabel,font:{size:9}}},
+/* ── Layout helper ── */
+var BG='#030208', GR='rgba(255,255,255,0.06)';
+function L(title,yL,xL,y2){
+  var lay={
+    paper_bgcolor:BG, plot_bgcolor:BG,
+    font:{color:'#ede6d8',family:'DM Mono,monospace',size:9},
+    margin:{t:32,b:38,l:60,r:y2?55:14},
+    legend:{bgcolor:'rgba(0,0,0,0)',bordercolor:'rgba(255,255,255,0.1)',
+            borderwidth:1,x:0.01,y:0.99,xanchor:'left',yanchor:'top',font:{size:8}},
+    title:{text:title,font:{size:10,color:'#d4a843'},x:0.02,xanchor:'left'},
+    xaxis:{gridcolor:GR,zerolinecolor:GR,tickfont:{size:8},
+           title:{text:xL,font:{size:8},standoff:3}},
+    yaxis:{gridcolor:GR,zerolinecolor:GR,tickfont:{size:8},
+           title:{text:yL,font:{size:8},standoff:3}},
     hovermode:'x unified',
   };
-  if(extra) Object.assign(L,extra);
-  return L;
+  if(y2) lay.yaxis2=Object.assign({
+    overlaying:'y',side:'right',gridcolor:'transparent',
+    tickfont:{size:8},titlefont:{size:8}
+  },y2);
+  return lay;
 }
 
-/* ══════════════════════════════════════
-   CHART 1: J(N), D₀(N), T(N), J_χ₄(N)
-   with √N corridor
-══════════════════════════════════════ */
-function buildChart1(){
-  var corrX=_xs.concat(_xs.slice().reverse());
-  var corrY=_upper.concat(_lower.slice().reverse());
+/* ── Trace builders — all use current state ── */
+function traces1(){
+  var cx=xs.concat(xs.slice().reverse());
+  var cy=up.concat(lo.slice().reverse());
   return [
-    {x:corrX,y:corrY,fill:'toself',fillcolor:'rgba(212,168,67,0.08)',
-     line:{color:'rgba(212,168,67,0.28)',width:1},name:'J\u00b11/\u221aN',
+    {x:cx,y:cy,fill:'toself',fillcolor:'rgba(212,168,67,0.08)',
+     line:{color:'rgba(212,168,67,0.25)',width:1},name:'J\u00b11/\u221aN',
      hoverinfo:'skip',showlegend:true},
-    {x:_xs,y:_jy,mode:'lines',line:{color:'#d4a843',width:2.5},name:'J(N)',
-     hovertemplate:'N=%{x}<br>J(N)=%{y:.8f}<extra></extra>'},
-    {x:_xs,y:_d0y,mode:'lines',line:{color:'#4a80f0',width:1.5,dash:'dot'},name:'D\u2080(N)',
+    {x:xs,y:jy,mode:'lines',line:{color:'#d4a843',width:2},name:'J(N)',
+     hovertemplate:'N=%{x}<br>J=%{y:.8f}<extra></extra>'},
+    {x:xs,y:d0y,mode:'lines',line:{color:'#4a80f0',width:1.5,dash:'dot'},name:'D\u2080(N)',
      hovertemplate:'N=%{x}<br>D\u2080=%{y:.8f}<extra></extra>'},
-    {x:_xs,y:_ty,mode:'lines',line:{color:'#9060d0',width:1.5,dash:'dot'},name:'T(N)',
+    {x:xs,y:ty,mode:'lines',line:{color:'#9060d0',width:1.5,dash:'dot'},name:'T(N)',
      hovertemplate:'N=%{x}<br>T=%{y:.8f}<extra></extra>'},
-    {x:_xs,y:_cy,mode:'lines',line:{color:'#e85540',width:1.8},name:'J\u03c7\u2084(N)',
+    {x:xs,y:c4y,mode:'lines',line:{color:'#e85540',width:1.5},name:'J\u03c7\u2084(N)',
      hovertemplate:'N=%{x}<br>J\u03c7\u2084=%{y:.8f}<extra></extra>'},
   ];
 }
-
-/* ══════════════════════════════════════
-   CHART 2: √N · |J - J(N)| stability
-══════════════════════════════════════ */
-function buildChart2(){
+function traces2(){
   return [
-    {x:_xs,y:_stab,mode:'lines',line:{color:'#2bbfb0',width:2},
+    {x:xs,y:stab,mode:'lines',line:{color:'#2bbfb0',width:2},
      name:'\u221aN\u00b7|J\u2212J(N)|',
-     hovertemplate:'N=%{x}<br>\u221aN\u00b7|J\u2212J(N)|=%{y:.7f}<extra></extra>'},
-    {x:[2,_xs[_xs.length-1]||100],y:[1,1],mode:'lines',
-     line:{color:'rgba(232,85,64,0.5)',width:1,dash:'dash'},
-     name:'RH bound = 1',showlegend:true,hoverinfo:'skip'},
+     hovertemplate:'N=%{x}<br>stab=%{y:.7f}<extra></extra>'},
+    {x:[2,xs[xs.length-1]||2],y:[1,1],mode:'lines',
+     line:{color:'rgba(232,85,64,0.45)',width:1,dash:'dash'},
+     name:'RH bound=1',hoverinfo:'skip'},
   ];
 }
-
-/* ══════════════════════════════════════
-   CHART 3: C(x) and D(x) continuous
-══════════════════════════════════════ */
-function buildChart3(){
-  var cx_pts=[], dx_pts=[], xs3=[];
-  var steps=300;
-  var xmax=60;
-  for(var i=0;i<=steps;i++){
-    var x=i*xmax/steps;
-    xs3.push(x);
-    cx_pts.push(Cx(x));
-    dx_pts.push(Dx(x));
+function traces3(N){
+  var px=[],py=[];
+  for(var i=0;i<=300;i++){var x=i*70/300;px.push(x);py.push(Cx(x));}
+  var sx=[],sy=[];
+  for(var i=0;i<PRIMES.length&&PRIMES[i]-1<=N;i++){
+    sx.push(PRIMES[i]-1); sy.push(Cx(PRIMES[i]-1));
   }
-  // Mark prime jump locations
-  var jumpX=[],jumpY=[];
-  _primes.slice(0,25).forEach(function(p){
-    jumpX.push(p-1);
-    jumpY.push(Dx(p-1+0.001)-Dx(p-1-0.001));
-  });
-  return {
-    c: [{x:xs3,y:cx_pts,mode:'lines',line:{color:'#d4a843',width:2.5},name:'C(x)',
-      hovertemplate:'x=%{x:.2f}<br>C(x)=%{y:.6f}<extra></extra>'},
-      {x:_primes.slice(0,25).map(function(p){return p-1;}),
-       y:_primes.slice(0,25).map(function(p){return Cx(p-1);}),
-       mode:'markers',marker:{color:'#2bbfb0',size:7,symbol:'circle'},
-       name:'C(p\u22121) \u2014 saturation points',
-       hovertemplate:'p\u22121=%{x}<br>C(p\u22121)=%{y:.6f}<extra></extra>'},
-    ],
-    d: [{x:xs3,y:dx_pts,mode:'lines',line:{color:'#e85540',width:2},name:'D(x)',
-      hovertemplate:'x=%{x:.2f}<br>D(x)=%{y:.6f}<extra></extra>'},
-      {x:_primes.slice(0,25).map(function(p){return p-1;}),
-       y:_primes.slice(0,25).map(function(p){return Dx(p-0.5);}),
-       mode:'markers+text',
-       marker:{color:'#d4a843',size:8,symbol:'triangle-up'},
-       text:_primes.slice(0,25).map(function(p){return 'p='+p;}),
-       textposition:'top center',
-       textfont:{size:7,color:'rgba(212,168,67,0.7)'},
-       name:'Jump at x=p\u22121',
-       hovertemplate:'p=%{text}<br>jump\u22481/(p(p\u22121))<extra></extra>'},
-    ]
-  };
+  return [
+    {x:px,y:py,mode:'lines',line:{color:'#d4a843',width:2.5},name:'C(x)',
+     hovertemplate:'x=%{x:.1f}<br>C=%{y:.6f}<extra></extra>'},
+    {x:sx,y:sy,mode:'markers',
+     marker:{color:'#2bbfb0',size:6,symbol:'circle'},name:'C(p\u22121)',
+     hovertemplate:'p\u22121=%{x}<br>C=%{y:.6f}<extra></extra>'},
+    {x:[N,N],y:[0,1.05],mode:'lines',
+     line:{color:'rgba(255,255,255,0.18)',width:1,dash:'dash'},
+     name:'N',showlegend:false,hoverinfo:'skip'},
+  ];
 }
-
-/* ══════════════════════════════════════
-   CHART 4: f_p(x) local factors for
-   first several primes
-══════════════════════════════════════ */
-function buildChart4(){
-  var xvals=[],traces=[];
-  var steps=200,xmax=40;
-  for(var i=0;i<=steps;i++) xvals.push(i*xmax/steps);
-  var firstPrimes=[2,3,5,7,11,13];
-  var cols=['#e8a830','#2bbfb0','#e85540','#4a80f0','#9060d0','#44cc88'];
-  firstPrimes.forEach(function(p,pi){
-    var ys=xvals.map(function(x){
-      return x>=p-1? p/(p+1) : (p*p-x-1)/(p*p-1);
+function traces4(N){
+  var px=[],py=[];
+  for(var i=0;i<=300;i++){
+    var x=i*70/300; px.push(x);
+    var s=0;
+    for(var j=0;j<PRIMES.length;j++){
+      var p=PRIMES[j];
+      if(p>x+1&&p<=N) s+=1/(p*p-x-1);
+    }
+    py.push(-s);
+  }
+  return [
+    {x:px,y:py,mode:'lines',line:{color:'#e85540',width:2},name:'D(x)',
+     hovertemplate:'x=%{x:.1f}<br>D=%{y:.6f}<extra></extra>'},
+    {x:jmpX,y:jmpY,mode:'markers',
+     marker:{color:'#d4a843',size:6,symbol:'triangle-up'},
+     name:'jump 1/(p(p\u22121))',
+     hovertemplate:'p\u22121=%{x}<br>size=%{y:.6f}<extra></extra>'},
+  ];
+}
+function tracesF(N){
+  var xv=[],traces=[];
+  for(var i=0;i<=200;i++) xv.push(i*50/200);
+  var fps=[2,3,5,7,11,13,17,19];
+  var cols=['#e8a830','#2bbfb0','#e85540','#4a80f0','#9060d0','#44cc88','#f07040','#80c0ff'];
+  fps.forEach(function(p,pi){
+    var sat=p-1<=N;
+    traces.push({
+      x:xv,
+      y:xv.map(function(x){return x>=p-1?p/(p+1):(p*p-x-1)/(p*p-1);}),
+      mode:'lines',
+      line:{color:cols[pi],width:sat?2.5:1,dash:sat?'solid':'dot'},
+      opacity:sat?1:0.35,
+      name:'f_'+p+(sat?' \u2713':''),
+      hovertemplate:'x=%{x:.1f}<br>f_'+p+'=%{y:.5f}<extra></extra>',
     });
-    traces.push({x:xvals,y:ys,mode:'lines',
-      line:{color:cols[pi],width:1.8},name:'f_'+p+'(x)',
-      hovertemplate:'x=%{x:.2f}<br>f_'+p+'=%{y:.5f}<extra></extra>'});
-    // Mark saturation point
-    traces.push({x:[p-1],y:[p/(p+1)],mode:'markers',
-      marker:{color:cols[pi],size:8,symbol:'circle-open',line:{width:2}},
-      name:'x='+(p-1)+' sat.',showlegend:false,
-      hovertemplate:'Saturates at x='+(p-1)+'<br>value='+( p/(p+1)).toFixed(4)+'<extra></extra>'});
   });
   return traces;
 }
-
-/* ══════════════════════════════════════
-   CHART 5: C(n) per ring M (discrete)
-   and φ(M)/M totient density
-══════════════════════════════════════ */
-function buildChart5(){
-  var ms=[],cn_vals=[],phi_vals=[];
-  for(var m=2;m<=100;m++){
-    ms.push(m);
-    cn_vals.push(Cx(m));
-    phi_vals.push(phi(m)/m);
-  }
+function traces5(){
   return [
-    {x:ms,y:cn_vals,type:'bar',name:'C(M) survival rate',
-     marker:{color:'rgba(43,191,176,0.7)',line:{color:'rgba(43,191,176,0.3)',width:0.5}},
+    {x:cm5x,y:cm5y,type:'bar',name:'C(M)',
+     marker:{color:'rgba(43,191,176,0.7)',line:{color:'rgba(0,0,0,0)',width:0}},
      hovertemplate:'M=%{x}<br>C(M)=%{y:.5f}<extra></extra>'},
-    {x:ms,y:phi_vals,mode:'lines',line:{color:'#d4a843',width:1.5},
-     name:'\u03c6(M)/M density',yaxis:'y2',
-     hovertemplate:'M=%{x}<br>\u03c6(M)/M=%{y:.4f}<extra></extra>'},
+    {x:cm5x,y:phi5y,mode:'lines',line:{color:'#d4a843',width:1.5},
+     name:'\u03c6(M)/M',yaxis:'y2',
+     hovertemplate:'M=%{x}<br>\u03c6/M=%{y:.4f}<extra></extra>'},
   ];
 }
-
-/* ══════════════════════════════════════
-   CHART 6: P(k) prime zeta values
-   and partial sums Σ_{k=2}^K P(k)
-══════════════════════════════════════ */
-function buildChart6(){
-  // Compute P(k) = Σ_p p^{-k} for k=2..20 using first 10000 primes
-  var ps=_primes.slice(0,5000);
-  var ks=[],pk_vals=[],cumsum=[];
-  var running=0;
-  for(var k=2;k<=20;k++){
-    var pk=0;
-    for(var i=0;i<ps.length;i++) pk+=Math.pow(ps[i],-k);
-    ks.push(k);
-    pk_vals.push(pk);
-    running+=pk;
-    cumsum.push(running);
-  }
+function traces6(){
+  var ks=[],pv=[],cs=[],run=0;
+  for(var k=0;k<19;k++){ks.push(k+2);pv.push(Pk[k]);run+=Pk[k];cs.push(run);}
   return [
-    {x:ks,y:pk_vals,type:'bar',name:'P(k)',
+    {x:ks,y:pv,type:'bar',name:'P(k)',
      marker:{color:ks.map(function(k){return k%2===0?'rgba(74,128,240,0.8)':'rgba(144,96,208,0.8)';}),
              line:{color:'rgba(0,0,0,0)',width:0}},
      hovertemplate:'k=%{x}<br>P(k)=%{y:.8f}<extra></extra>'},
-    {x:ks,y:cumsum,mode:'lines+markers',line:{color:'#d4a843',width:2},
-     marker:{color:'#d4a843',size:5},name:'\u03a3\u2096\u2082\u1d4f P(k) \u2192 J',yaxis:'y2',
-     hovertemplate:'k=%{x}<br>\u03a3P=%{y:.8f}<extra></extra>'},
+    {x:ks,y:cs,mode:'lines+markers',line:{color:'#d4a843',width:2},
+     marker:{color:'#d4a843',size:4},name:'\u03a3P(k)',yaxis:'y2',
+     hovertemplate:'k=%{x}<br>\u03a3=%{y:.8f}<extra></extra>'},
     {x:[2,20],y:[J_INF,J_INF],mode:'lines',
-     line:{color:'rgba(212,168,67,0.4)',width:1,dash:'dash'},
-     name:'J = 0.77316\u2026',yaxis:'y2',showlegend:true,hoverinfo:'skip'},
+     line:{color:'rgba(212,168,67,0.35)',width:1,dash:'dash'},
+     name:'J',yaxis:'y2',hoverinfo:'skip'},
   ];
 }
-
-/* ══════════════════════════════════════
-   CHART 7: c(m) coefficients
-══════════════════════════════════════ */
-function buildChart7(){
-  var ms=[],cms=[];
-  for(var m=2;m<=40;m++){
-    ms.push(m);
-    cms.push(cm(m));
-  }
+function traces7(){
   return [{
-    x:ms,y:cms,type:'bar',
-    marker:{
-      color:ms.map(function(m,i){
-        return cms[i]===1?'rgba(212,168,67,0.85)':
-               cms[i]>0?'rgba(43,191,176,0.7)':'rgba(232,85,64,0.7)';
-      }),
-      line:{color:'rgba(0,0,0,0)',width:0}
-    },
+    x:cm7x,y:cm7y,type:'bar',
+    marker:{color:cm7y.map(function(v){
+      return v===1?'rgba(212,168,67,0.9)':v>0?'rgba(43,191,176,0.7)':'rgba(232,85,64,0.7)';
+    }),line:{color:'rgba(0,0,0,0)',width:0}},
     name:'c(m)',
-    text:ms.map(function(m){return isPrime(m)?'p='+m:'';} ),
-    textposition:'outside',
-    textfont:{size:7,color:'rgba(212,168,67,0.7)'},
     hovertemplate:'m=%{x}<br>c(m)=%{y:.5f}<extra></extra>',
   }];
 }
-
-/* ══════════════════════════════════════
-   CHART 8: Jump sizes bar + cumulative
-══════════════════════════════════════ */
-function buildChart8(){
-  var maxBars=Math.min(_jx.length,300);
-  return [
-    {x:_jx.slice(0,maxBars),y:_jsizes.slice(0,maxBars),
-     type:'bar',name:'1/(p(p\u22121))',
-     marker:{color:_jx.slice(0,maxBars).map(function(p,i){
-       return 'rgba(43,191,176,'+(0.3+0.6*Math.exp(-i/40))+')';
-     }),line:{color:'rgba(0,0,0,0)',width:0}},
-     hovertemplate:'p=%{x}<br>1/(p(p\u22121))=%{y:.7f}<extra></extra>'},
-  ];
+function traces8(){
+  var mx=Math.min(jbX.length,300);
+  return [{
+    x:jbX.slice(0,mx),y:jbY.slice(0,mx),type:'bar',
+    marker:{color:jbX.slice(0,mx).map(function(p,i){
+      return 'rgba(43,191,176,'+(0.3+0.6*Math.exp(-i/40))+')';
+    }),line:{color:'rgba(0,0,0,0)',width:0}},
+    name:'1/(p(p\u22121))',
+    hovertemplate:'p=%{x}<br>jump=%{y:.7f}<extra></extra>',
+  }];
 }
-
-/* ══════════════════════════════════════
-   CHART 9: log C series convergence
-   Σ P(2k)/k · (1-2^k) → log C
-══════════════════════════════════════ */
-function buildChart9(){
-  var ps=_primes.slice(0,5000);
-  var ks=[],terms=[],cumsum=[],logC=Math.log(C_INF);
-  var running=0;
-  for(var k=1;k<=15;k++){
-    var pk2k=0;
-    for(var i=0;i<ps.length;i++) pk2k+=Math.pow(ps[i],-2*k);
-    var term=pk2k/k*(1-Math.pow(2,k));
-    ks.push(k);
-    terms.push(term);
-    running+=term;
-    cumsum.push(running);
-  }
+function traces9(){
+  var ks=[],tv=[],cs=[],run=0;
+  for(var k=0;k<15;k++){ks.push(k+1);tv.push(logC_t[k]);run+=logC_t[k];cs.push(run);}
   return [
-    {x:ks,y:terms,type:'bar',name:'P(2k)/k\u00b7(1\u22122\u1d4f)',
+    {x:ks,y:tv,type:'bar',name:'term',
      marker:{color:'rgba(74,128,240,0.75)',line:{color:'rgba(0,0,0,0)',width:0}},
      hovertemplate:'k=%{x}<br>term=%{y:.8f}<extra></extra>'},
-    {x:ks,y:cumsum,mode:'lines+markers',line:{color:'#2bbfb0',width:2},
-     marker:{color:'#2bbfb0',size:5},name:'\u03a3 \u2192 log C',yaxis:'y2',
+    {x:ks,y:cs,mode:'lines+markers',line:{color:'#2bbfb0',width:2},
+     marker:{color:'#2bbfb0',size:4},name:'\u03a3\u2192logC',yaxis:'y2',
      hovertemplate:'k=%{x}<br>\u03a3=%{y:.8f}<extra></extra>'},
-    {x:[1,15],y:[logC,logC],mode:'lines',
-     line:{color:'rgba(212,168,67,0.4)',width:1,dash:'dash'},
-     name:'log C = '+logC.toFixed(6),yaxis:'y2',showlegend:true,hoverinfo:'skip'},
+    {x:[1,15],y:[LOG_C,LOG_C],mode:'lines',
+     line:{color:'rgba(212,168,67,0.35)',width:1,dash:'dash'},
+     name:'log C',yaxis:'y2',hoverinfo:'skip'},
   ];
 }
-
-/* ══════════════════════════════════════
-   CHART 10: J_χ for multiple characters
-   χ₄, χ₃, χ₅ alongside J(N)
-══════════════════════════════════════ */
-function buildChart10(){
-  var ps=_primes.slice(0,2000),ms=[],j_chi3=[],j_chi4=[],j_chi5=[],j_plain=[];
-  var s3=0,s4=0,s5=0,sj=0;
-  var step=Math.max(1,Math.floor(ps.length/300));
-  for(var i=0;i<ps.length;i+=step){
-    var p=ps[i],jump=1/(p*(p-1));
-    sj+=jump;s3+=chi3(p)*jump;s4+=chi4(p)*jump;s5+=chi5(p)*jump;
-    ms.push(p);
-    j_plain.push(sj);
-    j_chi3.push(s3);
-    j_chi4.push(s4);
-    j_chi5.push(s5);
-  }
+function traces10(){
   return [
-    {x:ms,y:j_plain,mode:'lines',line:{color:'#d4a843',width:2},name:'J(N)',
-     hovertemplate:'p=%{x}<br>J=%{y:.7f}<extra></extra>'},
-    {x:ms,y:j_chi3,mode:'lines',line:{color:'#2bbfb0',width:1.5,dash:'dot'},name:'J\u03c7\u2083(N)',
-     hovertemplate:'p=%{x}<br>J\u03c7\u2083=%{y:.7f}<extra></extra>'},
-    {x:ms,y:j_chi4,mode:'lines',line:{color:'#e85540',width:1.5},name:'J\u03c7\u2084(N)',
-     hovertemplate:'p=%{x}<br>J\u03c7\u2084=%{y:.7f}<extra></extra>'},
-    {x:ms,y:j_chi5,mode:'lines',line:{color:'#9060d0',width:1.5,dash:'dot'},name:'J\u03c7\u2085(N)',
-     hovertemplate:'p=%{x}<br>J\u03c7\u2085=%{y:.7f}<extra></extra>'},
-    {x:[2,ms[ms.length-1]],y:[0,0],mode:'lines',
-     line:{color:'rgba(255,255,255,0.15)',width:0.8,dash:'dash'},
+    {x:c10x,y:c10j,mode:'lines',line:{color:'#d4a843',width:2},name:'J(N)',
+     hovertemplate:'N=%{x}<br>J=%{y:.7f}<extra></extra>'},
+    {x:c10x,y:c10_3,mode:'lines',line:{color:'#2bbfb0',width:1.5,dash:'dot'},name:'J\u03c7\u2083',
+     hovertemplate:'N=%{x}<br>J\u03c7\u2083=%{y:.7f}<extra></extra>'},
+    {x:c10x,y:c10_4,mode:'lines',line:{color:'#e85540',width:1.8},name:'J\u03c7\u2084',
+     hovertemplate:'N=%{x}<br>J\u03c7\u2084=%{y:.7f}<extra></extra>'},
+    {x:c10x,y:c10_5,mode:'lines',line:{color:'#9060d0',width:1.5,dash:'dot'},name:'J\u03c7\u2085',
+     hovertemplate:'N=%{x}<br>J\u03c7\u2085=%{y:.7f}<extra></extra>'},
+    {x:[2,c10x[c10x.length-1]||2],y:[0,0],mode:'lines',
+     line:{color:'rgba(255,255,255,0.1)',width:0.7,dash:'dash'},
      showlegend:false,hoverinfo:'skip'},
   ];
 }
 
-/* ══════════════════════════════════════
-   RENDER ALL CHARTS
-══════════════════════════════════════ */
-function renderAll(){
-  var c3=buildChart3();
-  // Chart 1: J(N) convergence + corridor
-  Plotly.react('an-plot-1',buildChart1(),
-    bLayout('J(N), D\u2080(N), T(N), J\u03c7\u2084(N) — Live convergence','Value','N'));
-
-  // Chart 2: √N stability
-  Plotly.react('an-plot-2',buildChart2(),
-    bLayout('\u221aN\u00b7|J\u2212J(N)| — RH stability index','Stability index','N'));
-
-  // Chart 3: C(x) and D(x)
-  Plotly.react('an-plot-3',c3.c,
-    bLayout('C(x) = \u220ff_p(x) — lift survival function','C(x)','x'));
-  Plotly.react('an-plot-4',c3.d,
-    bLayout('D(x) = d/dx log C(x) — prime-detecting derivative','D(x)','x'));
-
-  // Chart 5: C(M) and φ(M)/M
-  Plotly.react('an-plot-5',buildChart5(),
-    bLayout('C(M) survival rate and \u03c6(M)/M totient density','C(M)','M',{
-      yaxis2:{overlaying:'y',side:'right',gridcolor:'transparent',
-              title:{text:'\u03c6(M)/M',font:{size:9}},
-              tickfont:{color:'#d4a843',size:8},color:'#d4a843'}
-    }));
-
-  // Chart 6: P(k) prime zeta values
-  Plotly.react('an-plot-6',buildChart6(),
-    bLayout('P(k) = \u03a3_p p\u207b\u1d4f — prime zeta values and J = \u03a3P(k)','P(k)','k',{
-      yaxis2:{overlaying:'y',side:'right',gridcolor:'transparent',
-              title:{text:'\u03a3 P(k)',font:{size:9}},
-              tickfont:{color:'#d4a843',size:8},color:'#d4a843'}
-    }));
-
-  // Chart 7: c(m) coefficients
-  Plotly.react('an-plot-7',buildChart7(),
-    bLayout('c(m) coefficients — J = \u03a3 c(m) log \u03b6(m)','c(m)','m'));
-
-  // Chart 8: Jump sizes
-  Plotly.react('an-plot-8',buildChart8(),
-    bLayout('Jump sizes 1/(p(p\u22121)) — Jump Theorem','Jump size (log)','Prime p'));
+/* ── Draw all 11 charts ── */
+function drawAll(N){
+  var y2gold={title:{text:'',font:{size:8}},color:'#d4a843',tickfont:{color:'#d4a843',size:8}};
+  var y2teal={title:{text:'',font:{size:8}},color:'#2bbfb0',tickfont:{color:'#2bbfb0',size:8}};
+  Plotly.react('an-plot-1', traces1(), L('J(N) D\u2080 T J\u03c7\u2084 — convergence','Value','N'));
+  Plotly.react('an-plot-2', traces2(), L('\u221aN|J\u2212J(N)| — RH stability','Stability','N'));
+  Plotly.react('an-plot-3', traces3(N), L('C(x) — lift survival','C(x)','x'));
+  Plotly.react('an-plot-4', traces4(N), L('D(x) — prime-detecting derivative','D(x)','x'));
+  Plotly.react('an-plot-f', tracesF(N), L('f_p(x) local factors — saturation at x=p\u22121','f_p(x)','x'));
+  Plotly.react('an-plot-5', traces5(), L('C(M) survival & \u03c6(M)/M density','C(M)','M',y2gold));
+  Plotly.react('an-plot-6', traces6(), L('P(k) prime zeta values \u2192 J=\u03a3P(k)','P(k)','k',y2gold));
+  Plotly.react('an-plot-7', traces7(), L('c(m) coefficients','c(m)','m'));
+  Plotly.react('an-plot-8', traces8(), L('Jump sizes 1/(p(p\u22121))','size','prime p'));
   Plotly.relayout('an-plot-8',{'yaxis.type':'log'});
-
-  // Chart 9: log C series
-  Plotly.react('an-plot-9',buildChart9(),
-    bLayout('log C = \u03a3 P(2k)/k\u00b7(1\u22122\u1d4f) — series convergence','P(2k)/k\u00b7(1\u22122\u1d4f)','k',{
-      yaxis2:{overlaying:'y',side:'right',gridcolor:'transparent',
-              title:{text:'\u03a3 terms',font:{size:9}},
-              tickfont:{color:'#2bbfb0',size:8},color:'#2bbfb0'}
-    }));
-
-  // Chart 10: J_χ family
-  Plotly.react('an-plot-10',buildChart10(),
-    bLayout('J_\u03c7(N) for \u03c7\u2083, \u03c7\u2084, \u03c7\u2085 — character sums and Chebyshev bias','J_\u03c7(N)','N'));
-
-  // Chart 4 (f_p local factors) — static, render once
-  Plotly.react('an-plot-f',buildChart4(),
-    bLayout('f_p(x) local factors — saturation at x = p\u22121','f_p(x)','x'));
+  Plotly.react('an-plot-9', traces9(), L('log C = \u03a3P(2k)/k(1\u22122\u1d4f)','term','k',y2teal));
+  Plotly.react('an-plot-10',traces10(),L('J_\u03c7(N) character sums','J_\u03c7','N'));
 }
 
-function initAllPlots(){
-  var ids=['an-plot-1','an-plot-2','an-plot-3','an-plot-4','an-plot-5',
-           'an-plot-6','an-plot-7','an-plot-8','an-plot-9','an-plot-10','an-plot-f'];
+/* ── Init plots empty ── */
+function initPlots(){
+  var ids=['an-plot-1','an-plot-2','an-plot-3','an-plot-4','an-plot-f',
+           'an-plot-5','an-plot-6','an-plot-7','an-plot-8','an-plot-9','an-plot-10'];
   ids.forEach(function(id){
     var el=document.getElementById(id);
-    if(el) Plotly.newPlot(id,[],{paper_bgcolor:BG,plot_bgcolor:BG,
-      margin:{t:36,b:44,l:70,r:20},font:{color:'#ede6d8',family:'DM Mono,monospace',size:10}});
+    if(el) Plotly.newPlot(id,[],{
+      paper_bgcolor:BG,plot_bgcolor:BG,
+      margin:{t:32,b:38,l:60,r:14},
+      font:{color:'#ede6d8',family:'DM Mono,monospace',size:9},
+      xaxis:{gridcolor:GR,zerolinecolor:GR},
+      yaxis:{gridcolor:GR,zerolinecolor:GR},
+    });
   });
-  // Render static charts immediately
-  renderStaticCharts();
 }
 
-function renderStaticCharts(){
-  var c3=buildChart3();
-  Plotly.react('an-plot-3',c3.c,
-    bLayout('C(x) = \u220ff_p(x) — lift survival function','C(x)','x'));
-  Plotly.react('an-plot-4',c3.d,
-    bLayout('D(x) = d/dx log C(x) — prime-detecting derivative','D(x)','x'));
-  Plotly.react('an-plot-5',buildChart5(),
-    bLayout('C(M) survival rate and \u03c6(M)/M totient density','C(M)','M',{
-      yaxis2:{overlaying:'y',side:'right',gridcolor:'transparent',
-              title:{text:'\u03c6(M)/M',font:{size:9}},
-              tickfont:{color:'#d4a843',size:8},color:'#d4a843'}
-    }));
-  Plotly.react('an-plot-6',buildChart6(),
-    bLayout('P(k) prime zeta values and J = \u03a3P(k)','P(k)','k',{
-      yaxis2:{overlaying:'y',side:'right',gridcolor:'transparent',
-              title:{text:'\u03a3 P(k)',font:{size:9}},
-              tickfont:{color:'#d4a843',size:8},color:'#d4a843'}
-    }));
-  Plotly.react('an-plot-7',buildChart7(),
-    bLayout('c(m) coefficients — J = \u03a3 c(m) log \u03b6(m)','c(m)','m'));
-  Plotly.react('an-plot-9',buildChart9(),
-    bLayout('log C = \u03a3 P(2k)/k\u00b7(1\u22122\u1d4f) — series convergence','P(2k)/k term','k',{
-      yaxis2:{overlaying:'y',side:'right',gridcolor:'transparent',
-              title:{text:'\u03a3 terms',font:{size:9}},
-              tickfont:{color:'#2bbfb0',size:8},color:'#2bbfb0'}
-    }));
-  Plotly.react('an-plot-10',buildChart10(),
-    bLayout('J_\u03c7(N) for \u03c7\u2083, \u03c7\u2084, \u03c7\u2085 — Chebyshev bias','J_\u03c7(N)','prime index'));
-  Plotly.react('an-plot-f',buildChart4(),
-    bLayout('f_p(x) local factors — saturation at x = p\u22121','f_p(x)','x'));
-}
-
-/* ── Animation frame ── */
-function anFrame(){
-  if(!_running||_paused)return;
-  var limit=parseInt(document.getElementById('an-limit').value)||20000;
-  var spd=parseInt(document.getElementById('an-speed').value)||2;
-  var batch=BATCH[spd],delay=SPEEDS[spd],drawn=0;
-
-  while(_idx<_primes.length&&_primes[_idx]<=limit&&drawn<batch){
-    var p=_primes[_idx],jump=1/(p*(p-1));
-    _curJ+=jump;
-    _curD0+=1/(p*p-1);
-    _curT+=1/(p*(p*p-1));
-    _curChi+=chi4(p)*jump;
-    _jx.push(p);_jsizes.push(jump);
-    _idx++;drawn++;
-  }
-  if(_idx===0){_frameId=setTimeout(anFrame,delay);return;}
-
-  var N=_primes[Math.min(_idx,_primes.length)-1];
-  var stab=Math.sqrt(N)*Math.abs(J_INF-_curJ);
-
-  var sampleEvery=Math.max(1,Math.floor(limit/1000));
-  if(_idx%sampleEvery===0||_primes[_idx]>limit){
-    _xs.push(N);_jy.push(_curJ);_d0y.push(_curD0);
-    _ty.push(_curT);_cy.push(_curChi);_stab.push(stab);
-    _upper.push(J_INF+1/Math.sqrt(N));
-    _lower.push(J_INF-1/Math.sqrt(N));
-    _csvRows.push([N,_curJ.toFixed(10),_curD0.toFixed(10),
-                   _curT.toFixed(10),_curChi.toFixed(10),stab.toFixed(10)]);
-  }
-
-  document.getElementById('an-stat-n').textContent=N.toLocaleString();
-  document.getElementById('an-stat-j').textContent=_curJ.toFixed(7);
-  document.getElementById('an-stat-s').textContent=stab.toFixed(7);
-  document.getElementById('an-stat-chi').textContent=_curChi.toFixed(7);
-  document.getElementById('an-prog').style.width=(Math.min(N,limit)/limit*100)+'%';
-
-  if(_idx%40===0){
-    var lg=document.getElementById('an-log');
-    lg.innerHTML+='<span class="hi">N='+N.toLocaleString()+'</span>'
-      +' | <span class="s">J='+_curJ.toFixed(6)+'</span>'
-      +' | stab='+stab.toFixed(5)+'<br>';
-    lg.scrollTop=lg.scrollHeight;
-  }
-
-  // Update live charts
-  var corrX=_xs.concat(_xs.slice().reverse());
-  var corrY=_upper.concat(_lower.slice().reverse());
-  Plotly.react('an-plot-1',buildChart1(),
-    bLayout('J(N), D\u2080(N), T(N), J\u03c7\u2084(N) — Live convergence','Value','N'));
-  Plotly.react('an-plot-2',buildChart2(),
-    bLayout('\u221aN\u00b7|J\u2212J(N)| — RH stability index','Stability index','N'));
-  Plotly.react('an-plot-8',buildChart8(),
-    bLayout('Jump sizes 1/(p(p\u22121)) — Jump Theorem','Jump size','Prime p'));
-  Plotly.relayout('an-plot-8',{'yaxis.type':'log'});
-
-  if(_idx<_primes.length&&_primes[_idx]<=limit){
-    _frameId=setTimeout(anFrame,delay);
-  } else {
-    _running=false;
-    document.getElementById('an-play-btn').textContent='▶ Done';
-    var lg=document.getElementById('an-log');
-    lg.innerHTML+='<span class="p"><b>Complete \u2014 J(\u221e) residual = '
-      +(J_INF-_curJ).toExponential(4)+'</b></span><br>';
-    lg.scrollTop=lg.scrollHeight;
-    // Final full render
-    renderAll();
-  }
-}
-
-/* ── Controls ── */
-function resetData(){
-  _xs=[];_jy=[];_d0y=[];_ty=[];_cy=[];_stab=[];
-  _upper=[];_lower=[];_jx=[];_jsizes=[];_csvRows=[];
-  _idx=0;_curJ=0;_curD0=0;_curT=0;_curChi=0;
+/* ── Reset state ── */
+function resetAll(){
+  _run=false;_pause=false;clearTimeout(_fid);_idx=0;
+  J=0;D0=0;T=0;X4=0;X3=0;X5=0;
+  xs=[];jy=[];d0y=[];ty=[];c4y=[];stab=[];up=[];lo=[];
+  jmpX=[];jmpY=[];cm5x=[];cm5y=[];phi5y=[];
+  Pk=new Array(19).fill(0);
+  cm7x=[];cm7y=[];jbX=[];jbY=[];
+  logC_t=new Array(15).fill(0);
+  c10x=[];c10j=[];c10_3=[];c10_4=[];c10_5=[];
+  CSV=[];
   document.getElementById('an-stat-n').textContent='0';
   document.getElementById('an-stat-j').textContent='0.0000000';
   document.getElementById('an-stat-s').textContent='0.0000000';
   document.getElementById('an-stat-chi').textContent='0.0000000';
   document.getElementById('an-prog').style.width='0%';
-  document.getElementById('an-log').innerHTML='Ready.';
-  initAllPlots();
+  document.getElementById('an-log').innerHTML='Press \u25b6 Play \u2014 all 11 charts animate together.';
+  drawAll(0);
 }
 
+/* ── Animation frame ── */
+function frame(){
+  if(!_run||_pause) return;
+  var limit=parseInt(document.getElementById('an-limit').value)||20000;
+  var spd=parseInt(document.getElementById('an-speed').value)||2;
+  var batch=BATCHES[spd], delay=SPEEDS[spd], drawn=0;
+
+  while(_idx<PRIMES.length && PRIMES[_idx]<=limit && drawn<batch){
+    var p=PRIMES[_idx];
+    var jump=1/(p*(p-1));
+    J  +=jump;
+    D0 +=1/(p*p-1);
+    T  +=1/(p*(p*p-1));
+    X4 +=chi4(p)*jump;
+    X3 +=chi3(p)*jump;
+    X5 +=chi5(p)*jump;
+    jbX.push(p); jbY.push(jump);
+    jmpX.push(p-1); jmpY.push(jump); /* D(x) jump markers */
+    /* P(k) */
+    for(var k=2;k<=20;k++) Pk[k-2]+=Math.pow(p,-k);
+    /* log C series */
+    for(var k2=1;k2<=15;k2++) logC_t[k2-1]+=Math.pow(p,-2*k2)/k2*(1-Math.pow(2,k2));
+    /* C(M) bars up to 120 */
+    if(p<=120){ cm5x.push(p); cm5y.push(Cx(p)); phi5y.push(phi(p)/p); }
+    /* c(m) reveal at 2× pace, cap 60 */
+    var cm_lim=Math.min(p*2,60);
+    while(cm7x.length<cm_lim-1){
+      var m=cm7x.length+2; cm7x.push(m); cm7y.push(cm(m));
+    }
+    /* J_chi sampled */
+    if(_idx%4===0){ c10x.push(p);c10j.push(J);c10_3.push(X3);c10_4.push(X4);c10_5.push(X5); }
+    _idx++;drawn++;
+  }
+  if(_idx===0){_fid=setTimeout(frame,delay);return;}
+
+  var N=PRIMES[Math.min(_idx,PRIMES.length)-1];
+  var s=Math.sqrt(N)*Math.abs(J_INF-J);
+
+  var samp=Math.max(1,Math.floor(limit/800));
+  if(_idx%samp===0||!(_idx<PRIMES.length&&PRIMES[_idx]<=limit)){
+    xs.push(N);jy.push(J);d0y.push(D0);ty.push(T);c4y.push(X4);
+    stab.push(s);up.push(J_INF+1/Math.sqrt(N));lo.push(J_INF-1/Math.sqrt(N));
+    CSV.push([N,J.toFixed(10),D0.toFixed(10),T.toFixed(10),X4.toFixed(10),s.toFixed(10)]);
+  }
+
+  document.getElementById('an-stat-n').textContent=N.toLocaleString();
+  document.getElementById('an-stat-j').textContent=J.toFixed(7);
+  document.getElementById('an-stat-s').textContent=s.toFixed(7);
+  document.getElementById('an-stat-chi').textContent=X4.toFixed(7);
+  document.getElementById('an-prog').style.width=(Math.min(N,limit)/limit*100)+'%';
+
+  if(_idx%30===0){
+    var lg=document.getElementById('an-log');
+    lg.innerHTML+='<span class="hi">N='+N.toLocaleString()+'</span>'
+      +' | <span class="s">J='+J.toFixed(6)+'</span>'
+      +' | \u221aN\u0394='+s.toFixed(5)+'<br>';
+    lg.scrollTop=lg.scrollHeight;
+  }
+
+  drawAll(N); /* ALL 11 charts every frame */
+
+  if(_idx<PRIMES.length&&PRIMES[_idx]<=limit){
+    _fid=setTimeout(frame,delay);
+  } else {
+    _run=false;
+    document.getElementById('an-play-btn').textContent='\u25b6 Done';
+    var lg=document.getElementById('an-log');
+    lg.innerHTML+='<span class="p"><b>Done \u2014 residual='+(J_INF-J).toExponential(3)+'</b></span><br>';
+    lg.scrollTop=lg.scrollHeight;
+  }
+}
+
+/* ── Public controls ── */
 window.anPlay=function(){
-  if(_paused){_paused=false;document.getElementById('an-play-btn').textContent='▶ Playing\u2026';anFrame();return;}
-  if(_running)return;
-  resetData();
-  _running=true;_paused=false;
-  document.getElementById('an-play-btn').textContent='▶ Playing\u2026';
-  document.getElementById('an-log').innerHTML='<b>N | J(N) | Stability</b><br>';
-  setTimeout(anFrame,80);
+  if(_pause){_pause=false;document.getElementById('an-play-btn').textContent='\u25b6 Playing\u2026';frame();return;}
+  if(_run)return;
+  resetAll();_run=true;
+  document.getElementById('an-play-btn').textContent='\u25b6 Playing\u2026';
+  document.getElementById('an-log').innerHTML='<b>Starting\u2026</b><br>';
+  setTimeout(frame,80);
 };
 window.anPause=function(){
-  if(!_running)return;
-  _paused=!_paused;
-  if(_paused){clearTimeout(_frameId);document.getElementById('an-play-btn').textContent='▶ Resume';}
-  else{document.getElementById('an-play-btn').textContent='▶ Playing\u2026';anFrame();}
+  if(!_run)return;
+  _pause=!_pause;
+  if(_pause){clearTimeout(_fid);document.getElementById('an-play-btn').textContent='\u25b6 Resume';}
+  else{document.getElementById('an-play-btn').textContent='\u25b6 Playing\u2026';frame();}
 };
 window.anReset=function(){
-  _running=false;_paused=false;clearTimeout(_frameId);
-  document.getElementById('an-play-btn').textContent='▶ Play';
-  resetData();
+  document.getElementById('an-play-btn').textContent='\u25b6 Play';
+  resetAll();
 };
 window.anExportCSV=function(){
-  if(!_csvRows.length){alert('Run the animation first.');return;}
-  var h='N,J(N),D0(N),T(N),Jchi4(N),Stability\n';
-  var b=_csvRows.map(function(r){return r.join(',');}).join('\n');
+  if(!CSV.length){alert('Run animation first.');return;}
   var a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([h+b],{type:'text/csv'}));
+  a.href=URL.createObjectURL(new Blob(
+    ['N,J(N),D0(N),T(N),Jchi4(N),Stability\n'+CSV.map(function(r){return r.join(',');}).join('\n')],
+    {type:'text/csv'}));
   a.download='MLR_analysis.csv';a.click();
 };
 
-/* ── Tab activation ── */
-var _anInit=false;
-var _origSwitch=window.switchTab;
+/* ── Tab init ── */
+var _init=false;
+var _origSw=window.switchTab;
 window.switchTab=function(t){
-  _origSwitch(t);
-  if(t==='analysis'&&!_anInit){
-    _anInit=true;
-    setTimeout(function(){initAllPlots();setTimeout(renderStaticCharts,200);},120);
-  }
+  _origSw(t);
+  if(t==='analysis'&&!_init){_init=true;setTimeout(function(){initPlots();resetAll();},150);}
 };
 
 })();
 
-</script>>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>The Lift Survival Function — Wessen Getachew</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<style>
-/* ═══════════════════════════════════════
-   ROOT VARIABLES & RESET
-═══════════════════════════════════════ */
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --black:#05040a;
-  --deep:#0d0b14;
-  --card:#13111c;
-  --lift:#1a1726;
-  --ink:#ede6d8;
-  --ink2:#c9bfaa;
-  --ink3:#8a7f6a;
-  --ink4:#4a4335;
-  --gold:#d4a843;
-  --gold2:#a07828;
-  --goldx:#f0c060;
-  --teal:#2bbfb0;
-  --coral:#e85540;
-  --blue:#4a80f0;
-  --purple:#9060d0;
-  --border:#22202e;
-  --border2:#2e2b3c;
-  --serif:'Cormorant Garamond',Georgia,serif;
-  --display:'Instrument Serif',Georgia,serif;
-  --mono:'DM Mono',monospace;
-  --glow:rgba(212,168,67,0.12);
-}
-html{scroll-behavior:smooth;}
-html,body{height:100%;background:var(--black);}
-body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex-direction:column;}
-
-/* ═══════════════════════════════════════
-   SPLASH SCREEN
-═══════════════════════════════════════ */
-#splash{
-  position:fixed;inset:0;z-index:1000;
-  background:var(--black);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:opacity .8s ease, transform .8s ease;
-}
-#splash.out{opacity:0;transform:scale(1.04);pointer-events:none;}
-
-.splash-bg{
-  position:absolute;inset:0;overflow:hidden;
-}
-.splash-ring{
-  position:absolute;border-radius:50%;border:1px solid;
-  transform-origin:center center;
-  animation:ringPulse 8s ease-in-out infinite;
-}
-@keyframes ringPulse{
-  0%,100%{opacity:.15;transform:scale(1);}
-  50%{opacity:.4;transform:scale(1.03);}
-}
-.splash-content{
-  position:relative;z-index:2;text-align:center;padding:40px;max-width:760px;
-}
-.splash-eyebrow{
-  font-family:var(--mono);font-size:10px;letter-spacing:.3em;
-  color:var(--gold);text-transform:uppercase;margin-bottom:36px;
-  opacity:0;animation:fadeUp .6s .2s ease forwards;
-}
-.splash-title{
-  font-family:var(--display);font-size:clamp(36px,6vw,80px);
-  font-weight:400;line-height:1.05;color:var(--ink);
-  margin-bottom:8px;
-  opacity:0;animation:fadeUp .7s .4s ease forwards;
-}
-.splash-title em{font-style:italic;color:var(--gold);}
-.splash-sub{
-  font-family:var(--serif);font-size:clamp(14px,2vw,20px);
-  color:var(--ink3);font-style:italic;font-weight:300;
-  margin-bottom:48px;line-height:1.6;
-  opacity:0;animation:fadeUp .7s .6s ease forwards;
-}
-.splash-author{
-  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
-  color:var(--ink3);text-transform:uppercase;margin-bottom:60px;
-  opacity:0;animation:fadeUp .6s .8s ease forwards;
-}
-.splash-enter{
-  display:inline-flex;align-items:center;gap:12px;
-  background:transparent;border:1px solid var(--gold);
-  color:var(--gold);font-family:var(--mono);font-size:11px;
-  letter-spacing:.22em;text-transform:uppercase;
-  padding:16px 40px;cursor:pointer;
-  transition:all .3s;position:relative;overflow:hidden;
-  opacity:0;animation:fadeUp .6s 1s ease forwards;
-}
-.splash-enter::before{
-  content:'';position:absolute;inset:0;background:var(--gold);
-  transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
-}
-.splash-enter:hover::before{transform:scaleX(1);}
-.splash-enter:hover{color:var(--black);}
-.splash-enter span{position:relative;z-index:1;}
-.splash-enter .arr{
-  position:relative;z-index:1;
-  transition:transform .3s;
-}
-.splash-enter:hover .arr{transform:translateX(6px);}
-
-.splash-stats{
-  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
-  display:flex;gap:60px;
-  opacity:0;animation:fadeUp .6s 1.2s ease forwards;
-}
-.splash-stat{text-align:center;}
-.splash-stat-n{
-  font-family:var(--mono);font-size:24px;color:var(--gold);
-  display:block;margin-bottom:4px;
-}
-.splash-stat-l{
-  font-family:var(--mono);font-size:8px;letter-spacing:.15em;
-  color:var(--ink4);text-transform:uppercase;
-}
-
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(18px);}
-  to{opacity:1;transform:translateY(0);}
-}
-
-/* ═══════════════════════════════════════
-   NAV
-═══════════════════════════════════════ */
-#nav{
-  height:52px;flex-shrink:0;display:flex;align-items:stretch;
-  background:rgba(5,4,10,.95);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  position:relative;z-index:100;
-}
-.nav-logo{
-  font-family:var(--mono);font-size:9px;color:var(--gold);
-  letter-spacing:.25em;text-transform:uppercase;
-  padding:0 28px;display:flex;align-items:center;
-  border-right:1px solid var(--border);flex-shrink:0;
-  gap:8px;
-}
-.nav-logo-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;
-  animation:dotPulse 3s ease-in-out infinite;}
-@keyframes dotPulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.nav-tabs{display:flex;flex:1;}
-.tab-btn{
-  background:transparent;border:none;border-bottom:2px solid transparent;
-  margin-bottom:-1px;color:var(--ink4);
-  font-family:var(--mono);font-size:9px;letter-spacing:.16em;
-  text-transform:uppercase;padding:0 24px;cursor:pointer;
-  transition:all .2s;display:flex;align-items:center;gap:7px;
-}
-.tab-btn:hover{color:var(--ink2);}
-.tab-btn.on{color:var(--gold);border-bottom-color:var(--gold);}
-.tab-btn[data-t="canvas"].on{color:var(--teal);border-bottom-color:var(--teal);}
-.tab-btn[data-t="about"].on{color:var(--purple);border-bottom-color:var(--purple);}
-.tab-icon{font-size:11px;opacity:.7;}
-.nav-end{
-  margin-left:auto;display:flex;align-items:center;padding:0 24px;
-  font-family:var(--mono);font-size:8px;color:var(--ink4);letter-spacing:.08em;
-  border-left:1px solid var(--border);
-}
-
-/* ═══════════════════════════════════════
-   PAGES
-═══════════════════════════════════════ */
-.pg{flex:1;overflow:hidden;display:none;}
-.pg.on{display:flex;flex-direction:column;}
-
-/* ═══════════════════════════════════════
-   PAPER PAGE
-═══════════════════════════════════════ */
-#paper-pg{overflow-y:auto;background:var(--black);}
-.paper-hero{
-  background:linear-gradient(160deg,#0f0d18 0%,#0a0910 50%,#0d0b14 100%);
-  border-bottom:1px solid var(--border);
-  padding:80px 52px 60px;
-  position:relative;overflow:hidden;
-}
-.paper-hero::before{
-  content:'';position:absolute;top:-120px;right:-80px;
-  width:600px;height:600px;border-radius:50%;
-  background:radial-gradient(ellipse,rgba(212,168,67,.06) 0%,transparent 70%);
-  pointer-events:none;
-}
-.paper-hero::after{
-  content:'C(x)';position:absolute;right:52px;bottom:-20px;
-  font-family:var(--display);font-size:200px;font-style:italic;
-  color:rgba(212,168,67,.04);line-height:1;pointer-events:none;
-  white-space:nowrap;
-}
-.pw{max-width:800px;margin:0 auto;padding:0 0 120px;}
-.ptitle{
-  font-family:var(--display);font-size:clamp(28px,4vw,52px);
-  font-weight:400;line-height:1.08;
-  color:var(--ink);margin-bottom:10px;
-  max-width:800px;
-}
-.psub{
-  font-size:16px;color:var(--ink3);font-style:italic;
-  margin-bottom:20px;line-height:1.6;font-family:var(--serif);
-}
-.pmeta{
-  font-family:var(--mono);font-size:9px;color:var(--ink4);
-  letter-spacing:.12em;text-transform:uppercase;
-  margin-bottom:52px;display:flex;align-items:center;gap:20px;
-}
-.pmeta::after{content:'';flex:1;height:1px;background:var(--border);}
-.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;}
-.badge{
-  font-family:var(--mono);font-size:8px;letter-spacing:.12em;
-  text-transform:uppercase;padding:5px 12px;border:1px solid;
-  border-radius:20px;
-}
-.badge-gold{border-color:var(--gold2);color:var(--gold);}
-.badge-teal{border-color:var(--teal);color:var(--teal);opacity:.7;}
-.badge-coral{border-color:var(--coral);color:var(--coral);opacity:.7;}
-
-/* ── Paper body styles ── */
-.paper-body{padding:60px 52px 0;}
-h2{margin:64px 0 0;}
-.sn{font-family:var(--mono);font-size:9px;color:var(--gold2);
-  letter-spacing:.15em;text-transform:uppercase;display:block;margin-bottom:6px;}
-.st{font-family:var(--display);font-size:30px;font-weight:400;
-  color:var(--ink);line-height:1.2;display:block;margin-bottom:24px;font-style:italic;}
-p{font-size:16px;line-height:1.92;color:var(--ink2);
-  margin-bottom:18px;text-indent:1.5em;font-family:var(--serif);}
-p.ni,.lead p,.key p,.intuition p,.formal p,.eg p,.result p,.warn p,
-h2+p,.proof p,ul p,ol p{text-indent:0;}
-p strong{color:var(--ink);}
-p em{color:var(--gold);font-style:italic;}
-h3{font-family:var(--display);font-size:20px;font-weight:400;font-style:italic;
-  color:var(--ink2);margin:36px 0 14px;}
-code.math{font-family:var(--mono);font-size:12px;color:var(--gold);}
-.math{
-  font-family:var(--mono);font-size:12.5px;color:var(--teal);
-  background:rgba(43,191,176,.05);border:1px solid rgba(43,191,176,.15);
-  padding:16px 20px;margin:20px 0;line-height:1.7;
-  border-left:3px solid var(--teal);
-}
-.math.gold{color:var(--gold);background:rgba(212,168,67,.05);
-  border-color:rgba(212,168,67,.2);border-left-color:var(--gold);}
-.math.blue{color:var(--blue);background:rgba(74,128,240,.05);
-  border-color:rgba(74,128,240,.2);border-left-color:var(--blue);}
-
-/* Cards */
-.lead{
-  background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(212,168,67,.02));
-  border:1px solid var(--border2);border-left:3px solid var(--gold);
-  padding:24px 28px;margin:0 0 60px;
-}
-.lead-lbl,.key-lbl,.intuition-lbl,.formal-lbl,.eg-lbl,.result-lbl,.warn-lbl,.proof-word{
-  font-family:var(--mono);font-size:8px;color:var(--gold2);
-  letter-spacing:.22em;text-transform:uppercase;margin-bottom:12px;display:block;
-}
-.key{background:rgba(74,128,240,.05);border:1px solid var(--border2);
-  border-left:3px solid var(--blue);padding:18px 22px;margin:20px 0 24px;}
-.key-lbl{color:var(--blue);}
-.intuition{background:rgba(43,191,176,.04);border:1px solid var(--border2);
-  border-left:3px solid var(--teal);padding:18px 22px;margin:20px 0 24px;}
-.intuition-lbl{color:var(--teal);}
-.formal{background:rgba(144,96,208,.05);border:1px solid var(--border2);
-  border-left:3px solid var(--purple);padding:18px 22px;margin:20px 0 24px;}
-.formal-lbl{color:var(--purple);}
-.eg{background:rgba(255,255,255,.02);border:1px solid var(--border);
-  border-left:3px solid var(--ink4);padding:18px 22px;margin:20px 0 24px;}
-.eg-lbl{color:var(--ink3);}
-.result{
-  background:linear-gradient(135deg,rgba(212,168,67,.08),rgba(43,191,176,.04));
-  border:1px solid var(--border2);border-top:2px solid var(--gold);
-  padding:22px 26px;margin:28px 0;}
-.result-lbl{color:var(--goldx);}
-.warn{background:rgba(232,85,64,.05);border:1px solid rgba(232,85,64,.2);
-  border-left:3px solid var(--coral);padding:16px 20px;margin:20px 0;}
-.warn-lbl{color:var(--coral);}
-.proof{background:rgba(255,255,255,.015);border:1px solid var(--border);
-  padding:16px 20px;margin:16px 0;}
-.proof p{color:var(--ink3);}
-.qed{float:right;color:var(--ink4);font-size:18px;}
-
-/* Table */
-table{width:100%;border-collapse:collapse;margin:20px 0;font-family:var(--mono);font-size:11px;}
-th{background:rgba(212,168,67,.08);color:var(--gold);font-weight:400;
-  text-align:left;padding:10px 14px;border-bottom:1px solid var(--border2);
-  letter-spacing:.08em;text-transform:uppercase;}
-td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--ink3);}
-td.hi{color:var(--teal);}
-td.gold{color:var(--gold);}
-td.grn{color:#44cc88;}
-
-ul,ol{margin:12px 0 16px 32px;}
-ul li,ol li{color:var(--ink2);font-size:15px;line-height:1.8;
-  margin-bottom:6px;font-family:var(--serif);}
-ul li strong,ol li strong{color:var(--ink);}
-
-.sep{text-align:center;color:var(--ink4);letter-spacing:.6em;
-  margin:56px 0;font-size:14px;}
-.refs p{font-size:14px;line-height:1.7;color:var(--ink3);margin-bottom:10px;text-indent:0;}
-.refs p span{color:var(--gold);font-family:var(--mono);font-size:11px;margin-right:8px;}
-.foot{font-family:var(--mono);font-size:9px;color:var(--ink4);
-  letter-spacing:.06em;line-height:1.8;text-align:center;
-  border-top:1px solid var(--border);padding:40px 0;margin-top:80px;}
-.pstrip{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;}
-.pbtn{
-  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
-  border:1px solid var(--border2);background:rgba(43,191,176,.06);
-  color:var(--teal);padding:7px 14px;cursor:pointer;border-radius:2px;
-  transition:all .2s;
-}
-.pbtn:hover{background:rgba(43,191,176,.15);border-color:var(--teal);}
-.pbtn.amber{background:rgba(212,168,67,.06);color:var(--gold);border-color:var(--border2);}
-.pbtn.amber:hover{background:rgba(212,168,67,.15);border-color:var(--gold);}
-.pbtn.coral{background:rgba(232,85,64,.06);color:var(--coral);border-color:var(--border2);}
-.pbtn.coral:hover{background:rgba(232,85,64,.15);border-color:var(--coral);}
-
-/* ═══════════════════════════════════════
-   CANVAS PAGE
-═══════════════════════════════════════ */
-#canvas-pg{flex-direction:column;}
-#cv-desc-bar{
-  flex-shrink:0;background:rgba(13,11,20,.98);
-  border-bottom:1px solid var(--border);
-  padding:10px 20px;display:flex;flex-direction:column;gap:8px;
-}
-#cv-desc-sel{
-  font-family:var(--mono);font-size:9px;background:var(--deep);
-  color:var(--gold);border:1px solid var(--border2);padding:6px 10px;
-  border-radius:3px;cursor:pointer;width:100%;letter-spacing:.06em;
-}
-#cv-desc-text{
-  font-family:var(--serif);font-size:13px;line-height:1.72;
-  color:var(--ink3);display:none;padding:2px 0;
-}
-#cv-desc-text:not(:empty){display:block;}
-#cv-desc-text strong{color:var(--gold);}
-#cv-main{flex:1;display:flex;flex-direction:row;overflow:hidden;min-height:0;}
-#cv-top{flex:1;position:relative;background:#030208;overflow:hidden;}
-#cv-top canvas{position:absolute;top:0;left:0;cursor:crosshair;display:block;}
-
-/* Canvas sidebar */
-#cv-sb{
-  width:240px;flex-shrink:0;background:#0a0912;
-  border-left:1px solid var(--border);
-  overflow-y:auto;display:flex;flex-direction:column;
-}
-#cv-sb::-webkit-scrollbar{width:3px;}
-#cv-sb::-webkit-scrollbar-thumb{background:var(--border2);}
-.cs{border-bottom:1px solid var(--border);}
-.cs-h{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:9px 14px;cursor:pointer;user-select:none;
-  font-family:var(--mono);font-size:8px;color:var(--gold);
-  letter-spacing:.14em;text-transform:uppercase;transition:background .1s;
-}
-.cs-h:hover{background:rgba(212,168,67,.04);}
-.cs-arr{color:var(--border2);font-size:8px;transition:transform .15s;}
-.cs-b{display:none;padding:10px 12px 14px;flex-direction:column;gap:5px;}
-.cs-b.open{display:flex;}
-.cr{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:8px;}
-.cl{color:var(--ink4);font-size:7px;letter-spacing:.08em;flex-shrink:0;}
-.cv{color:var(--gold);font-size:9px;margin-left:auto;flex-shrink:0;}
-.cs-b input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer;margin:1px 0;}
-.cs-b select{
-  font-family:var(--mono);font-size:8px;background:var(--deep);
-  color:var(--ink2);border:1px solid var(--border2);
-  padding:3px 5px;border-radius:2px;cursor:pointer;width:100%;
-}
-.num-inp{
-  font-family:var(--mono);font-size:8px;background:var(--deep);
-  color:var(--ink2);border:1px solid var(--border2);
-  padding:2px 4px;border-radius:2px;width:52px;text-align:right;
-}
-.col-inp{width:28px;height:20px;border:1px solid var(--border2);
-  background:transparent;cursor:pointer;border-radius:2px;padding:0;}
-.ctb{
-  font-family:var(--mono);font-size:7.5px;letter-spacing:.07em;
-  border:1px solid var(--border2);background:transparent;color:var(--ink4);
-  padding:3px 8px;cursor:pointer;border-radius:2px;transition:all .12s;flex-shrink:0;
-}
-.ctb:hover{border-color:var(--gold);color:var(--gold);}
-.ctb.on{border-color:var(--teal);color:var(--teal);background:rgba(43,191,176,.07);}
-.sep-line{height:1px;background:var(--border);margin:4px -2px;}
-.hint{font-family:var(--mono);font-size:7px;color:var(--ink4);
-  letter-spacing:.04em;line-height:1.4;margin-top:1px;}
-
-/* Canvas stat bar */
-#cv-info-bar{
-  height:26px;flex-shrink:0;display:flex;align-items:center;
-  gap:14px;padding:0 16px;
-  background:rgba(10,9,18,.98);border-top:1px solid var(--border);
-  font-family:var(--mono);font-size:8px;
-}
-#cv-info-text{flex:1;color:var(--ink4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-#cv-stat{color:var(--ink4);white-space:nowrap;font-size:7px;}
-
-/* ═══════════════════════════════════════
-   ABOUT PAGE
-═══════════════════════════════════════ */
-#about-pg{overflow-y:auto;background:var(--black);}
-.about-wrap{max-width:860px;margin:0 auto;padding:80px 52px 120px;}
-.about-hero{margin-bottom:80px;}
-.about-kicker{
-  font-family:var(--mono);font-size:9px;letter-spacing:.25em;
-  color:var(--purple);text-transform:uppercase;margin-bottom:20px;
-}
-.about-title{
-  font-family:var(--display);font-size:clamp(32px,5vw,64px);
-  font-weight:400;color:var(--ink);line-height:1.08;margin-bottom:20px;
-}
-.about-title em{font-style:italic;color:var(--purple);}
-.about-lead{
-  font-size:18px;line-height:1.85;color:var(--ink2);
-  font-family:var(--serif);border-left:3px solid var(--purple);
-  padding-left:24px;
-}
-
-.results-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:48px 0;
-}
-@media(max-width:640px){.results-grid{grid-template-columns:1fr;}}
-.result-card{
-  background:var(--card);border:1px solid var(--border2);
-  padding:24px;position:relative;overflow:hidden;
-  transition:border-color .2s,transform .2s;
-}
-.result-card:hover{border-color:var(--gold2);transform:translateY(-2px);}
-.result-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-}
-.result-card.gold::before{background:var(--gold);}
-.result-card.teal::before{background:var(--teal);}
-.result-card.coral::before{background:var(--coral);}
-.result-card.blue::before{background:var(--blue);}
-.result-card.purple::before{background:var(--purple);}
-.rc-num{
-  font-family:var(--mono);font-size:32px;color:rgba(212,168,67,.15);
-  position:absolute;top:12px;right:16px;font-weight:300;line-height:1;
-}
-.rc-tag{
-  font-family:var(--mono);font-size:8px;letter-spacing:.15em;
-  text-transform:uppercase;margin-bottom:12px;display:block;
-}
-.gold .rc-tag{color:var(--gold);}
-.teal .rc-tag{color:var(--teal);}
-.coral .rc-tag{color:var(--coral);}
-.blue .rc-tag{color:var(--blue);}
-.purple .rc-tag{color:var(--purple);}
-.rc-title{
-  font-family:var(--display);font-size:22px;color:var(--ink);
-  font-style:italic;line-height:1.25;margin-bottom:10px;
-}
-.rc-desc{font-family:var(--serif);font-size:14px;color:var(--ink3);line-height:1.7;}
-.rc-formula{
-  font-family:var(--mono);font-size:11px;color:var(--teal);
-  background:rgba(43,191,176,.06);padding:8px 12px;
-  margin-top:14px;border-left:2px solid var(--teal);line-height:1.5;
-}
-.gold .rc-formula{color:var(--gold);background:rgba(212,168,67,.06);border-color:var(--gold);}
-
-.timeline{margin:60px 0;}
-.tl-title{
-  font-family:var(--display);font-size:28px;font-style:italic;
-  color:var(--ink);margin-bottom:36px;
-}
-.tl-item{
-  display:flex;gap:24px;margin-bottom:32px;
-  padding-bottom:32px;border-bottom:1px solid var(--border);
-}
-.tl-item:last-child{border-bottom:none;}
-.tl-num{
-  font-family:var(--mono);font-size:11px;color:var(--gold);
-  width:24px;flex-shrink:0;padding-top:2px;letter-spacing:.05em;
-}
-.tl-content{}
-.tl-label{
-  font-family:var(--mono);font-size:8px;letter-spacing:.15em;
-  color:var(--ink4);text-transform:uppercase;margin-bottom:6px;
-}
-.tl-text{font-family:var(--serif);font-size:15px;color:var(--ink2);line-height:1.75;}
-.tl-text strong{color:var(--ink);}
-.tl-text em{color:var(--gold);font-style:italic;}
-
-.honesty-box{
-  background:linear-gradient(135deg,rgba(144,96,208,.06),rgba(144,96,208,.02));
-  border:1px solid rgba(144,96,208,.3);
-  padding:32px;margin:60px 0;
-}
-.hb-title{
-  font-family:var(--display);font-size:24px;font-style:italic;
-  color:var(--purple);margin-bottom:20px;
-}
-.hb-text{font-family:var(--serif);font-size:15px;color:var(--ink2);line-height:1.8;}
-.hb-text + .hb-text{margin-top:14px;}
-
-.submit-box{
-  background:var(--card);border:1px solid var(--border2);
-  padding:32px;display:flex;gap:32px;align-items:center;
-  flex-wrap:wrap;margin-top:60px;
-}
-.sb-text{flex:1;}
-.sb-title{font-family:var(--display);font-size:22px;color:var(--ink);
-  font-style:italic;margin-bottom:10px;}
-.sb-desc{font-family:var(--serif);font-size:14px;color:var(--ink3);line-height:1.7;}
-.sb-links{display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
-.sb-link{
-  font-family:var(--mono);font-size:9px;letter-spacing:.12em;
-  border:1px solid var(--border2);padding:10px 20px;
-  text-decoration:none;text-transform:uppercase;text-align:center;
-  transition:all .2s;
-}
-.sb-link.arx{color:var(--gold);border-color:var(--gold2);}
-.sb-link.arx:hover{background:rgba(212,168,67,.1);}
-.sb-link.int{color:var(--teal);border-color:var(--teal);}
-.sb-link.int:hover{background:rgba(43,191,176,.1);}
-.sb-link.jnt{color:var(--blue);border-color:var(--blue);}
-.sb-link.jnt:hover{background:rgba(74,128,240,.1);}
-
-/* ═══════════════════════════════════════
-   ANALYSIS PAGE
-═══════════════════════════════════════ */
-#analysis-pg{overflow-y:auto;background:var(--black);}
-.an-wrap{max-width:1200px;margin:0 auto;padding:40px 40px 100px;}
-.an-hero{margin-bottom:36px;}
-.an-title{font-family:var(--display);font-size:clamp(26px,4vw,48px);
-  font-weight:400;color:var(--ink);line-height:1.1;margin-bottom:8px;}
-.an-title em{color:var(--teal);font-style:italic;}
-.an-sub{font-family:var(--serif);font-size:15px;color:var(--ink3);
-  line-height:1.7;max-width:700px;border-left:3px solid var(--teal);padding-left:18px;}
-.an-layout{display:grid;grid-template-columns:280px 1fr;gap:24px;min-height:600px;}
-@media(max-width:800px){.an-layout{grid-template-columns:1fr;}}
-.an-sidebar{display:flex;flex-direction:column;gap:14px;}
-.an-card{background:var(--card);border:1px solid var(--border2);padding:18px;
-  border-left:3px solid var(--teal);}
-.an-card.gold{border-left-color:var(--gold);}
-.an-card.coral{border-left-color:var(--coral);}
-.an-card.purple{border-left-color:var(--purple);}
-.an-card-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.15em;
-  color:var(--teal);text-transform:uppercase;margin-bottom:8px;display:block;}
-.an-card.gold .an-card-lbl{color:var(--gold);}
-.an-card.coral .an-card-lbl{color:var(--coral);}
-.an-card.purple .an-card-lbl{color:var(--purple);}
-.an-card p{font-family:var(--serif);font-size:13px;color:var(--ink3);line-height:1.65;margin:0;}
-.an-card p strong{color:var(--ink);}
-.an-card p em{color:var(--gold);}
-.an-main{display:flex;flex-direction:column;gap:16px;}
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-.stat-box{background:var(--card);border:1px solid var(--border2);
-  padding:14px 16px;text-align:center;}
-.stat-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;
-  color:var(--ink4);text-transform:uppercase;margin-bottom:6px;display:block;}
-.stat-val{font-family:var(--mono);font-size:18px;color:var(--teal);display:block;}
-.stat-val.gold{color:var(--gold);}
-.stat-val.coral{color:var(--coral);}
-.stat-val.purple{color:var(--purple);}
-.an-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
-.an-btn{font-family:var(--mono);font-size:9px;letter-spacing:.12em;
-  text-transform:uppercase;border:1px solid var(--border2);background:transparent;
-  color:var(--ink3);padding:10px 20px;cursor:pointer;transition:all .2s;
-  border-radius:2px;}
-.an-btn:hover{border-color:var(--gold);color:var(--gold);}
-.an-btn.play{border-color:var(--teal);color:var(--teal);background:rgba(43,191,176,.08);}
-.an-btn.play:hover{background:rgba(43,191,176,.18);}
-.an-btn.pause{border-color:var(--coral);color:var(--coral);}
-.an-ctrl-grp{display:flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:8px;color:var(--ink4);}
-.an-ctrl-grp input[type=range]{width:90px;accent-color:var(--gold);}
-.an-ctrl-grp select{font-family:var(--mono);font-size:8px;background:var(--deep);
-  color:var(--ink2);border:1px solid var(--border2);padding:4px 6px;border-radius:2px;}
-.an-prog{height:3px;background:var(--border);border-radius:2px;margin:0;}
-.an-prog-fill{height:100%;background:var(--teal);border-radius:2px;
-  width:0%;transition:width .1s;}
-#plot-main{height:380px;border-radius:4px;overflow:hidden;}
-#plot-jumps{height:220px;border-radius:4px;overflow:hidden;}
-.an-log{background:var(--deep);border:1px solid var(--border);
-  padding:12px;height:120px;overflow-y:auto;font-family:var(--mono);font-size:10px;
-  color:var(--ink3);line-height:1.6;}
-.an-log::-webkit-scrollbar{width:3px;}
-.an-log::-webkit-scrollbar-thumb{background:var(--border2);}
-.an-log span.p{color:var(--gold);}
-.an-log span.s{color:var(--teal);}
-.an-log span.hi{color:var(--ink);}
-</style>
-<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</script>
 
 </body>
-                                  </html>
+           </html>
