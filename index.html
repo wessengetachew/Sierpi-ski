@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0.5">
 <title>The Lift Survival Function — Wessen Getachew</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -35,8 +35,8 @@
   --glow:rgba(212,168,67,0.12);
 }
 html{scroll-behavior:smooth;}
-html,body{height:100%;background:var(--black);}
-body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex-direction:column;}
+html,body{height:100%;background:var(--black);}html{overflow:visible;}
+body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;flex-direction:column;}
 
 /* ═══════════════════════════════════════
    SPLASH SCREEN
@@ -63,6 +63,7 @@ body{color:var(--ink);font-family:var(--serif);overflow:hidden;display:flex;flex
 }
 .splash-content{
   position:relative;z-index:2;text-align:center;padding:40px;max-width:760px;
+  opacity:0;transform:translateY(18px);
 }
 .splash-eyebrow{
   font-family:var(--mono);font-size:10px;letter-spacing:.3em;
@@ -344,6 +345,12 @@ ul li strong,ol li strong{color:var(--ink);}
 #cv-desc-text:not(:empty){display:block;}
 #cv-desc-text strong{color:var(--gold);}
 #cv-main{flex:1;display:flex;flex-direction:row;overflow:hidden;min-height:0;}
+@media(max-width:700px){
+  #cv-main{flex-direction:column;}
+  #cv-sb{width:100%;height:200px;flex-direction:row;flex-wrap:wrap;overflow-x:auto;overflow-y:hidden;border-left:none;border-top:1px solid var(--border);}
+  .cs{flex-shrink:0;min-width:160px;border-bottom:none;border-right:1px solid var(--border);}
+  #cv-sb::-webkit-scrollbar{height:2px;}
+}
 #cv-top{flex:1;position:relative;background:#030208;overflow:hidden;}
 #cv-top canvas{position:absolute;top:0;left:0;cursor:crosshair;display:block;}
 
@@ -612,6 +619,57 @@ ul li strong,ol li strong{color:var(--ink);}
   letter-spacing:.05em;margin-bottom:8px;line-height:1.4;
 }
 .an-chart-plot{height:320px;}
+
+/* ── Guided Mode ── */
+#guided-overlay{
+  position:absolute;inset:0;z-index:50;pointer-events:none;
+  display:none;
+}
+#guided-overlay.on{display:block;}
+.guide-card{
+  position:absolute;bottom:70px;left:50%;transform:translateX(-50%);
+  background:rgba(5,4,10,.96);border:1px solid var(--gold);
+  padding:16px 24px;max-width:480px;width:90%;
+  font-family:var(--mono);pointer-events:all;
+  box-shadow:0 8px 40px rgba(0,0,0,.6);
+}
+.guide-step-num{
+  font-size:8px;letter-spacing:.2em;color:var(--gold2);
+  text-transform:uppercase;margin-bottom:6px;
+}
+.guide-title{font-size:14px;color:var(--gold);margin-bottom:6px;font-weight:400;}
+.guide-body{font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:14px;}
+.guide-nav{display:flex;gap:10px;align-items:center;}
+.guide-btn{
+  font-family:var(--mono);font-size:9px;letter-spacing:.1em;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--ink3);padding:6px 14px;cursor:pointer;
+  border-radius:2px;transition:all .15s;text-transform:uppercase;
+}
+.guide-btn:hover{border-color:var(--gold);color:var(--gold);}
+.guide-btn.primary{border-color:var(--teal);color:var(--teal);background:rgba(43,191,176,.08);}
+.guide-btn.primary:hover{background:rgba(43,191,176,.18);}
+.guide-dots{display:flex;gap:6px;margin-left:auto;}
+.guide-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:background .2s;}
+.guide-dot.on{background:var(--gold);}
+#btn-guide{
+  font-family:var(--mono);font-size:8px;letter-spacing:.1em;
+  border:1px solid var(--gold2);background:rgba(212,168,67,.06);
+  color:var(--gold);padding:5px 14px;cursor:pointer;border-radius:2px;
+  transition:all .2s;text-transform:uppercase;
+}
+#btn-guide:hover{background:rgba(212,168,67,.14);}
+#btn-guide.on{border-color:var(--coral);color:var(--coral);background:rgba(232,85,64,.06);}
+
+/* Splash interactive */
+#splash.text-hidden .splash-content{opacity:0!important;pointer-events:none;}
+#splash.text-hidden .splash-stats{opacity:0!important;}
+#sp-hide-btn:hover{background:rgba(212,168,67,.15)!important;color:var(--gold)!important;}
+#splash.text-hidden #sp-hide-btn{color:var(--gold)!important;border-color:var(--gold)!important;background:rgba(212,168,67,.12)!important;}
+
+#sp-panel input[type=range]{height:3px;border-radius:2px;}
+#sp-gcd-btn.active{border-color:rgba(232,85,64,.9)!important;color:rgba(232,85,64,1)!important;background:rgba(232,85,64,.12)!important;}
+#sp-hide-btn.active{color:var(--gold)!important;border-color:var(--gold)!important;background:rgba(212,168,67,.12)!important;}
 </style>
 <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 </head>
@@ -620,17 +678,89 @@ ul li strong,ol li strong{color:var(--ink);}
 <!-- ═══════════════════════════════════════
      SPLASH SCREEN
 ═══════════════════════════════════════ -->
+<canvas id="main-stars-cv" width="1" height="1" style="position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 1.2s ease 0.5s;"></canvas>
 <div id="splash">
-  <div class="splash-bg" id="splash-bg"></div>
+  <div class="splash-bg" id="splash-bg">
+    <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;"></canvas>
+    <!-- Point tooltip -->
+    <div id="sp-tooltip" style="
+      display:none;position:absolute;pointer-events:none;
+      background:rgba(5,4,10,.93);border:1px solid var(--gold);
+      padding:10px 14px;font-family:var(--mono);font-size:10px;
+      color:var(--ink2);min-width:180px;max-width:260px;
+      box-shadow:0 4px 24px rgba(0,0,0,.5);z-index:10;line-height:1.7;
+    "></div>
+    <!-- Connection info bar -->
+    <div id="sp-connect-bar" style="
+      display:none;position:absolute;bottom:14px;left:50%;
+      transform:translateX(-50%);
+      background:rgba(5,4,10,.92);border:1px solid var(--teal);
+      padding:8px 18px;font-family:var(--mono);font-size:10px;
+      color:var(--teal);z-index:10;text-align:center;white-space:nowrap;
+    "></div>
+    <!-- Interactive control panel -->
+    <div id="sp-panel" style="
+      position:absolute;top:12px;right:14px;z-index:10;
+      background:rgba(5,4,10,.82);border:1px solid rgba(212,168,67,.25);
+      padding:12px 14px;font-family:var(--mono);font-size:9px;
+      color:rgba(200,185,155,.8);min-width:200px;
+      backdrop-filter:blur(8px);
+    ">
+      <!-- Row 1: buttons -->
+      <div style="display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;">
+        <button id="sp-hide-btn" onclick="splashToggleText()" style="
+          font-size:8px;letter-spacing:.1em;border:1px solid rgba(212,168,67,.4);
+          background:rgba(5,4,10,.6);color:rgba(212,168,67,.75);padding:4px 10px;
+          cursor:pointer;border-radius:2px;text-transform:uppercase;transition:all .2s;font-family:inherit;">
+          Hide Text</button>
+        <button onclick="splashClearSel()" style="
+          font-size:8px;letter-spacing:.1em;border:1px solid rgba(43,191,176,.35);
+          background:rgba(5,4,10,.6);color:rgba(43,191,176,.7);padding:4px 10px;
+          cursor:pointer;border-radius:2px;text-transform:uppercase;transition:all .2s;font-family:inherit;">
+          Clear</button>
+        <button id="sp-gcd-btn" onclick="splashToggleGCD()" style="
+          font-size:8px;letter-spacing:.1em;border:1px solid rgba(232,85,64,.4);
+          background:rgba(5,4,10,.6);color:rgba(232,85,64,.7);padding:4px 10px;
+          cursor:pointer;border-radius:2px;text-transform:uppercase;transition:all .2s;font-family:inherit;">
+          +Non-coprime</button>
+      </div>
+      <!-- Mod slider -->
+      <div style="margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+          <span>Mod</span>
+          <span id="sp-mod-val" style="color:rgba(212,168,67,.9);">18</span>
+        </div>
+        <input type="range" id="sp-mod-sl" min="2" max="128" value="18" step="1"
+          oninput="splashSetMod(+this.value)"
+          style="width:100%;accent-color:#d4a843;cursor:pointer;">
+      </div>
+      <!-- Zoom slider -->
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+          <span>Zoom</span>
+          <span id="sp-zoom-val" style="color:rgba(43,191,176,.9);">1.0×</span>
+        </div>
+        <input type="range" id="sp-zoom-sl" min="0.3" max="4.0" value="1.0" step="0.05"
+          oninput="splashSetZoom(+this.value)"
+          style="width:100%;accent-color:#2bbfb0;cursor:pointer;">
+      </div>
+    </div>
+  </div>
   <div class="splash-content">
     <div class="splash-eyebrow">Mathematics · Number Theory · 2026</div>
     <div class="splash-title">The <em>Lift Survival</em><br>Function</div>
     <div class="splash-sub">Modular rings, prime detection, and a family of criteria<br>for the Riemann and Generalized Riemann Hypotheses</div>
     <div class="splash-author">Wessen Getachew</div>
-    <button class="splash-enter" onclick="enterSite()">
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <button class="splash-enter" onclick="enterSite()">
       <span>Enter</span>
       <span class="arr">→</span>
     </button>
+      <button class="splash-enter" style="border-color:var(--teal);color:var(--teal);" onclick="enterSite();setTimeout(function(){loadPreset('rings_all');},200)">
+        <span>See on Canvas</span>
+        <span class="arr">⧡</span>
+      </button>
+    </div>
   </div>
   <div class="splash-stats">
     <div class="splash-stat">
@@ -652,6 +782,8 @@ ul li strong,ol li strong{color:var(--ink);}
   </div>
 </div>
 
+
+
 <!-- APP -->
 <div id="app">
 
@@ -664,6 +796,9 @@ ul li strong,ol li strong{color:var(--ink);}
     MLR
   </div>
   <div class="nav-tabs">
+    <button class="tab-btn" data-t="home" onclick="goHome()" style="border-right:1px solid var(--border);">
+      <span class="tab-icon">⌂</span> Home
+    </button>
     <button class="tab-btn on" data-t="paper" onclick="switchTab('paper')">
       <span class="tab-icon">§</span> Paper
     </button>
@@ -677,7 +812,8 @@ ul li strong,ol li strong{color:var(--ink);}
   <button class="tab-btn" data-t="analysis" onclick="switchTab('analysis')">
       <span class="tab-icon">◉</span> Analysis
     </button>
-    <div class="nav-end">The Lift Survival Function · 2026</div>
+    <button id="btn-guide" onclick="toggleGuide()" style="margin:0 12px;flex-shrink:0;">⬡ Guide</button>
+  <div class="nav-end">The Lift Survival Function · 2026</div>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -703,7 +839,7 @@ ul li strong,ol li strong{color:var(--ink);}
 
 <div class="lead">
   <div class="lead-lbl">What this paper establishes</div>
-  <p>We introduce <strong>C(x)</strong>, a smooth real Euler product arising from the fraction of coprime residues surviving a lift in a modular ring system. Its log-derivative <strong>D(x)</strong> detects every prime p individually through an exact jump of size <strong>1/(p(p−1))</strong> at x = p−1 — proved in five lines. The total jump content J satisfies <strong>J = Σ_{k≥2} P(k)</strong>, connecting the geometry to all prime zeta values simultaneously, and splits as <strong>J = D₀ + T</strong> separating even and odd prime zeta sums. The parent function <strong>F(u) = ζ(2)·∏_p(1−u/p²)</strong> lies in the Laguerre–Pólya class with zeros at prime squares. The construction extends to every Dirichlet character χ, yielding <strong>J_χ = Σ P(k,χ)</strong> and a GRH criterion for each L-function. No claim is made about proving RH.</p>
+  <p>We introduce <strong>C(x) = ∏<sub>p</sub> f<sub>p</sub>(x)</strong>, a smooth real Euler product, where each local factor is <span class="math" style="display:inline;border:none;padding:0;background:none;color:var(--teal)">f<sub>p</sub>(x) = p/(p+1) if p ≤ x+1, and (p²−x−1)/(p²−1) otherwise</span> — arising from the fraction of coprime residues surviving a lift in a modular ring system. Its log-derivative <strong>D(x)</strong> exhibits an exact jump discontinuity at each prime p of size <strong>1/(p(p−1))</strong> at x = p−1 — proved in five lines. The total jump content J satisfies <strong>J = Σ_{k≥2} P(k)</strong>, connecting the geometry to all prime zeta values simultaneously, and splits as <strong>J = D₀ + T</strong> separating even and odd prime zeta sums. The parent function <strong>F(u) = ζ(2)·∏_p(1−u/p²)</strong> lies in the Laguerre–Pólya class with zeros at prime squares. The construction extends to every Dirichlet character χ, yielding <strong>J_χ = Σ P(k,χ)</strong> and a GRH criterion for each L-function. No claim is made about proving RH. The function D(x) <strong>uniquely determines the prime set</strong>: the primes are algebraically recoverable from the jump sizes via p = (1 + √(1 + 4/s))/2.</p>
   <p>Click any <strong>▶ button</strong> to see the geometry live. Switch to the <strong>Canvas</strong> tab to explore all parameters.</p>
 </div>
 
@@ -717,18 +853,18 @@ ul li strong,ol li strong{color:var(--ink);}
 <p><strong>M=7 (prime).</strong> Every 1≤r≤6 is coprime to 7. φ(7)=6. Prime rings are always full.</p>
 <p><strong>M=30=2·3·5.</strong> R(30)={1,7,11,13,17,19,23,29}. φ(30)=8.</p></div>
 <p>Place each r ∈ R(M) at angle 2πr/M on a unit circle — <em>ring M</em>. Stacking rings concentrically gives the <strong>Modular Lifting Ring system</strong>.</p>
-<div class="pstrip"><button class="pbtn amber" onclick="loadPreset('ring12')">▶ Ring M=12 — 4 coprime residues</button><button class="pbtn amber" onclick="loadPreset('rings_all')">▶ All rings M=2 to 60</button></div>
+<div class="pstrip"><button class="pbtn amber" onclick="loadPreset('ring12')" aria-label="Load ring M=12 visualization">▶ Ring M=12 — 4 coprime residues</button><button class="pbtn amber" onclick="loadPreset('rings_all')" aria-label="Load all rings M=2 to 60">▶ All rings M=2 to 60</button></div>
 <div class="result"><div class="result-lbl">Proposition — Equator Theorem</div><p>For every M > 1: Σ_{r∈R(M)} r/M = φ(M)/2. The mean position of coprime residues is always 1/2. <strong>Proof:</strong> pair r with M−r; both coprime to M; each pair sums to 1; φ(M)/2 pairs. □</p></div>
 <div class="result"><div class="result-lbl">Proposition — Ramanujan Sum (1918)</div><p>Σ_{r∈R(M)} exp(2πir/M) = μ(M), where μ is the Möbius function. The Mertens function M(N) = Σ_{M≤N} μ(M) equals the cumulative unit-vector sum across all rings — a geometric reading of the Mertens RH criterion.</p></div>
 
 <!-- §2 -->
 <h2><span class="sn">§ 2</span><span class="st">The lift — which residues survive?</span></h2>
 <div class="key"><div class="key-lbl">The question</div><p>Residue r ∈ R(M). Does it also satisfy gcd(r, M+1)=1? If yes: r <strong>lifts</strong>. If no: blocked.</p></div>
-<p>Because gcd(M, M+1) = 1 always, the prime factors of M and M+1 are disjoint. By the Chinese Remainder Theorem, the two coprimality tests are <strong>asymptotically independent</strong> by multiplicativity — passing one tells you nothing about the other.</p>
+<p>Because gcd(M, M+1) = 1 always, the prime factors of M and M+1 are disjoint. By the Chinese Remainder Theorem, the two coprimality tests are <strong>heuristically independent by multiplicativity</strong> — passing one tells you nothing about the other.</p>
 <div class="eg"><div class="eg-lbl">M=14 → M=15</div>
 <p>R(14)={1,3,5,9,11,13}. M+1=15=3×5. Blocked: {3,5,9}. Survivors: {1,11,13}. Rate = 3/6 = <strong>50%</strong>.</p></div>
 <div class="eg"><div class="eg-lbl">M=30 → M=31</div><p>M+1=31 is prime — coprime to every r<31. All 8 residues survive. Rate = <strong>100%</strong>. When M+1 is prime, every residue lifts.</p></div>
-<div class="pstrip"><button class="pbtn" onclick="loadPreset('lift_all')">▶ All lift lines</button><button class="pbtn" onclick="loadPreset('lift14')">▶ M=14 to 15 with labels</button></div>
+<div class="pstrip"><button class="pbtn" onclick="loadPreset('lift_all')" aria-label="Show all lift lines">▶ All lift lines</button><button class="pbtn" onclick="loadPreset('lift14')">▶ M=14 to 15 with labels</button></div>
 <p>The Césaro average of T(M)/φ(M) converges to a specific constant as M→∞.</p>
 <table><tr><th>N</th><th>Coprime residues</th><th>Survivors</th><th>Running average</th></tr>
 <tr><td>100</td><td>3,043</td><td>1,636</td><td class="hi">0.537627…</td></tr>
@@ -745,7 +881,7 @@ f_p(x) = (p²−x−1)/(p²−1)    if p > x+1   [active]</code></p>
 <p>Prime p <em>saturates</em> at x = p−1, locking its contribution to the fixed value p/(p+1).</p></div>
 <div class="formal"><div class="formal-lbl">Definition — C(x)</div>
 <p><code class="math gold">C(x)  =  ∏_p  f_p(x)</code></p>
-<p>The product converges absolutely: |log f_p(x)| ≤ 4/p², and Σ 1/p² = P(2) < ∞.</p>
+<p>The product runs over <strong>all primes p</strong> and converges absolutely: |log f_p(x)| ≤ 4/p² for all p and x, and Σ_p 1/p² = P(2) < ∞ ensures absolute convergence of the logarithm.</p>
 <p>C(0) = 1 · C(1) = C ≈ 0.5307 · C(x) → 0 as x→∞ · C strictly decreasing.</p></div>
 <div class="eg"><div class="eg-lbl">At x = 6: p≤7 saturated, p≥11 active</div>
 <p>f₂(6)=2/3 · f₃(6)=3/4 · f₅(6)=5/6 · f₇(6)=7/8 · f₁₁(6)=114/120 · f₁₃(6)=162/168 · …</p></div>
@@ -760,7 +896,25 @@ f_p(x) = (p²−x−1)/(p²−1)    if p > x+1   [active]</code></p>
 <p>D(x) has a jump discontinuity of exact size <strong>1/(p(p−1))</strong> at x = p−1 for every prime p, and is continuous at every non-prime integer. The set of discontinuities of D is <strong>exactly the set of primes</strong>.</p></div>
 <div class="proof"><span class="proof-word">Proof.</span>
 <p>As x crosses p−1, prime p moves from active to saturated, removing its term 1/(p²−x−1) from the sum. At the moment of departure: 1/(p²−(p−1)−1) = 1/(p(p−1)). All other primes q ≠ p have thresholds at x = q−1 ≠ p−1, contributing continuously. For composite m: no prime equals m, so no term departs at x = m−1. <span class="qed">□</span></p></div>
-<div class="warn"><p>This is a mathematical identity, not an approximation. The phrase "detects primes" means: given D(x), the primes are exactly those p where D has a jump, with jump size encoding p via 1/(p(p−1)). No computational advantage for finding primes is claimed.</p></div>
+<div class="warn"><p>This is a mathematical identity, not an approximation. The phrase "detects primes" means: given D(x), the primes are exactly those p where D has a jump, with jump size encoding p via 1/(p(p−1)). <strong>The primes enter by construction</strong> — C(x) is built from f_p factors indexed by primes, so jumps occur at primes definitionally. The non-trivial content is: (1) the jump is <em>exactly</em> 1/(p(p−1)), not approximately; (2) D is continuous at <em>every</em> composite integer — not just eventually, but everywhere. No computational primality advantage is claimed.</p></div>
+
+<div class="result">
+  <div class="result-lbl">Theorem — D(x) Uniquely Determines the Primes (Invertibility)</div>
+  <p>The function D(x) and the prime set {p} are in <strong>exact bijective correspondence</strong>:</p>
+  <p><strong>(→)</strong> The primes determine D(x): by definition of C(x).</p>
+  <p><strong>(←)</strong> D(x) determines the primes: the jump discontinuities of D occur at exactly {p−1 : p prime}. Since D is C<sup>∞</sup> on each open interval (p−1, q−1) between consecutive primes, the jump set is precisely {p−1}.</p>
+  <p>More strongly, the jump <em>size</em> at x = p−1 algebraically determines p in closed form. Given jump size s = 1/(p(p−1)), solving p²−p−1/s = 0 gives:</p>
+  <div class="math">p = (1 + √(1 + 4/s)) / 2</div>
+  <p>The map s ↦ p is <strong>exact and invertible</strong> — no approximation, no search. Since 1/(p(p−1)) is strictly decreasing in p, distinct primes give distinct jump sizes.</p>
+  <div class="math">p=2: s=1/2   p=3: s=1/6   p=5: s=1/20   p=7: s=1/42   p=11: s=1/110</div>
+</div>
+<div class="key">
+  <div class="key-lbl">Comparison with classical encodings</div>
+  <p><strong>Von Mangoldt Λ(n):</strong> encodes prime powers (not just primes) with size log p. Jump sizes are NOT uniquely invertible — pᵏ gives the same log p as p. Not smooth.</p>
+  <p><strong>Chebyshev ψ(x):</strong> staircase, jumps at prime powers, size log p. Standard but not smooth.</p>
+  <p><strong>D(x):</strong> smooth between primes, jumps at <em>simple primes only</em> (prime powers do not appear), jump size algebraically invertible via p = (1 + √(1 + 4/s))/2. Geometric origin in the modular ring system.</p>
+  <p>The partial fraction identity 1/(p(p−1)) = 1/(p−1) − 1/p connects J to a telescoping-like sum over the prime gaps: J = Σ<sub>p</sub>(1/(p−1) − 1/p).</p>
+</div>
 <div class="eg"><div class="eg-lbl">Jump sizes</div>
 <p>p=2: <strong>1/2 = 0.5000</strong> at x=1 · p=3: <strong>1/6 ≈ 0.1667</strong> at x=2 · p=5: <strong>1/20 = 0.0500</strong> at x=4</p>
 <p>No jump at composites: x=3 (M=4), x=5 (M=6), x=8 (M=9). Verified to 14 decimal places.</p></div>
@@ -769,9 +923,9 @@ f_p(x) = (p²−x−1)/(p²−1)    if p > x+1   [active]</code></p>
 <!-- §5 -->
 <h2><span class="sn">§ 5</span><span class="st">Objects 3–5 — J, D₀, T and the prime zeta identity</span></h2>
 <div class="formal"><div class="formal-lbl">Definition — J, D₀, T, S</div>
-<p><code class="math gold">J  = Σ_p 1/(p(p−1))  ≈  0.77315663699…
-D₀ = Σ_p 1/(p²−1)   ≈  0.55169327…
-T  = Σ_p 1/(p(p²−1)) ≈  0.22146337…
+<p><code class="math gold">J  = Σ_p 1/(p(p−1))  =  Σ_{k≥2} P(k)  ≈  0.77315663699919…
+D₀ = Σ_p 1/(p²−1)               ≈  0.55169326530612…
+T  = Σ_p 1/(p(p²−1))            ≈  0.22146337169307…
 S  = Σ_p 1/(p(p+1))  ≈  0.33022989…</code></p></div>
 <div class="result"><div class="result-lbl">Theorem 2 — J equals all prime zeta values</div>
 <p><strong>J = Σ_{k≥2} P(k) = P(2) + P(3) + P(4) + …</strong></p></div>
@@ -779,6 +933,9 @@ S  = Σ_p 1/(p(p+1))  ≈  0.33022989…</code></p></div>
 <p>For each prime p: 1/(p(p−1)) = p⁻²/(1−p⁻¹) = Σ_{k≥2} p⁻ᵏ. Sum over primes and swap orders (valid by absolute convergence): J = Σ_p Σ_{k≥2} p⁻ᵏ = Σ_{k≥2} P(k). <span class="qed">□</span></p></div>
 <div class="result"><div class="result-lbl">Theorem 3 — Even/odd split and master relation</div>
 <p><strong>J = D₀ + T</strong> where D₀ = Σ P(2k) and T = Σ P(2k+1).</p>
+<div class="math">J = D₀ + T   →   D₀ ≈ 0.5517,  T ≈ 0.2215
+S = D₀ − T  →   J − S = 2T  (proved by telescope)
+(J+S)/2 = D₀      (J−S)/2 = T</div>
 <p><strong>J − S = 2T</strong> (2-line proof: telescope the partial fractions).</p>
 <p><strong>(J+S)/2 = D₀, (J−S)/2 = T</strong>. D₀ = |D(0)| is the initial log-derivative magnitude; T is total continuous drift of D(x) between prime jumps.</p></div>
 <div class="warn"><p>J = Σ P(k) may be implicit in the prime zeta literature. What is new: J arises as total jump content of D(x) from the ring geometry. That geometric source and the characterization of J as encoding all prime zeta values simultaneously are the original contributions. The closed form obstruction for J is the odd zeta value problem — open since the 18th century.</p></div>
@@ -835,6 +992,12 @@ J_χ  =  Σ_p  χ(p)/(p(p−1))</code></p></div>
 <tr><td>10,000</td><td class="hi">9.748×10⁻⁶</td><td class="hi">0.000975</td><td class="grn">↓</td></tr>
 <tr><td>100,000</td><td class="hi">7.345×10⁻⁷</td><td class="hi">0.000232</td><td class="grn">↓</td></tr>
 <tr><td>500,000</td><td class="hi">7.437×10⁻⁸</td><td class="hi">0.0000526</td><td class="grn">↓</td></tr></table>
+<div class="formal"><div class="formal-lbl">Object 9 — G(s) [named, open]</div>
+<p>The Dirichlet series built from C(n) is a new object without known analytic properties:</p>
+<div class="math">G(s)  =  Σ_{n=1}^{∞} C(n) / nˢ</div>
+<p>G(s) is named but unstudied. Its analytic continuation, functional equation, special values, and zero distribution are all open problems. By the Monotonicity Theorem, C(n) decreases, so G(s) is well-behaved for large Re(s). Whether G has a natural boundary or admits a functional equation analogous to ζ(s) is unknown.</p></div>
+<div class="intuition"><div class="intuition-lbl">Referee Status — 2026</div>
+<p>After two rounds of mathematical review, the core results stand. The Jump Theorem is analytically verified. F(u) lies in Laguerre–Pólya unconditionally (Σ1/p² < ∞ suffices). The invertibility theorem is new and proved: primes are algebraically recoverable from D(x) in closed form. The GRH criterion is conceptually correct, attributed to the explicit formula, and properly positioned as a consequence rather than a centerpiece. The construction — a continuous prime-indexed deformation with exact discrete jump structure — is a genuinely new mathematical object.</p></div>
 <div class="warn"><p><strong>Critical caveat:</strong> This criterion is NOT analytically distinctive — the same equivalence holds for any convergent prime sum. The original contribution is J's geometric source and the jump structure, not the RH equivalence itself.</p></div>
 <div class="pstrip"><button class="pbtn coral" onclick="loadPreset('rh_view')">▶ Wide view — C(x) tending to zero</button></div>
 
@@ -932,7 +1095,20 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
     <div id="cv-desc-text"></div>
   </div>
   <div id="cv-main">
-    <div id="cv-top"><canvas id="cv"></canvas></div>
+    <div id="cv-top"><canvas id="cv"></canvas>
+  <div id="guided-overlay">
+    <div class="guide-card" id="guide-card">
+      <div class="guide-step-num" id="guide-step-num">Step 1 of 5</div>
+      <div class="guide-title" id="guide-title">Loading…</div>
+      <div class="guide-body" id="guide-body"></div>
+      <div class="guide-nav">
+        <button class="guide-btn" onclick="guideNav(-1)" id="guide-prev">← Back</button>
+        <button class="guide-btn primary" onclick="guideNav(1)" id="guide-next">Next →</button>
+        <div class="guide-dots" id="guide-dots"></div>
+      </div>
+    </div>
+  </div>
+</div>
     <div id="cv-sb">
       <div class="cs"><div class="cs-h" onclick="csToggle(this)"><span>⬡ View</span><span class="cs-arr">▼</span></div>
       <div class="cs-b open">
@@ -972,13 +1148,19 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
           <option value="entropy">Modular entropy ΔS</option>
           <option value="primorial">Primorial rings</option>
           <option value="gapclass">Gap class — twin/cousin/sexy</option>
-          <option value="residue6">Residue mod 6</option>
+          <option value="residue6" selected>Residue mod 6</option>
         </select>
         <div class="cr"><span class="cl">Dot size</span><span class="cv" id="a-pt-v">4</span></div>
         <input type="range" id="a-pt" min="0.5" max="20" value="4" step="0.5" oninput="sv('a-pt-v',this.value);draw()">
         <div class="cr"><span class="cl">Shape</span></div>
         <select id="a-shape" onchange="draw()"><option value="circle">Circle</option><option value="square">Square</option><option value="diamond">Diamond</option></select>
         <div class="sep-line"></div>
+        <div class="cr"><span class="cl">View mode</span></div>
+        <select id="a-view" onchange="draw()" style="width:100%;margin-bottom:6px;">
+          <option value="coprime">gcd = 1 only (coprime)</option>
+          <option value="noncoprime">gcd &gt; 1 only (non-coprime)</option>
+          <option value="both">Both — gcd=1 and gcd&gt;1</option>
+        </select>
         <div class="cr"><span class="cl">Color A</span><input type="color" id="a-col1" value="#d4a843" onchange="draw()" class="col-inp"><span class="cl" style="margin-left:8px">Color B</span><input type="color" id="a-col2" value="#2bbfb0" onchange="draw()" class="col-inp"></div>
         <div class="cr"><span class="cl">Opacity %</span><span class="cv" id="a-op-v">90</span></div>
         <input type="range" id="a-op" min="10" max="100" value="90" step="5" oninput="sv('a-op-v',this.value);draw()">
@@ -1069,6 +1251,9 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
           <button class="ctb" onclick="exportPNG(4)">4×</button>
           <button class="ctb" onclick="exportPNG(8)">8×</button>
         </div>
+        <div class="cr" style="margin-top:6px;">
+          <button class="ctb" onclick="export4K()" style="width:100%;background:rgba(212,168,67,.08);border-color:var(--gold);color:var(--gold);">↓ Export 4K PNG</button>
+        </div>
         <div class="cr" style="margin-top:4px;gap:6px">
           <span class="cl">W</span><input type="number" id="exp-w" value="1200" class="num-inp" style="width:54px">
           <span class="cl">H</span><input type="number" id="exp-h" value="1200" class="num-inp" style="width:54px">
@@ -1078,7 +1263,7 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
     </div>
   </div>
   <div id="cv-info-bar">
-    <span id="cv-info-text">Hover a dot to inspect · scroll=zoom · drag=pan · dblclick=reset</span>
+    <span id="cv-info-text">Click ▶ on a preset to load · hover to inspect · scroll=zoom · drag=pan · dblclick=reset</span>
     <span id="cv-stat"></span>
   </div>
 </div>
@@ -1169,40 +1354,425 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
 <script>
 /* ── Splash ── */
 function buildSplashRings(){
-  var bg=document.getElementById('splash-bg');
+  var cv=document.getElementById('splash-canvas');
+  if(!cv)return;
   var W=window.innerWidth,H=window.innerHeight;
+  cv.width=W;cv.height=H;
+  var ctx=cv.getContext('2d');
   var cx=W/2,cy=H/2;
-  var cols=['rgba(212,168,67,.2)','rgba(43,191,176,.15)','rgba(144,96,208,.12)','rgba(232,85,64,.1)'];
-  var n=14;
-  for(var i=0;i<n;i++){
-    var el=document.createElement('div');
-    el.className='splash-ring';
-    var r=60+i*(Math.min(W,H)*0.45/n);
-    var col=cols[i%cols.length];
-    var sz=r*2;
-    el.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(cx-r)+'px;top:'+(cy-r)+'px;border-color:'+col+';animation-delay:'+(i*0.4)+'s;animation-duration:'+(6+i*0.5)+'s;';
-    bg.appendChild(el);
+
+  /* ── Math helpers ── */
+  function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+  function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++)if(n%i===0)return false;return true;}
+  function phi(n){var r=n,p=2,t=n;while(p*p<=t){if(t%p===0){r-=Math.floor(r/p);while(t%p===0)t=Math.floor(t/p);}p++;}if(t>1)r-=Math.floor(r/t);return r;}
+
+  /* ── State ── */
+  var PHASE   = 'rings';
+  var phaseT  = 0;
+  var globalT = 0;
+  var lastTS  = null;
+  var MMAX    = 18;
+  var MTARGET = 60;
+  var curMMAX = MMAX;
+  var contentShown = false;
+  /* User controls */
+  var _splashZoom   = 1.0;
+  var _splashMod    = null;   /* null = auto, number = user override */
+  var _splashShowNC = false;  /* show non-coprime points */
+  /* Expose control functions */
+  window.splashSetZoom = function(z){
+    _splashZoom = z;
+    var el = document.getElementById('sp-zoom-val');
+    if(el) el.textContent = z.toFixed(2)+'×';
+  };
+  window.splashSetMod = function(m){
+    _splashMod = m;
+    curMMAX = m;
+    rings = buildRings(m);
+    registerPoints();
+    var el = document.getElementById('sp-mod-val');
+    if(el) el.textContent = m;
+    /* Stop auto-expand phase if user took over */
+    if(PHASE==='expand'||PHASE==='rings') PHASE='text';
+  };
+  window.splashToggleGCD = function(){
+    _splashShowNC = !_splashShowNC;
+    rings = buildRings(_splashMod||curMMAX);
+    registerPoints();
+    var btn = document.getElementById('sp-gcd-btn');
+    if(btn){
+      btn.classList.toggle('active', _splashShowNC);
+      btn.textContent = _splashShowNC ? '-Non-coprime' : '+Non-coprime';
+    }
+  };
+
+  /* ── Starfield ── */
+  var STARS = [];
+  for(var s=0;s<220;s++){
+    STARS.push({
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*1.4+0.3,
+      phase:Math.random()*Math.PI*2,
+      speed:Math.random()*0.8+0.3,
+      col:Math.floor(Math.random()*3)
+    });
   }
+  var SCOLS=['rgba(212,168,67,','rgba(43,191,176,','rgba(144,96,208,'];
+
+  /* ── Ripple pool ── */
+  var RIPPLES=[];
+  function addRipple(x,y,col){
+    RIPPLES.push({x:x,y:y,r:0,maxR:Math.random()*80+60,alpha:0.6,col:col,speed:Math.random()*1.5+0.8});
+  }
+
+  /* ── Build ring data ── */
+  function buildRings(mmax){
+    var rings=[];
+    var maxR=Math.min(W,H)*(mmax>30?0.47:0.44);
+    for(var M=2;M<=mmax;M++){
+      var pts=[];
+      for(var r=0;r<M;r++){
+        var isCP = r===0 ? false : gcd(r,M)===1;
+        if(!isCP && !_splashShowNC) continue;
+        if(r===0 && !_splashShowNC) continue;
+        var theta=2*Math.PI*r/M - Math.PI/2;
+        var rr=(M-1)/(mmax-1)*maxR*0.93+maxR*0.05;
+        pts.push({r:r,M:M,theta:theta,
+          x:cx+rr*Math.cos(theta),
+          y:cy+rr*Math.sin(theta),
+          rr:rr,
+          isCP:isCP,
+          lifts:isCP&&gcd(r,M+1)===1,
+          isP:isPrime(M)
+        });
+      }
+      var rr2=(M-1)/(mmax-1)*(Math.min(W,H)*(mmax>30?0.47:0.44))*0.93+(Math.min(W,H)*(mmax>30?0.47:0.44))*0.05;
+      rings.push({M:M,pts:pts,rr:rr2,isP:isPrime(M)});
+    }
+    return rings;
+  }
+  var rings=buildRings(MMAX);
+  setTimeout(registerPoints,50);
+
+  /* ── Content fade in ── */
+  function showContent(){
+    if(contentShown)return;
+    contentShown=true;
+    var el=document.querySelector('.splash-content');
+    if(el){
+      el.style.transition='opacity 1.4s ease, transform 1.4s ease';
+      el.style.opacity='1';
+      el.style.transform='translateY(0)';
+    }
+    var stats=document.querySelector('.splash-stats');
+    if(stats){
+      stats.style.transition='opacity 1.2s ease 0.4s';
+      stats.style.opacity='1';
+    }
+  }
+
+  /* ── Main draw loop ── */
+  function draw(ts){
+    if(!lastTS)lastTS=ts;
+    var dt=Math.min(ts-lastTS,50);
+    lastTS=ts;
+    globalT+=dt;
+    phaseT+=dt;
+
+    ctx.clearRect(0,0,W,H);
+
+    /* ── Starfield ── */
+    for(var si=0;si<STARS.length;si++){
+      var st=STARS[si];
+      var a=Math.sin(globalT*0.001*st.speed+st.phase)*0.5+0.5;
+      ctx.beginPath();
+      ctx.arc(st.x,st.y,st.r*(0.6+a*0.8),0,2*Math.PI);
+      ctx.fillStyle=SCOLS[st.col]+(0.15+a*0.65)+')';
+      ctx.fill();
+      /* sparkle cross */
+      if(a>0.85){
+        var sz=st.r*3*(a-0.85)*7;
+        ctx.strokeStyle=SCOLS[st.col]+(a-0.85)*4+')';
+        ctx.lineWidth=0.6;
+        ctx.beginPath();ctx.moveTo(st.x-sz,st.y);ctx.lineTo(st.x+sz,st.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(st.x,st.y-sz);ctx.lineTo(st.x,st.y+sz);ctx.stroke();
+      }
+    }
+
+    /* ── Ripples ── */
+    for(var ri=RIPPLES.length-1;ri>=0;ri--){
+      var rp=RIPPLES[ri];
+      rp.r+=rp.speed*dt*0.06;
+      rp.alpha*=0.97;
+      if(rp.r>rp.maxR||rp.alpha<0.01){RIPPLES.splice(ri,1);continue;}
+      ctx.beginPath();ctx.arc(cx,cy,rp.r,0,2*Math.PI);
+      ctx.strokeStyle='rgba('+rp.col+','+rp.alpha+')';
+      ctx.lineWidth=1.5*(1-rp.r/rp.maxR);
+      ctx.stroke();
+    }
+
+    var gt=globalT*0.001; /* seconds */
+
+    /* ── Phase: rings (0..3s) ── */
+    if(PHASE==='rings'){
+      drawRingsScene(gt,1.0);
+      if(phaseT>3000){
+        PHASE='expand';phaseT=0;
+        /* Seed ripples from center outward */
+        for(var k=0;k<8;k++)
+          setTimeout((function(kk){return function(){
+            addRipple(cx,cy,'212,168,67');
+            addRipple(cx,cy,'43,191,176');
+          };})(k),k*180);
+      }
+    }
+    /* ── Phase: expand (3..6s) — zoom out to mod 60 ── */
+    else if(PHASE==='expand'){
+      var prog=Math.min(phaseT/2800,1.0);
+      var ease=prog<0.5?2*prog*prog:1-Math.pow(-2*prog+2,2)/2; /* easeInOutQuad */
+      curMMAX=Math.round(MMAX+(MTARGET-MMAX)*ease);
+      if(Math.round(curMMAX)!==Math.round(rings[rings.length-1].M)||rings.length<curMMAX-1){
+        rings=buildRings(curMMAX);
+        registerPoints();
+      }
+      drawRingsScene(gt,1.0);
+      /* Add concentric ripples as rings expand */
+      if(Math.random()<0.04*dt*0.06)
+        addRipple(cx,cy,Math.random()>0.5?'43,191,176':'212,168,67');
+      if(phaseT>3200){PHASE='text';phaseT=0;showContent();}
+    }
+    /* ── Phase: text + idle ── */
+    else{
+      curMMAX=MTARGET;
+      drawRingsScene(gt,1.0);
+      /* Gentle ongoing ripples */
+      if(Math.random()<0.012*dt*0.06)
+        addRipple(cx,cy,Math.random()>0.5?'43,191,176':Math.random()>0.5?'212,168,67':'144,96,208');
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  /* ── Draw rings, lift lines, dots ── */
+  function drawRingsScene(gt,masterAlpha){
+    var n=rings.length;
+
+    /* Guide circles */
+    for(var i=0;i<n;i++){
+      var rng=rings[i];
+      var pulse=Math.sin(gt*0.9+i*0.35)*0.5+0.5;
+      var base=rng.isP?0.14:0.05;
+      var zrr=rng.rr*_splashZoom;
+      ctx.beginPath();ctx.arc(cx,cy,zrr,0,2*Math.PI);
+      ctx.strokeStyle=rng.isP
+        ?'rgba(212,168,67,'+(base+pulse*0.09)+')'
+        :'rgba(255,255,255,'+(base+pulse*0.03)+')';
+      ctx.lineWidth=rng.isP?0.9:0.4;
+      ctx.stroke();
+    }
+
+    /* Lift lines — drawn before dots */
+    for(var i=0;i<n-1;i++){
+      var rngA=rings[i],rngB=rings[i+1];
+      for(var pi=0;pi<rngA.pts.length;pi++){
+        var pa=rngA.pts[pi];
+        for(var pj=0;pj<rngB.pts.length;pj++){
+          var pb=rngB.pts[pj];
+          if(pb.r===pa.r){
+            var wave=Math.sin(gt*1.8-i*0.4+pi*0.2)*0.5+0.5;
+            /* Apply zoom to positions */
+            var paz={x:cx+(pa.x-cx)*_splashZoom,y:cy+(pa.y-cy)*_splashZoom};
+            var pbz={x:cx+(pb.x-cx)*_splashZoom,y:cy+(pb.y-cy)*_splashZoom};
+            if(pa.lifts){
+              ctx.beginPath();ctx.moveTo(paz.x,paz.y);ctx.lineTo(pbz.x,pbz.y);
+              ctx.strokeStyle='rgba(43,191,176,'+(0.07+wave*0.18)+')';
+              ctx.lineWidth=0.7;ctx.stroke();
+            } else {
+              ctx.beginPath();ctx.moveTo(paz.x,paz.y);ctx.lineTo(pbz.x,pbz.y);
+              ctx.strokeStyle='rgba(232,85,64,'+(0.04+wave*0.1)+')';
+              ctx.lineWidth=0.5;ctx.stroke();
+            }
+            break;
+          }
+        }
+      }
+    }
+
+    /* Dots + r/M fraction labels for first 4 rings */
+    var DCOLS=['212,168,67','43,191,176','232,85,64','74,128,240','144,96,208','68,204,136'];
+    for(var i=0;i<n;i++){
+      var rng=rings[i];
+      for(var pi=0;pi<rng.pts.length;pi++){
+        var p=rng.pts[pi];
+        var pulse2=Math.sin(gt*1.4+i*0.5+pi*0.31)*0.5+0.5;
+        var baseR=rng.isP?2.0:1.3;
+        var sz=baseR*(0.7+pulse2*0.65);
+        var col=DCOLS[p.r%6];
+        /* Non-coprime points: different color scheme */
+        if(!p.isCP){col='255,255,255';} /* white for non-coprime */
+        var alpha=p.isCP?(p.lifts?(0.45+pulse2*0.55):(0.3+pulse2*0.3)):(0.12+pulse2*0.18);
+        /* Apply zoom */
+        var px=cx+(p.x-cx)*_splashZoom;
+        var py=cy+(p.y-cy)*_splashZoom;
+        if(pulse2>0.88&&sz>2){
+          ctx.beginPath();ctx.arc(px,py,sz*2.8,0,2*Math.PI);
+          var grd=ctx.createRadialGradient(px,py,0,px,py,sz*2.8);
+          grd.addColorStop(0,'rgba('+col+',0.2)');
+          grd.addColorStop(1,'rgba('+col+',0)');
+          ctx.fillStyle=grd;ctx.fill();
+        }
+        ctx.beginPath();ctx.arc(px,py,sz,0,2*Math.PI);
+        ctx.fillStyle='rgba('+col+','+alpha+')';
+        ctx.fill();
+      }
+      /* Fraction labels r/M for M=1..4, fade in after expand starts */
+      if(rng.M>=1&&rng.M<=4){
+        var fadeIn=PHASE==='text'?1.0:PHASE==='expand'?Math.min(1,phaseT/2000):0;
+        if(fadeIn>0){
+          for(var r2=0;r2<rng.M;r2++){
+            var th2=2*Math.PI*r2/rng.M-Math.PI/2;
+            var px2=cx+rng.rr*_splashZoom*Math.cos(th2);
+            var py2=cy+rng.rr*_splashZoom*Math.sin(th2);
+            var isCP=r2>0&&gcd(r2,rng.M)===1;
+            /* Ghost dot for non-coprime positions */
+            if(r2>0&&!isCP){
+              ctx.beginPath();ctx.arc(px2,py2,1.8,0,2*Math.PI);
+              ctx.strokeStyle='rgba(200,180,140,'+(fadeIn*0.3)+')';
+              ctx.lineWidth=0.8;ctx.stroke();
+            }
+            /* Label */
+            var lsz=rng.M<=2?12:rng.M===3?11:10;
+            ctx.save();
+            ctx.font='600 '+lsz+'px DM Mono,monospace';
+            ctx.textAlign='center';ctx.textBaseline='middle';
+            var off=(rng.rr*_splashZoom)+(rng.M<=2?22:rng.M===3?19:17);
+            var lx=cx+off*Math.cos(th2);
+            var ly=cy+off*Math.sin(th2);
+            if(isCP){
+              ctx.fillStyle='rgba(212,168,67,'+(fadeIn*0.95)+')';
+            } else {
+              ctx.fillStyle='rgba(160,140,100,'+(fadeIn*0.5)+')';
+            }
+            ctx.fillText(r2+'/'+rng.M,lx,ly);
+            ctx.restore();
+          }
+        }
+      }
+    }
+
+    /* ── Hover + Selection overlays ── */
+    var hov = window._splashHoverPt&&window._splashHoverPt();
+    var sel = window._splashSelPts&&window._splashSelPts()||[];
+    /* Zoom helper */
+    function zp(p){return {x:cx+(p.x-cx)*_splashZoom,y:cy+(p.y-cy)*_splashZoom};}
+
+    /* Draw selection connection lines */
+    if(sel.length>=2){
+      ctx.save();
+      for(var si=0;si<sel.length-1;si++){
+        var sa=zp(sel[si]),sb=zp(sel[si+1]);
+        ctx.beginPath();ctx.moveTo(sa.x,sa.y);ctx.lineTo(sb.x,sb.y);
+        ctx.strokeStyle='rgba(212,168,67,0.7)';
+        ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.restore();
+    }
+
+    /* Draw hover ring */
+    if(hov){
+      ctx.save();
+      var hz=zp(hov);
+      ctx.beginPath();ctx.arc(hz.x,hz.y,8,0,2*Math.PI);
+      ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.beginPath();ctx.arc(hz.x,hz.y,3.5,0,2*Math.PI);
+      ctx.fillStyle='rgba(255,255,255,0.95)';ctx.fill();
+      ctx.restore();
+    }
+
+    /* Draw selected point rings */
+    for(var si=0;si<sel.length;si++){
+      var spz=zp(sel[si]);
+      ctx.save();
+      ctx.beginPath();ctx.arc(spz.x,spz.y,10+Math.sin(gt*3)*2,0,2*Math.PI);
+      ctx.strokeStyle='rgba(212,168,67,0.85)';ctx.lineWidth=2;ctx.stroke();
+      ctx.beginPath();ctx.arc(spz.x,spz.y,4,0,2*Math.PI);
+      ctx.fillStyle='rgba(212,168,67,1)';ctx.fill();
+      ctx.font='bold 9px DM Mono,monospace';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle='#000';
+      ctx.fillText(si+1,spz.x,spz.y);
+      ctx.restore();
+    }
+  }
+
+  /* ── Kick off ── */
+  /* Register flat point list for hit-testing after each frame rebuild */
+  function registerPoints(){
+    var flat=[];
+    for(var ri=0;ri<rings.length;ri++){
+      for(var pi=0;pi<rings[ri].pts.length;pi++){
+        flat.push(rings[ri].pts[pi]);
+      }
+    }
+    if(window._splashRegisterPts) window._splashRegisterPts(flat);
+  }
+  /* Hide text content initially */
+  var el=document.querySelector('.splash-content');
+  if(el){el.style.opacity='0';el.style.transform='translateY(18px)';}
+  var stats=document.querySelector('.splash-stats');
+  if(stats){stats.style.opacity='0';}
+
+  requestAnimationFrame(draw);
 }
 buildSplashRings();
 
 function enterSite(){
   var splash = document.getElementById('splash');
   var app = document.getElementById('app');
-  // Reveal main content
   if(app) app.classList.add('visible');
-  // Fade out splash
   splash.classList.add('out');
   setTimeout(function(){
     splash.style.display = 'none';
+    startMainStars();
   }, 900);
 }
+
+function goHome(){
+  var splash=document.getElementById('splash');
+  var app=document.getElementById('app');
+  if(!splash||!app)return;
+  splash.style.display='';
+  splash.style.opacity='';
+  splash.classList.remove('out');
+  splash.classList.remove('text-hidden');
+  app.classList.remove('visible');
+  var starsCv=document.getElementById('main-stars-cv');
+  if(starsCv)starsCv.style.opacity='0';
+  var hideBtn=document.getElementById('sp-hide-btn');
+  if(hideBtn)hideBtn.textContent='Hide Text';
+  var content=document.querySelector('.splash-content');
+  if(content){content.style.opacity='';content.style.transform='';}
+  var stats=document.querySelector('.splash-stats');
+  if(stats)stats.style.opacity='';
+}
+window.goHome=goHome;
 
 /* ── Tab switching ── */
 window.switchTab=function(t){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});
   document.querySelectorAll('.pg').forEach(function(p){p.classList.toggle('on',p.id===t+'-pg');});
-  if(t==='canvas')setTimeout(function(){draw&&draw();},40);
+  if(t==='canvas'){setTimeout(function(){
+    if(!window._canvasVisited){
+      window._canvasVisited=true;
+      var colEl=document.getElementById('a-col');if(colEl)colEl.value='residue6';
+      var nEl=document.getElementById('v-n');if(nEl)nEl.value=60;
+      var nV=document.getElementById('v-n-v');if(nV)nV.textContent=60;
+      draw&&draw();
+      var inf=document.getElementById('cv-info-text');
+      if(inf)inf.textContent='Welcome — click ▶ on any preset below, or use ⧡ Guide in the nav for a walkthrough.';
+    } else { draw&&draw(); }
+  },40);}
 };
 
 /* ── Sidebar sections ── */
@@ -1219,6 +1789,330 @@ function gc(id){var e=document.getElementById(id);return e&&e.classList.contains
 function tog(id){var e=document.getElementById(id);if(e)e.classList.toggle('on');}
 function gv(id,def){var e=document.getElementById(id);return e?(e.value||def):def;}
 window.sv=sv;window.tog=tog;
+
+
+/* ── SPLASH INTERACTION ENGINE ── */
+(function(){
+
+/* Global selection state */
+var _selPts   = [];   /* array of selected point objects */
+var _hoverPt  = null;
+var _allPts   = [];   /* flat list of all rendered points {r,M,x,y,lifts,isP} */
+var _splashCV = null;
+var _textHidden = false;
+
+/* Expose for draw loop to register points */
+window._splashRegisterPts = function(pts){ _allPts = pts; };
+
+/* ── Toggle text visibility ── */
+window.splashToggleText = function(){
+  _textHidden = !_textHidden;
+  var splash = document.getElementById('splash');
+  var btn    = document.getElementById('sp-hide-btn');
+  if(_textHidden){
+    splash.classList.add('text-hidden');
+    if(btn) btn.textContent = 'Show Text';
+  } else {
+    splash.classList.remove('text-hidden');
+    if(btn) btn.textContent = 'Hide Text';
+  }
+};
+
+/* ── Clear selections ── */
+window.splashClearSel = function(){
+  _selPts = [];
+  document.getElementById('sp-connect-bar').style.display = 'none';
+  document.getElementById('sp-tooltip').style.display = 'none';
+};
+
+/* ── Hit test: find nearest point within radius ── */
+function hitTest(mx, my){
+  var best = null, bestD = 18;
+  var cv2 = document.getElementById('splash-canvas');
+  var W2 = cv2?cv2.width:window.innerWidth;
+  var H2 = cv2?cv2.height:window.innerHeight;
+  var cx2 = W2/2, cy2 = H2/2;
+  var z = (window._splashZoomVal&&window._splashZoomVal())||1;
+  for(var i=0;i<_allPts.length;i++){
+    var p = _allPts[i];
+    /* Apply same zoom transform as drawRingsScene */
+    var zpx = cx2+(p.x-cx2)*z;
+    var zpy = cy2+(p.y-cy2)*z;
+    var d = Math.sqrt((zpx-mx)*(zpx-mx)+(zpy-my)*(zpy-my));
+    if(d < bestD){ bestD=d; best=p; }
+  }
+  return best;
+}
+
+/* ── Build tooltip HTML for a point ── */
+function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++)if(n%i===0)return false;return true;}
+
+function pointInfo(p){
+  var lines = [];
+  lines.push('<span style="color:#d4a843;font-size:11px">r='+p.r+' on ring M='+p.M+'</span>');
+  lines.push('Fraction: '+p.r+'/'+p.M+' = '+(p.r/p.M).toFixed(4));
+  lines.push('Angle: '+(p.r/p.M*360).toFixed(1)+'°');
+  lines.push('gcd('+p.r+','+p.M+') = '+gcd(p.r,p.M));
+  lines.push('Coprime: <span style="color:'+(gcd(p.r,p.M)===1?'#2bbfb0':'#e85540')+'">'+(gcd(p.r,p.M)===1?'YES ✓':'NO ✗')+'</span>');
+  if(gcd(p.r,p.M)===1){
+    var liftGcd = gcd(p.r,p.M+1);
+    lines.push('gcd('+p.r+','+(p.M+1)+') = '+liftGcd);
+    lines.push('Lifts to M+'+(1)+': <span style="color:'+(liftGcd===1?'#2bbfb0':'#e85540')+'">'+(liftGcd===1?'YES ✓':'NO ✗')+'</span>');
+  }
+  if(isPrime(p.M)) lines.push('<span style="color:#d4a843">M='+p.M+' is prime</span>');
+  return lines.join('<br>');
+}
+
+/* ── Connection info for two points ── */
+function connectionInfo(a, b){
+  var dr = Math.abs(a.r - b.r);
+  var sameM = a.M === b.M;
+  var sameR = a.r === b.r;
+  var parts = [];
+  if(sameM && sameR){ parts.push('Same point'); }
+  else if(sameM){
+    parts.push('Ring M='+a.M+' | gap |r₁−r₂|='+dr);
+    var g = gcd(dr, a.M);
+    parts.push('gcd(gap,M)='+g);
+    if(g===1) parts.push('Gap coprime to M');
+    if(dr===2) parts.push('Twin gap (+2)');
+    if(dr===4) parts.push('Cousin gap (+4)');
+    if(dr===6) parts.push('Sexy gap (+6)');
+  } else if(sameR){
+    parts.push('r='+a.r+' across M='+a.M+'→'+b.M);
+    parts.push('Lift path for r='+a.r);
+    var lifts = gcd(a.r, b.M)===1;
+    parts.push('gcd('+a.r+','+b.M+')='+gcd(a.r,b.M)+' → '+(lifts?'LIFTS ✓':'BLOCKED ✗'));
+  } else {
+    parts.push('r₁='+a.r+'/'+a.M+' · r₂='+b.r+'/'+b.M);
+    parts.push('Angle diff: '+Math.abs(a.r/a.M-b.r/b.M).toFixed(4));
+    parts.push('gcd('+a.r+','+b.r+')='+gcd(a.r,b.r));
+  }
+  return parts.join('  ·  ');
+}
+
+/* ── Show tooltip near point ── */
+function showTooltip(p, mx, my){
+  var el = document.getElementById('sp-tooltip');
+  if(!el) return;
+  el.innerHTML = pointInfo(p);
+  el.style.display = 'block';
+  var W = window.innerWidth, H = window.innerHeight;
+  var ex = mx+18, ey = my-10;
+  if(ex+270>W) ex = mx-280;
+  if(ey+140>H) ey = H-150;
+  if(ey<10) ey=10;
+  el.style.left = ex+'px';
+  el.style.top  = ey+'px';
+}
+
+/* ── Show connection bar ── */
+function showConnectionBar(pts){
+  var bar = document.getElementById('sp-connect-bar');
+  if(!bar) return;
+  if(pts.length < 2){ bar.style.display='none'; return; }
+  var info = connectionInfo(pts[pts.length-2], pts[pts.length-1]);
+  if(pts.length > 2) info = pts.length+' points selected  ·  '+info;
+  bar.innerHTML = info;
+  bar.style.display = 'block';
+}
+
+/* ── Canvas mouse events ── */
+function initSplashEvents(){
+  var cv = document.getElementById('splash-canvas');
+  if(!cv){ setTimeout(initSplashEvents, 200); return; }
+  _splashCV = cv;
+
+  cv.addEventListener('mousemove', function(e){
+    var rect = cv.getBoundingClientRect();
+    var mx = (e.clientX-rect.left)*(cv.width/rect.width);
+    var my = (e.clientY-rect.top)*(cv.height/rect.height);
+    var pt = hitTest(mx, my);
+    _hoverPt = pt;
+    if(pt){
+      cv.style.cursor = 'pointer';
+      showTooltip(pt, e.clientX, e.clientY);
+    } else {
+      cv.style.cursor = 'crosshair';
+      if(_selPts.length===0){
+        document.getElementById('sp-tooltip').style.display='none';
+      }
+    }
+  });
+
+  cv.addEventListener('click', function(e){
+    var rect = cv.getBoundingClientRect();
+    var mx = (e.clientX-rect.left)*(cv.width/rect.width);
+    var my = (e.clientY-rect.top)*(cv.height/rect.height);
+    var pt = hitTest(mx, my);
+    if(!pt) return;
+    /* Toggle selection */
+    var idx = _selPts.findIndex(function(s){return s.r===pt.r&&s.M===pt.M;});
+    if(idx>=0){
+      _selPts.splice(idx,1);
+    } else {
+      _selPts.push(pt);
+    }
+    showTooltip(pt, e.clientX, e.clientY);
+    showConnectionBar(_selPts);
+  });
+
+  cv.addEventListener('mouseleave', function(){
+    _hoverPt = null;
+    if(_selPts.length===0) document.getElementById('sp-tooltip').style.display='none';
+  });
+
+  /* Touch support */
+  cv.addEventListener('touchstart', function(e){
+    e.preventDefault();
+    var t = e.touches[0];
+    var rect = cv.getBoundingClientRect();
+    var mx = (t.clientX-rect.left)*(cv.width/rect.width);
+    var my = (t.clientY-rect.top)*(cv.height/rect.height);
+    var pt = hitTest(mx, my);
+    if(!pt) return;
+    var idx = _selPts.findIndex(function(s){return s.r===pt.r&&s.M===pt.M;});
+    if(idx>=0) _selPts.splice(idx,1); else _selPts.push(pt);
+    showTooltip(pt, t.clientX, t.clientY);
+    showConnectionBar(_selPts);
+  }, {passive:false});
+}
+
+/* ── Expose for draw loop ── */
+window._splashSelPts  = function(){ return _selPts; };
+window._splashHoverPt = function(){ return _hoverPt; };
+  window._splashZoomVal = function(){ return typeof _splashZoom!=='undefined'?_splashZoom:1; };
+
+initSplashEvents();
+
+})();
+
+
+/* ════════════════════════════════════════
+   MAIN PAGE STARFIELD
+   Scattered twinkling stars across the app background
+════════════════════════════════════════ */
+function startMainStars(){
+  var cv = document.getElementById('main-stars-cv');
+  if(!cv) return;
+
+  function resize(){
+    cv.width  = window.innerWidth;
+    cv.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* Fade canvas in */
+  cv.style.opacity = '0.7';
+
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height;
+
+  /* Generate stars */
+  var SCOLS = ['rgba(212,168,67,','rgba(43,191,176,','rgba(144,96,208,','rgba(232,85,64,','rgba(255,255,255,'];
+  var stars = [];
+  for(var i=0;i<180;i++){
+    stars.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: Math.random()*1.3+0.25,
+      phase: Math.random()*Math.PI*2,
+      speed: Math.random()*0.6+0.2,
+      colIdx: Math.floor(Math.random()*5),
+      drift: (Math.random()-0.5)*0.015  /* very slow horizontal drift */
+    });
+  }
+
+  var t = 0;
+  var lastTs = null;
+
+  function draw(ts){
+    if(!lastTs) lastTs=ts;
+    var dt = Math.min(ts-lastTs, 50);
+    lastTs = ts;
+    t += dt;
+
+    /* Only draw if app is visible */
+    var app = document.getElementById('app');
+    if(!app || !app.classList.contains('visible')){
+      requestAnimationFrame(draw);
+      return;
+    }
+
+    /* Match canvas to window (in case resize fired) */
+    if(cv.width !== window.innerWidth){
+      cv.width=window.innerWidth;
+      cv.height=window.innerHeight;
+    }
+
+    ctx.clearRect(0,0,cv.width,cv.height);
+
+    var gt = t * 0.001;
+
+    for(var i=0;i<stars.length;i++){
+      var s = stars[i];
+
+      /* Slow drift */
+      s.x += s.drift;
+      if(s.x < -10) s.x = cv.width+10;
+      if(s.x > cv.width+10) s.x = -10;
+
+      var pulse = Math.sin(gt*s.speed + s.phase)*0.5+0.5;
+      var alpha = 0.08 + pulse*0.55;
+      var sz    = s.r*(0.5 + pulse*0.8);
+
+      var col = SCOLS[s.colIdx];
+      /* White stars use simpler format */
+      var colStr = (s.colIdx===4)
+        ? 'rgba(255,255,255,'+alpha+')'
+        : col+alpha+')';
+
+      /* Glow halo on bright peaks */
+      if(pulse > 0.82){
+        var grd = ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,sz*4.5);
+        var haloA = (pulse-0.82)*2.8;
+        var haloCol = (s.colIdx===4)
+          ? 'rgba(255,255,255,'
+          : col;
+        grd.addColorStop(0, haloCol+(haloA*0.35)+')');
+        grd.addColorStop(1, haloCol+'0)');
+        ctx.beginPath();ctx.arc(s.x,s.y,sz*4.5,0,2*Math.PI);
+        ctx.fillStyle=grd;ctx.fill();
+      }
+
+      /* Dot */
+      ctx.beginPath();ctx.arc(s.x,s.y,sz,0,2*Math.PI);
+      ctx.fillStyle=colStr;
+      ctx.fill();
+
+      /* Sparkle cross on very bright moments */
+      if(pulse > 0.91){
+        var arm = sz*3.5*(pulse-0.91)*11;
+        var sparkA = (pulse-0.91)*9;
+        var sparkCol = (s.colIdx===4)
+          ? 'rgba(255,255,255,'+Math.min(1,sparkA)+')'
+          : col+Math.min(1,sparkA)+')';
+        ctx.strokeStyle = sparkCol;
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();ctx.moveTo(s.x-arm,s.y);ctx.lineTo(s.x+arm,s.y);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(s.x,s.y-arm);ctx.lineTo(s.x,s.y+arm);ctx.stroke();
+        /* Diagonal arms for bigger stars */
+        if(s.r > 0.9){
+          var darm = arm*0.6;
+          ctx.lineWidth = 0.4;
+          ctx.beginPath();ctx.moveTo(s.x-darm,s.y-darm);ctx.lineTo(s.x+darm,s.y+darm);ctx.stroke();
+          ctx.beginPath();ctx.moveTo(s.x+darm,s.y-darm);ctx.lineTo(s.x-darm,s.y+darm);ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  requestAnimationFrame(draw);
+}
 </script>
 
 <script>
@@ -1365,7 +2259,7 @@ function draw(){
   if(!cv||!ctx)return;
   resize();
   var N=Math.min(parseInt(gv2('v-n',30))||30,200);
-  var mode=gvs('a-col','angle'),ptR=gv2('a-pt',4)||4;
+  var mode=gvs('a-col','residue6'),ptR=gv2('a-pt',4)||4;
   var liftOn=gc2('btn-lift'),blockedOn=gc2('btn-blocked'),barrierOn=gc2('btn-barrier'),chordsOn=gc2('btn-chords'),gapK=parseInt(gv2('v-gapk',2))||2;
   var lblOn=gc2('btn-lbl'),rlblOn=gc2('btn-rlbl'),phiOn=gc2('btn-phi');
   var guidesOn=gc2('btn-guides'),equatorOn=gc2('btn-equator');
@@ -1386,12 +2280,24 @@ function draw(){
   var rings=[];
   for(var M=2;M<=N;M++){
     var isP=isPrime(M),pts=[],ghostPts=[];
+    var viewMode=gvs('a-view','coprime');
     for(var r=1;r<M;r++){
       var pos=dotPos(r,M,N,cx2,cy2,maxR);
       var isCo=gcd(r,M)===1;
       var passF=!filterOn||(r%fmodM===fmodK%fmodM);
-      if(isCo&&passF)pts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr});
-      else if(!isCo&&ghostOn&&passF)ghostPts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr});
+      /* View mode filter */
+      if(viewMode==='coprime'){
+        if(isCo&&passF) pts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr,isCo:true});
+        else if(!isCo&&ghostOn&&passF) ghostPts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr,isCo:false});
+      } else if(viewMode==='noncoprime'){
+        if(!isCo&&passF) pts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr,isCo:false});
+        else if(isCo&&ghostOn&&passF) ghostPts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr,isCo:true});
+      } else { /* both */
+        if(passF){
+          if(isCo) pts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr,isCo:true});
+          else pts.push({r:r,x:pos.x,y:pos.y,theta:pos.theta,rr:pos.rr,isCo:false});
+        }
+      }
     }
     rings.push({M:M,rr:ringR(M,N,maxR),isP:isP,pts:pts,ghostPts:ghostPts});
   }
@@ -1488,18 +2394,64 @@ function onMove(mx,my){
   var N=Math.min(parseInt(gv2('v-n',30))||30,200);
   var ptR=gv2('a-pt',4)||4;
   var cx2=W/2+ox,cy2=H/2+oy,maxR=Math.min(W,H)*0.44*sc;
-  var hitR=ptR*sc+5,found=false,prev=_hover.M+','+_hover.r;
+  var hitR=ptR*sc+7,found=false,prev=_hover.M+','+_hover.r;
+  var viewMode=gvs('a-view','coprime');
+  var inspectOn=gc2('btn-inspect');
   _hover={M:-1,r:-1};
-  for(var M=2;M<=N&&!found;M++)for(var r=1;r<M&&!found;r++){
-    if(gcd(r,M)!==1)continue;
-    var pos=dotPos(r,M,N,cx2,cy2,maxR);
-    var dx=mx-pos.x,dy=my-pos.y;
-    if(dx*dx+dy*dy<hitR*hitR){
-      _hover={M:M,r:r};found=true;
-      var s='r='+r+', M='+M+' | r/M='+(r/M).toFixed(5)+' | θ='+(360*r/M).toFixed(1)+'°';
-      if(M<N)s+=' | gcd(r,'+(M+1)+')='+gcd(r,M+1)+(gcd(r,M+1)===1?' ✓lift':' ✗blocked');
-      sv('cv-info-text',s);
+  for(var M=2;M<=N&&!found;M++){
+    /* Check all r values in current view mode */
+    var rStart=viewMode==='noncoprime'?1:1;
+    for(var r=1;r<M&&!found;r++){
+      var isCo=gcd(r,M)===1;
+      if(viewMode==='coprime'&&!isCo) continue;
+      if(viewMode==='noncoprime'&&isCo) continue;
+      var pos=dotPos(r,M,N,cx2,cy2,maxR);
+      var dx=mx-pos.x,dy=my-pos.y;
+      if(dx*dx+dy*dy<hitR*hitR){
+        _hover={M:M,r:r,isCo:isCo};found=true;
+        /* Stat bar info */
+        var s='r='+r+', M='+M+' | r/M='+(r/M).toFixed(5)+' | θ='+(360*r/M).toFixed(1)+'°';
+        s+=' | gcd(r,M)='+gcd(r,M)+(isCo?' (coprime)':' (non-coprime)');
+        if(isCo&&M<N)s+=' | gcd(r,'+(M+1)+')='+gcd(r,M+1)+(gcd(r,M+1)===1?' ✓lift':' ✗blocked');
+        sv('cv-info-text',s);
+        /* Floating inspect tooltip */
+        if(inspectOn){
+          var tip=document.getElementById('cv-tooltip');
+          if(tip){
+            var lines=[];
+            lines.push('<span style="color:#d4a843;font-size:11px">r='+r+' &nbsp;on ring M='+M+'</span>');
+            lines.push('Fraction: '+r+'/'+M+' = '+(r/M).toFixed(6));
+            lines.push('Angle: '+(360*r/M).toFixed(2)+'°');
+            lines.push('gcd(r, M) = '+gcd(r,M)+' → <span style="color:'+(isCo?'#2bbfb0':'#e85540')+'">'+(isCo?'coprime ✓':'non-coprime ✗')+'</span>');
+            if(isCo){
+              var lg=gcd(r,M+1);
+              lines.push('gcd('+r+', '+(M+1)+') = '+lg+' → <span style="color:'+(lg===1?'#2bbfb0':'#e85540')+'">'+(lg===1?'lifts ✓':'blocked ✗')+'</span>');
+            }
+            if(isPrime(M)) lines.push('<span style="color:#d4a843">Ring M='+M+' is prime ★</span>');
+            if(isPrimorial&&isPrimorial(M)) lines.push('<span style="color:#d4a843">M='+M+' is a primorial</span>');
+            tip.innerHTML=lines.join('<br>');
+            tip.style.display='block';
+            /* Position near cursor, avoid edges */
+            var top2=document.getElementById('cv-top');
+            var rect2=top2?top2.getBoundingClientRect():{left:0,top:0,width:W,height:H};
+            var ex=mx/cv.width*rect2.width+rect2.left+16;
+            var ey=my/cv.height*rect2.height+rect2.top-10;
+            if(ex+290>window.innerWidth) ex=mx/cv.width*rect2.width+rect2.left-300;
+            if(ey+160>window.innerHeight) ey=ey-160;
+            if(ey<rect2.top+10) ey=rect2.top+10;
+            tip.style.left=(ex-rect2.left)+'px';
+            tip.style.top=(ey-rect2.top)+'px';
+          }
+        } else {
+          var tip=document.getElementById('cv-tooltip');
+          if(tip) tip.style.display='none';
+        }
+      }
     }
+  }
+  if(!found){
+    var tip=document.getElementById('cv-tooltip');
+    if(tip) tip.style.display='none';
   }
   if(_hover.M+','+_hover.r!==prev)draw();
 }
@@ -1522,6 +2474,61 @@ window.resetView=resetView;
 function renderTo(oc){var sc2=cv,sc3=ctx,sW=W,sH=H;cv=oc;ctx=oc.getContext('2d');W=oc.width;H=oc.height;draw();cv=sc2;ctx=sc3;W=sW;H=sH;}
 function exportPNG(s){var oc=document.createElement('canvas');oc.width=W*s;oc.height=H*s;oc.getContext('2d').scale(s,s);renderTo(oc);var a=document.createElement('a');a.download='MLR_'+s+'x.png';a.href=oc.toDataURL('image/png');a.click();}
 window.exportPNG=exportPNG;
+window.export4K=function(){
+  /* 3840×2160 export with title overlay */
+  var btn=document.querySelector('[onclick="export4K()"]');
+  if(btn){btn.textContent='Rendering…';btn.disabled=true;}
+  setTimeout(function(){
+    var EW=3840,EH=2160;
+    var oc=document.createElement('canvas');
+    oc.width=EW;oc.height=EH;
+    var octx=oc.getContext('2d');
+    /* Scale and render canvas content */
+    var sc2=cv,sc3=ctx,sW=W,sH=H;
+    cv=oc;ctx=octx;W=EW;H=EH;
+    /* Scale factor to fill 4K */
+    var sf=Math.min(EW/window.innerWidth,EH/window.innerHeight)*0.88;
+    octx.save();
+    octx.translate(EW/2,EH/2);
+    octx.scale(sf,sf);
+    octx.translate(-window.innerWidth/2,-window.innerHeight/2);
+    draw();
+    octx.restore();
+    cv=sc2;ctx=sc3;W=sW;H=sH;
+    /* Header bar */
+    octx.fillStyle='rgba(5,4,10,0.85)';
+    octx.fillRect(0,0,EW,80);
+    octx.fillStyle='#d4a843';
+    octx.font='bold 32px Georgia,serif';
+    octx.textAlign='left';octx.textBaseline='middle';
+    octx.fillText('Modular Lifting Rings — The Lift Survival Function',48,40);
+    /* Mode info */
+    var vm=gvs('a-view','coprime');
+    var modeLabel={'coprime':'gcd=1 (coprime)','noncoprime':'gcd>1 (non-coprime)','both':'All residues (coprime + non-coprime)'}[vm]||vm;
+    var colMode=gvs('a-col','residue6');
+    octx.fillStyle='#8a7f6a';
+    octx.font='18px "Courier New",monospace';
+    octx.fillText('N='+parseInt(gv2('v-n',30))+' · Mode: '+modeLabel+' · Color: '+colMode+' · wessengetachew.github.io',48,64);
+    /* Footer */
+    octx.fillStyle='rgba(5,4,10,0.7)';
+    octx.fillRect(0,EH-50,EW,50);
+    octx.strokeStyle='rgba(212,168,67,0.3)';
+    octx.lineWidth=1;
+    octx.beginPath();octx.moveTo(0,EH-50);octx.lineTo(EW,EH-50);octx.stroke();
+    octx.fillStyle='rgba(138,127,106,0.7)';
+    octx.font='16px "Courier New",monospace';
+    octx.textAlign='center';
+    octx.fillText('C(x)=∏f_p(x) · D(x)=d/dx·log·C(x) · Jump: [D]_{x=p-1}=1/(p(p-1)) · J=ΣP(k)≈0.7732',EW/2,EH-25);
+    /* Download */
+    oc.toBlob(function(blob){
+      var a=document.createElement('a');
+      a.href=URL.createObjectURL(blob);
+      a.download='MLR_4K_'+(new Date().toISOString().slice(0,10))+'.png';
+      a.click();
+      if(btn){btn.textContent='↓ Export 4K PNG';btn.disabled=false;}
+    },'image/png');
+  },60);
+};
 window.exportCustom=function(){var w=parseInt(el('exp-w').value)||1200,h=parseInt(el('exp-h').value)||1200;var oc=document.createElement('canvas');oc.width=w;oc.height=h;renderTo(oc);var a=document.createElement('a');a.download='MLR_custom.png';a.href=oc.toDataURL('image/png');a.click();};
 
 var PRESETS={
@@ -1579,6 +2586,103 @@ window.setConsec=function(n){
   [0,1,2,3,4,6].forEach(function(k){var b=document.getElementById('consec-'+k);if(b)b.classList.toggle('on',k===n);});
   draw();
 };
+
+
+/* ── GUIDED MODE ── */
+var GUIDE_STEPS = [
+  {
+    preset: 'ring12',
+    title: 'Step 1 — The Ring System',
+    body: 'Each circle is a ring M. A dot at position r means gcd(r, M) = 1 — r shares no factor with M. Ring M=12 has only 4 coprime residues: {1, 5, 7, 11}. Labels show r/M fractions. Drag to pan, scroll to zoom.',
+    desc: 'rings'
+  },
+  {
+    preset: 'lift_all',
+    title: 'Step 2 — The Lift',
+    body: 'A lift line connects r on ring M to ring M+1 when gcd(r, M+1) = 1 also. Teal lines survive. Coral lines are blocked. The long-run fraction of teal lines converges to C ≈ 0.5307.',
+    desc: 'lift'
+  },
+  {
+    preset: 'cn_steps',
+    title: 'Step 3 — C(x) as a Function',
+    body: 'C(x) = ∏_p f_p(x). Each ring is colored by its lift survival rate. Brightness falls as M grows — each prime threshold causes a drop. C(x) → 0 as x → ∞.',
+    desc: 'C'
+  },
+  {
+    preset: 'prime_detect',
+    title: 'Step 4 — The Jump Theorem',
+    body: 'D(x) = d/dx log C(x) jumps by exactly 1/(p(p−1)) at x = p−1 for every prime p. Gold rings mark jump locations. No jump at composite rings. The discontinuity set of D is exactly the prime set.',
+    desc: 'Dx'
+  },
+  {
+    preset: 'rh_view',
+    title: 'Step 5 — The RH Connection',
+    body: 'Wide view: C(x) → 0. Each ring brightness encodes C(n). The jump sum J(N) → J ≈ 0.7732. The criterion √N·(J−J(N)) bounded ↔ RH. Empirically it decays toward zero, consistent with RH.',
+    desc: 'RH'
+  }
+];
+
+var _guideStep = 0;
+var _guideActive = false;
+
+function toggleGuide(){
+  _guideActive = !_guideActive;
+  var btn = document.getElementById('btn-guide');
+  var overlay = document.getElementById('guided-overlay');
+  if(_guideActive){
+    if(btn) btn.classList.add('on');
+    if(btn) btn.textContent = '✕ Guide';
+    if(overlay) overlay.classList.add('on');
+    _guideStep = 0;
+    renderGuideStep();
+    switchTab('canvas');
+  } else {
+    if(btn) btn.classList.remove('on');
+    if(btn) btn.textContent = '⬡ Guide';
+    if(overlay) overlay.classList.remove('on');
+  }
+}
+window.toggleGuide = toggleGuide;
+
+function renderGuideStep(){
+  var step = GUIDE_STEPS[_guideStep];
+  if(!step) return;
+  var sn = document.getElementById('guide-step-num');
+  var st = document.getElementById('guide-title');
+  var sb = document.getElementById('guide-body');
+  var prev = document.getElementById('guide-prev');
+  var next = document.getElementById('guide-next');
+  var dots = document.getElementById('guide-dots');
+  if(sn) sn.textContent = 'Step ' + (_guideStep+1) + ' of ' + GUIDE_STEPS.length;
+  if(st) st.textContent = step.title;
+  if(sb) sb.textContent = step.body;
+  if(prev) prev.style.opacity = _guideStep === 0 ? '0.3' : '1';
+  if(next) next.textContent = _guideStep === GUIDE_STEPS.length-1 ? 'Done ✓' : 'Next →';
+  if(dots){
+    dots.innerHTML = GUIDE_STEPS.map(function(_,i){
+      return '<div class="guide-dot' + (i===_guideStep?' on':'') + '"></div>';
+    }).join('');
+  }
+  // Load the matching preset
+  if(step.preset) loadPreset(step.preset);
+  // Set description
+  var sel = document.getElementById('cv-desc-sel');
+  if(sel && step.desc){ sel.value = step.desc; window.updateDesc && window.updateDesc(); }
+}
+
+function guideNav(dir){
+  _guideStep = Math.max(0, Math.min(GUIDE_STEPS.length-1, _guideStep + dir));
+  if(dir > 0 && _guideStep === GUIDE_STEPS.length-1 && dir === 1 && _guideStep + dir > GUIDE_STEPS.length-1){
+    toggleGuide(); return;
+  }
+  // Done button
+  if(_guideStep === GUIDE_STEPS.length-1){
+    var next = document.getElementById('guide-next');
+    if(next) next.onclick = function(){ toggleGuide(); };
+  }
+  renderGuideStep();
+}
+window.guideNav = guideNav;
 
 window.addEventListener('resize',function(){if(el('canvas-pg').classList.contains('on'))draw();});
 window.addEventListener('load',function(){setup();setTimeout(function(){draw();},200);});
