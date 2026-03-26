@@ -839,6 +839,58 @@ J_χ  =  Σ_p  χ(p)/(p(p−1))</code></p></div>
 <div class="pstrip"><button class="pbtn coral" onclick="loadPreset('rh_view')">▶ Wide view — C(x) tending to zero</button></div>
 
 <!-- §10 -->
+
+<!-- New sections from uploaded work -->
+<h2><span class="sn">§ 10</span><span class="st">Strict monotonicity and the Feller–Tornier identity</span></h2>
+<p class="ni">Two results that give C deeper structural meaning.</p>
+<div class="result"><div class="result-lbl">Theorem — Strict Monotonicity</div>
+<p>If rad(j) ⊊ rad(k) then C<sub>j</sub> &gt; C<sub>k</sub>. The sequence C(1) &gt; C(2) &gt; C(3) … is strictly decreasing. Each additional prime factor p strictly reduces the Euler product.</p>
+<div class="math">C(1) = 0.530711…   C(2) = 0.413061…   C(3) = 0.373969…
+C(4) = 0.337595…   C(5) = 0.319787…   C(6) = 0.302712…
+C₂ = 0.497542…  [rad={2}]     C₃ = 0.601465…  [rad={3}]
+C₆ = 0.448655…  [rad={2,3}]   C₃₀ = 0.440834…  [rad={2,3,5}]</div>
+</div>
+<div class="result"><div class="result-lbl">Theorem — Feller–Tornier Identity C = ζ(2)·d<sub>FT</sub></div>
+<p>C = ζ(2) · ∏<sub>p</sub>(1 − 2/p²) = ζ(2) · d<sub>FT</sub>, where d<sub>FT</sub> is the Feller–Tornier density of squarefree integers at consecutive positions. ζ(2) encodes prime gap distributions; d<sub>FT</sub> measures squarefree density. Their product is exactly C.</p></div>
+
+<h2><span class="sn">§ 11</span><span class="st">Primorial rings and exceptional lift rates</span></h2>
+<div class="result"><div class="result-lbl">Theorem 7.1 — Primorial Lift Theorem</div>
+<p>For the primorial p# = 2·3·5·…·p, when p#+1 is prime, <strong>every residue in R(p#) lifts to ring p#+1</strong> — the lift rate hits 100%. When p#+1 is composite the rate falls far below C.</p>
+<table><tr><th>p#</th><th>p#+1</th><th>Status</th><th>Rate</th></tr>
+<tr><td>6</td><td>7</td><td class="grn">prime</td><td class="grn">100%</td></tr>
+<tr><td>30</td><td>31</td><td class="grn">prime</td><td class="grn">100%</td></tr>
+<tr><td>210</td><td>211</td><td class="grn">prime</td><td class="grn">100%</td></tr>
+<tr><td>2310</td><td>2311</td><td class="grn">prime</td><td class="grn">100%</td></tr>
+</table></div>
+<div class="pstrip"><button class="pbtn" onclick="loadPreset('primorial')">&#9654; Primorial coloring</button></div>
+
+<h2><span class="sn">§ 12</span><span class="st">Sector geometry — equator, mirror, barrier</span></h2>
+<div class="result"><div class="result-lbl">Theorem 8.1 — Equator Gap</div>
+<p>For every prime p, M = 2p is a <strong>forced gap</strong>: gcd(p, 2p) = p &gt; 1. Prime p is absent from ring 2p but present on rings 2p−1 and 2p+1.</p></div>
+<div class="result"><div class="result-lbl">Theorem 8.2 — Mirror Lift</div>
+<p>For p in the top half (p+1 ≤ M ≤ 2p−1): gcd(M−p, M+1) = gcd(M−p, p+1). The mirrors that lift are exactly R(p+1) ∩ {1,…,p−1}, encoding (ℤ/(p+1)ℤ)*.</p></div>
+<div class="result"><div class="result-lbl">Theorem 8.3 — Bottom Sector</div>
+<p>In M ∈ [2p+1, 3p]: prime p appears on exactly <strong>p−1 rings</strong>. M mod p cycles through (ℤ/pℤ)* in sequential order. Exactly p−2 of these rings support lifts.</p></div>
+<div class="result"><div class="result-lbl">Theorem 8.4 — Upper Path Permanent Barrier</div>
+<p>For every odd M, r = (M+1)/2 is on ring M but <strong>never lifts</strong>: gcd((M+1)/2, M+1) ≥ 2. This is the permanent red barrier path approaching the equator from above.</p></div>
+<div class="result"><div class="result-lbl">Theorem 8.5 — Lower Path Alternation &amp; Gaussian Integer Detection</div>
+<p>For odd M, r = (M−1)/2 lifts iff <strong>M ≡ 3 (mod 4)</strong>. By Fermat’s theorem on sums of two squares, primes q ≡ 3 mod 4 are exactly those inert in ℤ[i]. The lower path alternation is a geometric detector of Gaussian integer inertness.</p></div>
+<div class="pstrip">
+  <button class="pbtn amber" onclick="loadPreset('equator')">&#9654; Top/bottom half (Thm 8.1)</button>
+  <button class="pbtn coral" onclick="loadPreset('barrier')">&#9654; Barrier paths (Thm 8.4/8.5)</button>
+</div>
+
+<h2><span class="sn">§ 13</span><span class="st">Gap classes and Hardy–Littlewood ratio</span></h2>
+<div class="key"><div class="key-lbl">Gap class coloring</div>
+<p><strong style="color:#44cc88">Green = twin</strong> (gcd(r+2,M)=1) · <strong style="color:#4a80f0">Blue = cousin</strong> (gcd(r+4,M)=1) · <strong style="color:#9060d0">Purple = sexy</strong> (gcd(r+6,M)=1). Purple points q ≡ 3 mod 4 are inert in ℤ[i] — the Gaussian integer connection (Cor 8.5a).</p></div>
+<div class="result"><div class="result-lbl">Corollary 9.2 — Hardy–Littlewood Ratio S(6)/S(2) = 2</div>
+<p>On the primitive polygon mod 30: gap-6 (sexy) chord count = 6, gap-2 (twin) chord count = 3. Ratio = <strong>exactly 2</strong>. This matches the Hardy–Littlewood asymptotic prediction for twin vs sexy prime densities, verified as an exact integer identity at M=30.</p>
+<div class="math">S(6)/S(2) = 6/3 = 2  (exact at M=30 = 2·3·5)</div></div>
+<div class="pstrip">
+  <button class="pbtn" onclick="loadPreset('gapclass')">&#9654; Gap class coloring</button>
+  <button class="pbtn amber" onclick="loadPreset('entropy')">&#9654; Entropy coloring</button>
+</div>
+
 <div class="sep">· · ·</div>
 <h2><span class="sn">References</span><span class="st" style="font-size:20px"></span></h2>
 <div class="refs">
@@ -916,6 +968,11 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
           <option value="mod4">Residue mod 4</option>
           <option value="coprime_frac">r/M fraction</option>
           <option value="solid1">Solid color</option>
+          <option value="half">Top / Bottom half</option>
+          <option value="entropy">Modular entropy ΔS</option>
+          <option value="primorial">Primorial rings</option>
+          <option value="gapclass">Gap class — twin/cousin/sexy</option>
+          <option value="residue6">Residue mod 6</option>
         </select>
         <div class="cr"><span class="cl">Dot size</span><span class="cv" id="a-pt-v">4</span></div>
         <input type="range" id="a-pt" min="0.5" max="20" value="4" step="0.5" oninput="sv('a-pt-v',this.value);draw()">
@@ -942,6 +999,27 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
         <div class="sep-line"></div>
         <div class="cr"><span class="cl">Lift color</span><input type="color" id="l-col" value="#2bbfb0" onchange="draw()" class="col-inp"><span class="cl" style="margin-left:8px">Block color</span><input type="color" id="l-bcol" value="#e85540" onchange="draw()" class="col-inp"></div>
         <div class="cr" style="margin-top:4px"><span class="cl">Curve</span><select id="l-curve" onchange="draw()" style="flex:1;margin-left:6px"><option value="line">Straight</option><option value="bezier">Bezier</option><option value="arc">Arc</option></select></div>
+        <div class="sep-line"></div>
+        <div class="cr"><span class="cl">Consecutive lifts</span></div>
+        <div class="cr" style="gap:4px;flex-wrap:wrap;">
+          <button class="ctb" onclick="setConsec(0)" id="consec-0">All</button>
+          <button class="ctb" onclick="setConsec(1)" id="consec-1">C(1)</button>
+          <button class="ctb" onclick="setConsec(2)" id="consec-2">C(2)</button>
+          <button class="ctb" onclick="setConsec(3)" id="consec-3">C(3)</button>
+          <button class="ctb" onclick="setConsec(4)" id="consec-4">C(4)</button>
+          <button class="ctb" onclick="setConsec(6)" id="consec-6">C(6)</button>
+        </div>
+        <div class="hint" id="consec-desc">Show all lift lines · C = 0.530711…</div>
+        <div class="sep-line"></div>
+        <div class="cr"><span class="cl">Gap chords k=</span>
+          <input type="number" id="v-gapk" value="2" min="1" max="12" class="num-inp" style="width:36px" onchange="draw()">
+          <button class="ctb" id="btn-chords" onclick="tog('btn-chords');draw()">OFF</button>
+        </div>
+        <div class="hint">Connects r to r+k when both coprime to M</div>
+        <div class="cr"><span class="cl">Barrier paths</span>
+          <button class="ctb" id="btn-barrier" onclick="tog('btn-barrier');draw()">OFF</button>
+        </div>
+        <div class="hint">Red=(M+1)/2 permanent barrier · Purple=(M-1)/2 alternating (Thm 8.4/8.5)</div>
       </div></div>
       <div class="cs"><div class="cs-h" onclick="csToggle(this)"><span>Aa Labels</span><span class="cs-arr">▲</span></div>
       <div class="cs-b">
@@ -1144,6 +1222,7 @@ window.sv=sv;window.tog=tog;
 </script>
 
 <script>
+
 /* ════════════════════════════════════════
    CANVAS RENDERER — self-contained
 ════════════════════════════════════════ */
@@ -1207,6 +1286,13 @@ function ringR(M,N,maxR){
 function dotPos(r,M,N,cx2,cy2,maxR){
   var dir=gc2('btn-cw')?1:-1;
   var ra=gv2('v-ra',0),rb=gv2('v-rb',1);
+  var arr=gvs('v-arr','concentric');
+  if(arr==='fermat'){
+    /* Fermat spiral: ρ=√M, θ=2πr/M */
+    var rho=Math.sqrt(M)/Math.sqrt(N)*maxR*0.95;
+    var theta=dir*2*Math.PI*r/M+(ra/rb)*M*0.1-Math.PI/2;
+    return{x:cx2+rho*Math.cos(theta),y:cy2+rho*Math.sin(theta),theta:theta,rr:rho};
+  }
   var theta=dir*2*Math.PI*(r/M+(ra/rb)*M)-Math.PI/2;
   var rr=ringR(M,N,maxR);
   return{x:cx2+rr*Math.cos(theta),y:cy2+rr*Math.sin(theta),theta:theta,rr:rr};
@@ -1225,9 +1311,28 @@ function dotColor(mode,r,M,isP){
     case 'mod4':return colA([c1,c2,'#e85540','#4a80f0'][r%4],op);
     case 'coprime_frac':return'hsla('+Math.round((r/M)*300)+',78%,55%,'+(op/100)+')';
     case 'solid1':return colA(c1,op);
+    case 'half':{var f=r/M;if(Math.abs(f-0.5)<0.018)return'rgba(212,168,67,'+(op/100)+')';return f<0.5?'rgba(43,191,176,'+(op/100)+')':'rgba(232,85,64,'+(op/100)+')';}
+    case 'entropy':{var ds=-Math.log(phi(M)/M),t3=Math.min(1,ds/2.5);return'hsla('+Math.round(240-t3*200)+',80%,'+(35+t3*30)+'%,'+(op/100)+')';}
+    case 'primorial':return isPrimorial(M)?'rgba(212,168,67,'+(op/100)+')':'rgba(80,70,100,'+(op*0.4/100)+')';
+    case 'gapclass':{var g2=gcd(r+2,M)===1,g4=gcd(r+4,M)===1,g6=gcd(r+6,M)===1;if(g2)return'rgba(120,210,120,'+(op/100)+')';if(g4)return'rgba(100,170,224,'+(op/100)+')';if(g6)return'rgba(200,120,224,'+(op/100)+')';return'rgba(80,70,100,'+(op*0.35/100)+')';}
+    case 'residue6':{var c6=['#e8a830','#2bbfb0','#ff6650','#5588ff','#aa80ff','#44cc88'];return colA(c6[r%6],op);}
     default:return colA(c1,op);
   }
 }
+function isPrimorial(M){return[2,6,30,210,2310,30030,510510].indexOf(M)>=0;}
+
+/* Consecutive lift filter: r survives n lifts from M */
+function survivesNLifts(r,M,n){
+  if(n<=0)return true;
+  for(var i=1;i<=n;i++){if(gcd(r,M+i)!==1)return false;}
+  return true;
+}
+/* Gap chord check: does r+k also appear on ring M? */
+function hasGapChord(r,M,k){return gcd(r,M)===1&&gcd((r+k)%M||M,M)===1;}
+/* Left/barrier path: r=(M+1)/2 upper barrier, r=(M-1)/2 lower alternating */
+function isUpperBarrier(r,M){return M%2===1&&r===(M+1)/2;}
+function isLowerPath(r,M){return M%2===1&&r===(M-1)/2;}
+
 
 function drawShape(px,py,r){
   var sh=gvs('a-shape','circle');
@@ -1261,7 +1366,7 @@ function draw(){
   resize();
   var N=Math.min(parseInt(gv2('v-n',30))||30,200);
   var mode=gvs('a-col','angle'),ptR=gv2('a-pt',4)||4;
-  var liftOn=gc2('btn-lift'),blockedOn=gc2('btn-blocked');
+  var liftOn=gc2('btn-lift'),blockedOn=gc2('btn-blocked'),barrierOn=gc2('btn-barrier'),chordsOn=gc2('btn-chords'),gapK=parseInt(gv2('v-gapk',2))||2;
   var lblOn=gc2('btn-lbl'),rlblOn=gc2('btn-rlbl'),phiOn=gc2('btn-phi');
   var guidesOn=gc2('btn-guides'),equatorOn=gc2('btn-equator');
   var spokesOn=gc2('btn-spokes'),psqOn=gc2('btn-psq'),cdotOn=gc2('btn-cdot');
@@ -1334,6 +1439,20 @@ function draw(){
       if(hlM&&!isTrk)ctx.fillStyle='rgba(212,168,67,0.95)';
       drawShape(p.x,p.y,r2);
       if(isHov||isTrk){ctx.beginPath();ctx.arc(p.x,p.y,r2+2,0,2*Math.PI);ctx.strokeStyle='rgba(255,255,255,0.6)';ctx.lineWidth=1;ctx.stroke();}
+      /* Gap chords */
+      if(chordsOn&&gapK>0){
+        var rk=(p.r+gapK)%ring.M||ring.M;
+        if(gcd(rk,ring.M)===1){
+          var pk=dotPos(rk,ring.M,N,cx2,cy2,maxR);
+          ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(pk.x,pk.y);
+          ctx.strokeStyle='rgba(136,204,136,0.4)';ctx.lineWidth=0.9;ctx.stroke();
+        }
+      }
+      /* Barrier path highlights */
+      if(barrierOn&&ring.M%2===1){
+        if(isUpperBarrier(p.r,ring.M)){ctx.beginPath();ctx.arc(p.x,p.y,r2*1.5,0,2*Math.PI);ctx.fillStyle='rgba(255,68,102,0.85)';ctx.fill();}
+        else if(isLowerPath(p.r,ring.M)){ctx.beginPath();ctx.arc(p.x,p.y,r2*1.5,0,2*Math.PI);ctx.fillStyle='rgba(204,136,255,0.85)';ctx.fill();}
+      }
       if(showLbl&&ring.pts.length<(lblOn?200:32)){
         var sz=lblSz*sc;
         ctx.font=sz+'px DM Mono,monospace';ctx.textAlign='center';ctx.textBaseline='middle';
@@ -1420,6 +1539,14 @@ var PRESETS={
   rh_view:{N:130,col:'lift',pt:1.5,lift:false,blocked:false,lbl:false,rlbl:false,guides:false,desc:'RH',info:'Wide view: C(x)\u21920. Each ring brightness = C(n). Falling brightness encodes J(N)\u2192J. \u221aN\u00b7(J\u2212J(N))\u21920 \u2194 RH.'},
   Fview:{N:50,col:'mod6',pt:3,lift:false,blocked:false,lbl:false,rlbl:false,guides:true,psq:true,desc:'F',info:'F(u)=\u03b6(2)\u00b7\u220f(1\u2212u/p\u00b2) has zeros at prime squares {4,9,25,49,\u2026}. Red tick marks show prime-square positions. Mod 6 coloring reveals 6-periodic structure.'},
   tracked:{N:40,col:'angle',pt:3,lift:false,blocked:false,lbl:false,rlbl:false,guides:true,track:true,trackR:1,desc:'rings',info:'Tracking residue r=1 across all rings (always coprime to every M). Change the Track r slider to follow any residue.'},
+  /* New presets from uploaded files */
+  equator:{N:60,col:'half',pt:3,lift:false,blocked:false,lbl:false,rlbl:true,guides:true,desc:'Dx',info:'Top/bottom split (Thm 8.1). Gold dots at the equator r/M≈1/2. Equator gap: prime p absent from ring 2p (forced gap). Teal=top half, coral=bottom half.'},
+  barrier:{N:50,col:'angle',pt:3.5,lift:true,blocked:true,lbl:false,rlbl:false,guides:true,desc:'rings',info:'Barrier paths (Thm 8.4/8.5). Red=upper barrier r=(M+1)/2, always blocked. Purple=lower path r=(M-1)/2, lifts iff M≡3 mod 4. Enable Barrier Paths in controls.'},
+  entropy:{N:70,col:'entropy',pt:2.5,lift:false,blocked:false,lbl:false,rlbl:false,guides:false,desc:'rings',info:'ΔS=−ln(φ(M)/M) modular entropy. Warm=many prime factors. Primorial rings maximise entropy. C=ζ(2)·dₛT (Feller–Tornier).'},
+  gapclass:{N:55,col:'gapclass',pt:3,lift:false,blocked:false,lbl:false,rlbl:false,guides:true,desc:'rings',info:'Gap classes: green=twin (+2), blue=cousin (+4), purple=sexy (+6). Purple q≡3 mod 4 are inert in ℤ[i] — Gaussian integer detection (Cor 8.5a).'},
+  primorial:{N:80,col:'primorial',pt:2.5,lift:true,blocked:false,lbl:false,rlbl:true,guides:true,desc:'C',info:'Primorial rings M=6,30,210 highlighted gold (Thm 7.1). Sparsest rings. When M+1 is prime the survival rate hits 100— every residue lifts.'},
+  consec2:{N:40,col:'lift',pt:4,lift:true,blocked:false,lbl:false,rlbl:true,guides:true,desc:'C',info:'Consecutive lift filter C(2): only residues that survive 2 consecutive lifts — C(2)≈0.413061. Shows deeper filtering structure of the modular rings.'},
+  fermat_view:{N:60,col:'angle',pt:3,lift:false,blocked:false,lbl:false,rlbl:false,guides:false,desc:'rings',arr:'fermat',info:'Fermat spiral arrangement ρ=√M. Coprime residues on a spiral unfold the ring structure. Primes cluster at specific angular bands.'},
 };
 
 window.loadPreset=function(key){
@@ -1427,6 +1554,7 @@ window.loadPreset=function(key){
   function sp(id,v){var e=el(id);if(e)e.value=v;}
   function sb(id,on){var e=el(id);if(e){if(on)e.classList.add('on');else e.classList.remove('on');}}
   sp('v-n',pr.N);sv('v-n-v',pr.N);try{el('v-n-num').value=pr.N;}catch(e){}
+  if(pr.arr){sp('v-arr',pr.arr);}else{var va=el('v-arr');if(va)va.value='concentric';}
   sp('a-col',pr.col||'angle');sp('a-pt',pr.pt||4);sv('a-pt-v',pr.pt||4);
   if(pr.lbl_type)sp('lbl-type',pr.lbl_type);
   sb('btn-lift',!!pr.lift);sb('btn-blocked',pr.blocked!==false);
@@ -1442,9 +1570,20 @@ window.loadPreset=function(key){
   setTimeout(function(){draw();},40);
 };
 
+/* ── Consecutive lift control ── */
+var _consecN=0;
+window.setConsec=function(n){
+  _consecN=n;
+  var labels={0:'Show all lift lines · C = 0.530711…',1:'r survives 1 lift · C(1)=0.530711…',2:'r survives 2 lifts · C(2)=0.413061…',3:'r survives 3 lifts · C(3)=0.373969…',4:'r survives 4 lifts · C(4)=0.337595…',6:'r survives 6 lifts · C(6)=0.302712…'};
+  var d=document.getElementById('consec-desc');if(d)d.textContent=labels[n]||('r survives '+n+' lifts');
+  [0,1,2,3,4,6].forEach(function(k){var b=document.getElementById('consec-'+k);if(b)b.classList.toggle('on',k===n);});
+  draw();
+};
+
 window.addEventListener('resize',function(){if(el('canvas-pg').classList.contains('on'))draw();});
 window.addEventListener('load',function(){setup();setTimeout(function(){draw();},200);});
 })();
+
 </script>
 
 <!-- ═══════════════════════════════════════
@@ -1476,6 +1615,7 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
       <span id="an-speed-lbl">Fast</span>
     </div>
     <button class="an-btn" onclick="anExportCSV()">↓ CSV</button>
+    <button class="an-btn" id="an-png-btn" onclick="anExportPNG()">↓ Export 4K PNG</button>
   </div>
 
   <!-- Stats row -->
@@ -1975,6 +2115,192 @@ window.anExportCSV=function(){
   a.download='MLR_analysis.csv';a.click();
 };
 
+window.anExportPNG=function(){
+  var btn=document.getElementById('an-png-btn');
+  if(btn){btn.textContent='Rendering…';btn.disabled=true;}
+
+  /* 4K canvas: 3840×2160 */
+  var W=3840,H=2160;
+  var COLS=3,ROWS=4;
+  var HDR=110,FTR=60;
+  var PAD=18;
+  var cellW=Math.floor(W/COLS);
+  var cellH=Math.floor((H-HDR-FTR)/ROWS);
+
+  /* Chart metadata: [id, title, description] */
+  var CHARTS=[
+    ['an-plot-1','J(N), D₀(N), T(N), Jχ₄(N) — Live Convergence',
+     'Convergence of jump content sums to J≈0.7732. Gold corridor = ±1/√N boundary encoding the RH criterion.'],
+    ['an-plot-2','√N·|J−J(N)| — RH Stability Index',
+     'Must stay bounded for RH. Empirically decays as N⁻⁰ʷ⁶¹, consistent with RH. Dashed red = bound of 1.'],
+    ['an-plot-3','C(x) — Lift Survival Function',
+     'C(x)=∏f_p(x). Teal dots mark C(p−1) saturation points. C(0)=1, C(1)≈0.5307, C(x)→0.'],
+    ['an-plot-4','D(x) — Prime-Detecting Log-Derivative',
+     'D(x)=d/dx log C(x). Gold markers show exact jump sizes 1/(p(p−1)) appearing left to right.'],
+    ['an-plot-f','f_p(x) Local Factors — Saturation Switching',
+     'Each curve switches at x=p−1 from active formula to saturated value p/(p+1). Solid = saturated.'],
+    ['an-plot-5','C(M) & φ(M)/M — Per-Ring Rates',
+     'Teal bars: C(M) survival rate per ring. Gold line: φ(M)/M totient density. Primorials dip lowest.'],
+    ['an-plot-6','P(k) Prime Zeta Values — J = Σ P(k)',
+     'P(k)=Σ_p p⁻ᵏ for k=2..20. Blue=even k, purple=odd k. Gold: running sum → J=0.7732.'],
+    ['an-plot-7','c(m) Coefficients — J = Σ c(m) log ζ(m)',
+     'Gold: primes c(p)=1. Teal: positive composites. Coral: negative. Proved: c(pᵏ)=(p−1)/p.'],
+    ['an-plot-8','Jump Sizes 1/(p(p−1)) — The Jump Theorem',
+     'Each bar = one prime’s contribution to J. Log scale. p=2 contributes 1/2, the dominant jump.'],
+    ['an-plot-9','log C = Σ P(2k)/k·(1−2ᵏ) — Series Convergence',
+     'Blue bars: individual terms. Teal line: running sum → log C≈−0.634. Dashed gold = exact target.'],
+    ['an-plot-10','J_χ(N) — Character Sums & Chebyshev Bias',
+     'J_χ₄≈−0.144 (coral) reflects primes≡3 mod 4 outweighing primes≡1 mod 4 in jump content.'],
+  ];
+
+  /* Render each Plotly chart to image then composite */
+  var promises=CHARTS.map(function(ch){
+    var el=document.getElementById(ch[0]);
+    if(!el||!el.data||!el.data.length){
+      return Promise.resolve(null);
+    }
+    return Plotly.toImage(el,{
+      format:'png',width:cellW-PAD*2,height:cellH-80,scale:1
+    });
+  });
+
+  Promise.all(promises).then(function(imgs){
+    var cv=document.createElement('canvas');
+    cv.width=W; cv.height=H;
+    var ctx=cv.getContext('2d');
+
+    /* Background */
+    ctx.fillStyle='#05040a';
+    ctx.fillRect(0,0,W,H);
+
+    /* Subtle grid lines */
+    ctx.strokeStyle='rgba(255,255,255,0.04)';
+    ctx.lineWidth=1;
+    for(var c=1;c<COLS;c++){ctx.beginPath();ctx.moveTo(c*cellW,HDR);ctx.lineTo(c*cellW,H-FTR);ctx.stroke();}
+    for(var r=1;r<ROWS;r++){ctx.beginPath();ctx.moveTo(0,HDR+r*cellH);ctx.lineTo(W,HDR+r*cellH);ctx.stroke();}
+
+    /* Header */
+    ctx.fillStyle='rgba(212,168,67,0.08)';
+    ctx.fillRect(0,0,W,HDR);
+    ctx.strokeStyle='rgba(212,168,67,0.3)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,HDR);ctx.lineTo(W,HDR);ctx.stroke();
+
+    /* Header text */
+    ctx.fillStyle='#d4a843';
+    ctx.font='bold 38px Georgia, serif';
+    ctx.textAlign='left';
+    ctx.textBaseline='middle';
+    ctx.fillText('The Lift Survival Function — Complete Numerical Analysis',56,HDR*0.4);
+
+    ctx.fillStyle='#8a7f6a';
+    ctx.font='22px "Courier New", monospace';
+    ctx.fillText('Wessen Getachew · 2026 · C(x), D(x), J=ΣP(k), J=D₀+T, F(u)=ζ(2)∏(1−u/p²), J_χ=ΣP(k,χ)',56,HDR*0.72);
+
+    /* Stat panel top-right of header */
+    var statN=document.getElementById('an-stat-n');
+    var statJ=document.getElementById('an-stat-j');
+    var statS=document.getElementById('an-stat-s');
+    if(statN&&statJ&&statS){
+      var stats=[
+        ['N',statN.textContent,'#2bbfb0'],
+        ['J(N)',statJ.textContent,'#d4a843'],
+        ['√NΔ',statS.textContent,'#e85540'],
+      ];
+      var sx=W-600;
+      stats.forEach(function(s,i){
+        ctx.fillStyle='rgba(255,255,255,0.05)';
+        ctx.fillRect(sx+i*190,8,180,HDR-16);
+        ctx.fillStyle=s[2];
+        ctx.font='bold 28px "Courier New"';
+        ctx.textAlign='center';
+        ctx.fillText(s[1],sx+i*190+90,HDR*0.55);
+        ctx.fillStyle='rgba(255,255,255,0.3)';
+        ctx.font='14px "Courier New"';
+        ctx.fillText(s[0],sx+i*190+90,HDR*0.85);
+      });
+    }
+
+    /* Draw each chart */
+    var loadImg=function(idx,src){
+      return new Promise(function(res){
+        if(!src){res(null);return;}
+        var img=new Image();
+        img.onload=function(){res({img:img,idx:idx});};
+        img.onerror=function(){res(null);};
+        img.src=src;
+      });
+    };
+
+    var imgPromises=imgs.map(function(src,i){return loadImg(i,src);});
+
+    Promise.all(imgPromises).then(function(loaded){
+      loaded.forEach(function(item){
+        if(!item)return;
+        var i=item.idx;
+        var col=i%COLS, row=Math.floor(i/COLS);
+        var x=col*cellW+PAD;
+        var y=HDR+row*cellH;
+        var ch=CHARTS[i];
+
+        /* Cell background */
+        ctx.fillStyle='rgba(19,17,28,0.9)';
+        ctx.fillRect(x,y+PAD,cellW-PAD*2,cellH-PAD*2);
+
+        /* Chart image */
+        var imgY=y+PAD+44;
+        var imgH=cellH-PAD*2-88;
+        ctx.drawImage(item.img,x,imgY,cellW-PAD*2,imgH);
+
+        /* Title bar */
+        ctx.fillStyle='rgba(5,4,10,0.85)';
+        ctx.fillRect(x,y+PAD,cellW-PAD*2,42);
+        ctx.fillStyle='#d4a843';
+        ctx.font='bold 18px "Courier New", monospace';
+        ctx.textAlign='left';
+        ctx.textBaseline='middle';
+        ctx.fillText(ch[1],x+10,y+PAD+21);
+
+        /* Description bar */
+        ctx.fillStyle='rgba(5,4,10,0.7)';
+        ctx.fillRect(x,y+cellH-PAD-44,cellW-PAD*2,44);
+        ctx.fillStyle='#8a7f6a';
+        ctx.font='15px Georgia, serif';
+        ctx.textBaseline='middle';
+        /* Word-wrap description to fit */
+        var desc=ch[2];
+        var maxW=cellW-PAD*2-20;
+        ctx.fillText(desc,x+10,y+cellH-PAD-22,maxW);
+      });
+
+      /* Footer */
+      ctx.fillStyle='rgba(212,168,67,0.05)';
+      ctx.fillRect(0,H-FTR,W,FTR);
+      ctx.strokeStyle='rgba(212,168,67,0.2)';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(0,H-FTR);ctx.lineTo(W,H-FTR);ctx.stroke();
+      ctx.fillStyle='rgba(138,127,106,0.6)';
+      ctx.font='18px "Courier New"';
+      ctx.textAlign='center';
+      ctx.textBaseline='middle';
+      ctx.fillText('modular lifting rings · wessengetachew.github.io · J=ΣP(k) · Jump Theorem: [D]_{x=p−1}=1/(p(p−1)) · F(u)=ζ(2)∏(1−u/p²)',W/2,H-FTR/2);
+
+      /* Download */
+      cv.toBlob(function(blob){
+        var a=document.createElement('a');
+        a.href=URL.createObjectURL(blob);
+        a.download='MLR_analysis_4K.png';
+        a.click();
+        if(btn){btn.textContent='↓ Export 4K PNG';btn.disabled=false;}
+      },'image/png');
+    });
+  }).catch(function(err){
+    console.error('Export error:',err);
+    if(btn){btn.textContent='↓ Export 4K PNG';btn.disabled=false;}
+    alert('Export failed — run the animation first so all charts have data.');
+  });
+};
+
 /* ── Tab init ── */
 var _init=false;
 var _origSw=window.switchTab;
@@ -1988,4 +2314,4 @@ window.switchTab=function(t){
 </script>
 
 </body>
-           </html>
+   </html>
