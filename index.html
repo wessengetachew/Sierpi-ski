@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0.5">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0.5,viewport-fit=cover">
 <title>The Lift Survival Function — Wessen Getachew</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -35,8 +35,8 @@
   --glow:rgba(212,168,67,0.12);
 }
 html{scroll-behavior:smooth;}
-html,body{height:100%;background:var(--black);}html{overflow:visible;}
-body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;flex-direction:column;}
+html,body{height:100%;background:var(--black);width:100%;max-width:100%;}
+body{color:var(--ink);font-family:var(--serif);display:flex;flex-direction:column;width:100%;}
 
 /* ═══════════════════════════════════════
    SPLASH SCREEN
@@ -63,6 +63,8 @@ body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;fl
 }
 .splash-content{
   position:relative;z-index:2;text-align:center;padding:40px;max-width:760px;
+  background:rgba(5,4,10,0.55);border-radius:8px;
+  backdrop-filter:blur(2px);
   opacity:0;transform:translateY(18px);
 }
 .splash-eyebrow{
@@ -138,6 +140,8 @@ body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;fl
   background:rgba(5,4,10,.95);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--border);
   position:relative;z-index:100;
+  width:100%;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
 }
 .nav-logo{
   font-family:var(--mono);font-size:9px;color:var(--gold);
@@ -172,17 +176,17 @@ body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;fl
    PAGES
 ═══════════════════════════════════════ */
 .pg{flex:1;overflow:hidden;display:none;}
-.pg.on{display:flex;flex-direction:column;}
+.pg.on{display:flex;flex-direction:column;width:100%;}
 
 /* ═══════════════════════════════════════
    PAPER PAGE
 ═══════════════════════════════════════ */
-#paper-pg{overflow-y:auto;background:var(--black);}
+#paper-pg{overflow-y:auto;background:var(--black);width:100%;}
 .paper-hero{
   background:linear-gradient(160deg,#0f0d18 0%,#0a0910 50%,#0d0b14 100%);
   border-bottom:1px solid var(--border);
   padding:40px 28px 48px;
-  position:relative;overflow:hidden;
+  position:relative;overflow:hidden;width:100%;
 }
 @media(min-width:700px){
   .paper-hero{padding:72px 52px 60px;}
@@ -199,7 +203,7 @@ body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;fl
   color:rgba(212,168,67,.04);line-height:1;pointer-events:none;
   white-space:nowrap;
 }
-.pw{max-width:800px;margin:0 auto;padding:0 0 80px;}
+.pw{max-width:800px;margin:0 auto;padding:0 0 80px;width:100%;box-sizing:border-box;}
 .ptitle{
   font-family:var(--display);font-size:clamp(22px,5vw,52px);
   font-weight:400;line-height:1.1;
@@ -227,7 +231,7 @@ body{color:var(--ink);font-family:var(--serif);overflow-x:hidden;display:flex;fl
 .badge-coral{border-color:var(--coral);color:var(--coral);opacity:.7;}
 
 /* ── Paper body styles ── */
-.paper-body{padding:32px 20px 0;}
+.paper-body{padding:32px 20px 0;width:100%;box-sizing:border-box;}
 @media(min-width:700px){.paper-body{padding:52px 52px 0;}}
 h2{margin:64px 0 0;}
 .sn{font-family:var(--mono);font-size:9px;color:var(--gold2);
@@ -413,7 +417,7 @@ ul li strong,ol li strong{color:var(--ink);}
 /* ═══════════════════════════════════════
    ABOUT PAGE
 ═══════════════════════════════════════ */
-#about-pg{overflow-y:auto;background:var(--black);}
+#about-pg{overflow-y:auto;background:var(--black);width:100%;}
 .about-wrap{max-width:860px;margin:0 auto;padding:80px 52px 120px;}
 .about-hero{margin-bottom:80px;}
 .about-kicker{
@@ -599,7 +603,7 @@ ul li strong,ol li strong{color:var(--ink);}
 #app{
   display:flex;flex-direction:column;flex:1;
   opacity:0;transition:opacity .6s ease .2s;
-  min-height:0;
+  min-height:0;width:100%;overflow-x:hidden;
 }
 #app.visible{opacity:1;}
 
@@ -663,6 +667,7 @@ ul li strong,ol li strong{color:var(--ink);}
 
 /* Splash interactive */
 #splash.text-hidden .splash-content{opacity:0!important;pointer-events:none;}
+#splash.text-hidden .splash-enter{pointer-events:none!important;}
 #splash.text-hidden .splash-stats{opacity:0!important;}
 #sp-hide-btn:hover{background:rgba(212,168,67,.15)!important;color:var(--gold)!important;}
 #splash.text-hidden #sp-hide-btn{color:var(--gold)!important;border-color:var(--gold)!important;background:rgba(212,168,67,.12)!important;}
@@ -681,7 +686,7 @@ ul li strong,ol li strong{color:var(--ink);}
 <canvas id="main-stars-cv" width="1" height="1" style="position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 1.2s ease 0.5s;"></canvas>
 <div id="splash">
   <div class="splash-bg" id="splash-bg">
-    <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;"></canvas>
+    <canvas id="splash-canvas" style="position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;image-rendering:crisp-edges;"></canvas>
     <!-- Point tooltip -->
     <div id="sp-tooltip" style="
       display:none;position:absolute;pointer-events:none;
@@ -698,53 +703,146 @@ ul li strong,ol li strong{color:var(--ink);}
       padding:8px 18px;font-family:var(--mono);font-size:10px;
       color:var(--teal);z-index:10;text-align:center;white-space:nowrap;
     "></div>
-    <!-- Interactive control panel -->
+    <!-- Splash control panel -->
     <div id="sp-panel" style="
       position:absolute;top:12px;right:14px;z-index:10;
-      background:rgba(5,4,10,.82);border:1px solid rgba(212,168,67,.25);
-      padding:12px 14px;font-family:var(--mono);font-size:9px;
-      color:rgba(200,185,155,.8);min-width:200px;
-      backdrop-filter:blur(8px);
+      font-family:var(--mono);font-size:9px;
     ">
-      <!-- Row 1: buttons -->
-      <div style="display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;">
+      <!-- Top action bar: always visible -->
+      <div style="display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap;justify-content:flex-end;">
+        <button onclick="splashFullscreen()" id="sp-fs-btn" style="
+          font-size:8px;letter-spacing:.1em;border:1px solid rgba(144,96,208,.4);
+          background:rgba(5,4,10,.75);color:rgba(144,96,208,.75);padding:4px 10px;
+          cursor:pointer;border-radius:2px;text-transform:uppercase;font-family:inherit;">⛶ Full</button>
         <button id="sp-hide-btn" onclick="splashToggleText()" style="
           font-size:8px;letter-spacing:.1em;border:1px solid rgba(212,168,67,.4);
-          background:rgba(5,4,10,.6);color:rgba(212,168,67,.75);padding:4px 10px;
-          cursor:pointer;border-radius:2px;text-transform:uppercase;transition:all .2s;font-family:inherit;">
-          Hide Text</button>
-        <button onclick="splashClearSel()" style="
-          font-size:8px;letter-spacing:.1em;border:1px solid rgba(43,191,176,.35);
-          background:rgba(5,4,10,.6);color:rgba(43,191,176,.7);padding:4px 10px;
-          cursor:pointer;border-radius:2px;text-transform:uppercase;transition:all .2s;font-family:inherit;">
-          Clear</button>
-        <button id="sp-gcd-btn" onclick="splashToggleGCD()" style="
-          font-size:8px;letter-spacing:.1em;border:1px solid rgba(232,85,64,.4);
-          background:rgba(5,4,10,.6);color:rgba(232,85,64,.7);padding:4px 10px;
-          cursor:pointer;border-radius:2px;text-transform:uppercase;transition:all .2s;font-family:inherit;">
-          +Non-coprime</button>
+          background:rgba(5,4,10,.75);color:rgba(212,168,67,.75);padding:4px 10px;
+          cursor:pointer;border-radius:2px;text-transform:uppercase;font-family:inherit;">Hide Text</button>
+        <button onclick="splashTogglePanel()" id="sp-dd-btn" style="
+          font-size:8px;letter-spacing:.1em;border:1px solid rgba(43,191,176,.4);
+          background:rgba(5,4,10,.75);color:rgba(43,191,176,.8);padding:4px 10px;
+          cursor:pointer;border-radius:2px;font-family:inherit;">⚙ Controls ▾</button>
+        <button onclick="splashPlay()" id="sp-play-btn" style="
+          font-size:8px;letter-spacing:.1em;border:1px solid rgba(68,204,136,.5);
+          background:rgba(5,4,10,.75);color:rgba(68,204,136,.85);padding:4px 12px;
+          cursor:pointer;border-radius:2px;font-family:inherit;font-weight:600;" id="sp-play-name">▶ Play</button>
       </div>
-      <!-- Mod slider -->
-      <div style="margin-bottom:8px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-          <span>Mod</span>
-          <span id="sp-mod-val" style="color:rgba(212,168,67,.9);">18</span>
+      <!-- Mod slider: always visible -->
+      <div style="background:rgba(5,4,10,.82);border:1px solid rgba(212,168,67,.2);padding:8px 10px;margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;color:rgba(200,185,155,.8);">
+          <span>Mod N</span><span id="sp-mod-val" style="color:rgba(212,168,67,.9);">18</span>
         </div>
-        <input type="range" id="sp-mod-sl" min="2" max="128" value="18" step="1"
-          oninput="splashSetMod(+this.value)"
-          style="width:100%;accent-color:#d4a843;cursor:pointer;">
-      </div>
-      <!-- Zoom slider -->
-      <div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-          <span>Zoom</span>
-          <span id="sp-zoom-val" style="color:rgba(43,191,176,.9);">1.0×</span>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input type="range" id="sp-mod-sl" min="2" max="512" value="18" step="1"
+            oninput="splashSetMod(+this.value);document.getElementById('sp-mod-inp').value=this.value;if(window.splashUpdateStats)window.splashUpdateStats();"
+            style="flex:1;accent-color:#d4a843;cursor:pointer;">
+          <input type="number" id="sp-mod-inp" value="18" min="2" max="9999"
+            onchange="var v=Math.max(2,+this.value);splashSetMod(v);document.getElementById('sp-mod-sl').value=Math.min(v,512);"
+            style="width:50px;font-family:var(--mono);font-size:9px;background:rgba(5,4,10,.8);
+            border:1px solid rgba(212,168,67,.35);color:rgba(212,168,67,.9);padding:3px 5px;text-align:center;">
         </div>
-        <input type="range" id="sp-zoom-sl" min="0.3" max="4.0" value="1.0" step="0.05"
-          oninput="splashSetZoom(+this.value)"
-          style="width:100%;accent-color:#2bbfb0;cursor:pointer;">
       </div>
-    </div>
+      <!-- Dropdown panel -->
+      <div id="sp-dd" style="display:none;background:rgba(5,4,10,.94);border:1px solid rgba(212,168,67,.18);
+        padding:12px 14px;color:rgba(200,185,155,.8);width:min(88vw,320px);
+        backdrop-filter:blur(10px);max-height:80vh;overflow-y:auto;">
+
+        <!-- VIEW -->
+        <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);">
+          <div style="margin-bottom:5px;color:rgba(150,140,120,.7);font-size:8px;letter-spacing:.12em;">VIEW MODE</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <button id="sp-gcd-btn" onclick="splashToggleGCD()" style="font-size:8px;border:1px solid rgba(232,85,64,.45);background:rgba(5,4,10,.6);color:rgba(232,85,64,.75);padding:4px 11px;cursor:pointer;border-radius:2px;font-family:inherit;">gcd=1</button>
+            <button onclick="splashClearSel()" style="font-size:8px;border:1px solid rgba(43,191,176,.35);background:rgba(5,4,10,.6);color:rgba(43,191,176,.7);padding:4px 11px;cursor:pointer;border-radius:2px;font-family:inherit;">Clear sel</button>
+          </div>
+        </div>
+
+        <!-- ZOOM -->
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span>Zoom</span><span id="sp-zoom-val" style="color:rgba(43,191,176,.9);">1.0×</span></div>
+          <input type="range" id="sp-zoom-sl" min="0.3" max="4.0" value="1.0" step="0.05" oninput="splashSetZoom(+this.value)" style="width:100%;accent-color:#2bbfb0;cursor:pointer;">
+        </div>
+
+        <!-- LIFT DEPTH -->
+        <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span>Lift depth</span><span id="sp-lift-val" style="color:rgba(43,191,176,.9);">all</span></div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <input type="range" id="sp-lift-sl" min="0" max="512" value="0" step="1" oninput="splashSetLift(+this.value);document.getElementById('sp-lift-inp').value=this.value;" style="flex:1;accent-color:#2bbfb0;cursor:pointer;">
+            <input type="number" id="sp-lift-inp" value="0" min="0" max="9999" onchange="var v=Math.max(0,+this.value);splashSetLift(v);document.getElementById('sp-lift-sl').value=Math.min(v,512);" style="width:46px;font-family:var(--mono);font-size:9px;background:rgba(5,4,10,.8);border:1px solid rgba(43,191,176,.35);color:rgba(43,191,176,.9);padding:3px 4px;text-align:center;">
+          </div>
+        </div>
+
+        <!-- LINES SECTION -->
+        <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);">
+          <div style="margin-bottom:6px;color:rgba(150,140,120,.7);font-size:8px;letter-spacing:.12em;">LINES</div>
+
+          <!-- GCD ring connector -->
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <button id="sp-gcdlines-btn" onclick="splashToggle('gcdlines')" style="font-size:8px;border:1px solid rgba(255,255,255,.2);background:rgba(5,4,10,.6);color:rgba(180,170,150,.7);padding:4px 11px;cursor:pointer;border-radius:2px;font-family:inherit;min-width:90px;">GCD rings</button>
+            <span style="font-size:8px;color:rgba(120,110,90,.6);">thickness</span>
+            <input type="range" id="sp-gcd-thick" min="0.3" max="4.0" value="0.5" step="0.1" oninput="splashSetThick('gcd',+this.value)" style="flex:1;accent-color:#aaa;cursor:pointer;">
+          </div>
+
+          <!-- Lift line thickness -->
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span style="font-size:8px;color:rgba(120,110,90,.6);min-width:90px;">Lift lines</span>
+            <span style="font-size:8px;color:rgba(120,110,90,.6);">thickness</span>
+            <input type="range" id="sp-lift-thick" min="0.3" max="5.0" value="0.9" step="0.1" oninput="splashSetThick('lift',+this.value)" style="flex:1;accent-color:#2bbfb0;cursor:pointer;">
+          </div>
+
+          <!-- Gap lines -->
+          <div style="margin-bottom:6px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
+              <button id="sp-gaplines-btn" onclick="splashToggle('gaplines')" style="font-size:8px;border:1px solid rgba(212,168,67,.35);background:rgba(5,4,10,.6);color:rgba(212,168,67,.7);padding:4px 11px;cursor:pointer;border-radius:2px;font-family:inherit;min-width:90px;">Gap lines</button>
+              <span style="font-size:8px;color:rgba(120,110,90,.6);">thickness</span>
+              <input type="range" id="sp-gap-thick" min="0.3" max="4.0" value="0.6" step="0.1" oninput="splashSetThick('gap',+this.value)" style="flex:1;accent-color:#d4a843;cursor:pointer;">
+            </div>
+            <!-- Gap value input + presets -->
+            <div style="font-size:8px;color:rgba(120,110,90,.7);margin-bottom:4px;">Gaps (comma-separated, e.g. 2,4,6)</div>
+            <input type="text" id="sp-gap-vals" value="2" placeholder="2,4,6" oninput="splashSetGapVals(this.value)" style="width:100%;font-family:var(--mono);font-size:9px;background:rgba(5,4,10,.8);border:1px solid rgba(212,168,67,.3);color:rgba(212,168,67,.85);padding:4px 8px;margin-bottom:5px;box-sizing:border-box;">
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <button onclick="splashGapPreset('2')" style="font-size:7.5px;border:1px solid rgba(212,168,67,.25);background:rgba(5,4,10,.5);color:rgba(180,168,120,.7);padding:2px 7px;cursor:pointer;border-radius:2px;font-family:inherit;">+2 twin</button>
+              <button onclick="splashGapPreset('4')" style="font-size:7.5px;border:1px solid rgba(212,168,67,.25);background:rgba(5,4,10,.5);color:rgba(180,168,120,.7);padding:2px 7px;cursor:pointer;border-radius:2px;font-family:inherit;">+4 cousin</button>
+              <button onclick="splashGapPreset('6')" style="font-size:7.5px;border:1px solid rgba(212,168,67,.25);background:rgba(5,4,10,.5);color:rgba(180,168,120,.7);padding:2px 7px;cursor:pointer;border-radius:2px;font-family:inherit;">+6 sexy</button>
+              <button onclick="splashGapPreset('2,4,6')" style="font-size:7.5px;border:1px solid rgba(212,168,67,.25);background:rgba(5,4,10,.5);color:rgba(180,168,120,.7);padding:2px 7px;cursor:pointer;border-radius:2px;font-family:inherit;">all</button>
+              <button onclick="splashGapPreset('6n')" style="font-size:7.5px;border:1px solid rgba(43,191,176,.25);background:rgba(5,4,10,.5);color:rgba(120,180,160,.7);padding:2px 7px;cursor:pointer;border-radius:2px;font-family:inherit;">6n</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESIDUE TRACKER -->
+        <div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.07);">
+          <div style="margin-bottom:5px;color:rgba(150,140,120,.7);font-size:8px;letter-spacing:.12em;">RESIDUE TRACKER</div>
+          <div style="font-size:7.5px;color:rgba(120,110,90,.6);margin-bottom:6px;">Enter residue r, then click Track — dims all others, animates the path</div>
+          <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+            <span style="font-size:8px;color:rgba(150,140,120,.7);">r =</span>
+            <input type="number" id="sp-res-input" value="1" min="1" step="1" style="width:54px;font-family:var(--mono);font-size:9px;background:rgba(5,4,10,.8);border:1px solid rgba(144,96,208,.4);color:rgba(180,160,220,.9);padding:3px 5px;text-align:center;">
+            <button onclick="splashTrackResidue(+document.getElementById('sp-res-input').value)" id="sp-res-btn" style="font-size:8px;border:1px solid rgba(144,96,208,.5);background:rgba(5,4,10,.6);color:rgba(144,96,208,.8);padding:4px 11px;cursor:pointer;border-radius:2px;font-family:inherit;flex:1;">Track</button>
+            <button onclick="splashClearResidues()" style="font-size:8px;border:1px solid rgba(255,255,255,.15);background:rgba(5,4,10,.6);color:rgba(140,130,110,.6);padding:4px 8px;cursor:pointer;border-radius:2px;font-family:inherit;">✕</button>
+          </div>
+          <div id="sp-res-active" style="font-size:8px;color:rgba(144,96,208,.8);min-height:14px;"></div>
+        </div>
+
+      </div>
+
+      <!-- Bottom stats bar -->
+      <div id="sp-stats-bar" style="
+        position:fixed;bottom:0;left:0;right:0;
+        background:rgba(5,4,10,.92);border-top:1px solid rgba(212,168,67,.18);
+        font-family:var(--mono);font-size:9px;color:rgba(180,170,150,.8);
+        padding:6px 16px;display:flex;gap:18px;flex-wrap:wrap;z-index:20;
+        align-items:center;
+      ">
+        <span>gcd=1: <span id="sp-stat-cp" style="color:#d4a843;font-weight:600;">—</span></span>
+        <span>gcd=1/total: <span id="sp-stat-ratio" style="color:#d4a843;">—</span></span>
+        <span>lifts: <span id="sp-stat-lifts" style="color:#2bbfb0;font-weight:600;">—</span></span>
+        <span>lift/gcd=1: <span id="sp-stat-lratio" style="color:#2bbfb0;">—</span></span>
+        <span>lift/total: <span id="sp-stat-ltotal" style="color:#2bbfb0;">—</span></span>
+        <span style="color:rgba(120,110,90,.5);">│</span>
+        <span title="Lift survival constant C = ∏f_p(1) ≈ 0.5307">C = <span id="sp-stat-C" style="color:#d4a843;font-weight:600;">0.5307</span></span>
+        <span title="C(N): lift survival at current mod — fraction surviving lift from ring N to N+1">C(N) = <span id="sp-stat-CN" style="color:#9060d0;font-weight:600;">—</span></span>
+        <span title="D(N) = d/dx log C(x) at x=N — the log-derivative, always negative">D(N) = <span id="sp-stat-DN" style="color:#e85540;">—</span></span>
+        <span style="color:rgba(120,110,90,.6);">N=<span id="sp-stat-rings" style="color:rgba(180,170,150,.7);">—</span></span>
+      </div>
   </div>
   <div class="splash-content">
     <div class="splash-eyebrow">Mathematics · Number Theory · 2026</div>
@@ -756,7 +854,16 @@ ul li strong,ol li strong{color:var(--ink);}
       <span>Enter</span>
       <span class="arr">→</span>
     </button>
-      <button class="splash-enter" style="border-color:var(--teal);color:var(--teal);" onclick="enterSite();setTimeout(function(){loadPreset('rings_all');},200)">
+      <button class="splash-enter" style="border-color:var(--teal);color:var(--teal);" onclick="enterSite();setTimeout(function(){
+  var m=typeof _splashMod!=='undefined'&&_splashMod?_splashMod:(typeof curMMAX!=='undefined'?curMMAX:60);
+  var nEl=document.getElementById('v-n');if(nEl)nEl.value=Math.min(m,200);
+  var nV=document.getElementById('v-n-v');if(nV)nV.textContent=Math.min(m,200);
+  var col=document.getElementById('a-col');if(col)col.value='residue6';
+  var vm=document.getElementById('a-view');
+  if(vm){var vc=typeof _splashViewCycle!=='undefined'?_splashViewCycle:0;
+    vm.value=vc===0?'coprime':vc===1?'noncoprime':'both';}
+  draw&&draw();
+},300);">
         <span>See on Canvas</span>
         <span class="arr">⧡</span>
       </button>
@@ -1149,6 +1256,7 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
           <option value="primorial">Primorial rings</option>
           <option value="gapclass">Gap class — twin/cousin/sexy</option>
           <option value="residue6" selected>Residue mod 6</option>
+          <option value="gcdcolor">GCD color (opener style)</option>
         </select>
         <div class="cr"><span class="cl">Dot size</span><span class="cv" id="a-pt-v">4</span></div>
         <input type="range" id="a-pt" min="0.5" max="20" value="4" step="0.5" oninput="sv('a-pt-v',this.value);draw()">
@@ -1218,7 +1326,7 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
       </div></div>
       <div class="cs"><div class="cs-h" onclick="csToggle(this)"><span>⊙ Overlays</span><span class="cs-arr">▲</span></div>
       <div class="cs-b">
-        <div class="cr"><span class="cl">Guide circles</span><button class="ctb on" id="btn-guides" onclick="tog('btn-guides');draw()">ON</button></div>
+        <div class="cr"><span class="cl">Guide circles</span><button class="ctb on" id="btn-guides" onclick="tog('btn-guides');draw()">ON</button><button class="ctb" id="btn-prime-rings" onclick="tog('btn-prime-rings');draw()" title="Show only prime rings">Primes only</button></div>
         <div class="cr"><span class="cl">Equator line</span><button class="ctb" id="btn-equator" onclick="tog('btn-equator');draw()">OFF</button></div>
         <div class="cr"><span class="cl">Spokes</span><button class="ctb" id="btn-spokes" onclick="tog('btn-spokes');draw()">OFF</button></div>
         <div class="cr"><span class="cl">Prime sq markers</span><button class="ctb" id="btn-psq" onclick="tog('btn-psq');draw()">OFF</button></div>
@@ -1356,9 +1464,16 @@ GRH ↔ √N·|J_χ−J_χ(N)| bounded · F in Laguerre–Pólya class unconditi
 function buildSplashRings(){
   var cv=document.getElementById('splash-canvas');
   if(!cv)return;
+  var dpr=Math.min(window.devicePixelRatio||1,3); /* cap at 3× for perf */
   var W=window.innerWidth,H=window.innerHeight;
-  cv.width=W;cv.height=H;
+  /* Physical pixels = viewport × dpr for crisp rendering */
+  cv.width=Math.round(W*dpr);
+  cv.height=Math.round(H*dpr);
+  /* Keep CSS size = viewport so it doesn't blow up */
+  cv.style.width=W+'px';
+  cv.style.height=H+'px';
   var ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr); /* all drawing coords stay in CSS px */
   var cx=W/2,cy=H/2;
 
   /* ── Math helpers ── */
@@ -1374,35 +1489,74 @@ function buildSplashRings(){
   var MMAX    = 18;
   var MTARGET = 60;
   var curMMAX = MMAX;
+  window._splashMod = null; /* will be set on first splashSetMod call */
   var contentShown = false;
   /* User controls */
   var _splashZoom   = 1.0;
-  var _splashMod    = null;   /* null = auto, number = user override */
-  var _splashShowNC = false;  /* show non-coprime points */
+  var _splashMod    = null;
+  var _splashShowNC = false;
+  var _splashViewCycle = 0;  /* 0=coprime only, 1=non-coprime only, 2=both */
+  var _splashLiftN = 0;
+  var _splashShowGCDLines = false;
+  var _splashGCDLineThick = 0.5;
+  var _splashLiftLineThick = 0.9;
+  var _splashGapLineThick = 0.6;  /* ring-internal connector lines */
+  var _splashShowGapLines = false;  /* gap-2n admissible lines */
+  var _splashGapN = [2];            /* gap sizes as array */
+  var _splashResidueTracker = {};   /* tracked residues → color */
+  var _splashResidueColors = ['#d4a843','#2bbfb0','#e85540','#5588ff','#9060d0','#44cc88','#ff9944','#ff44aa'];
+  var _splashResColorIdx = 0;
+  var _splashResidueMode = false;
+  var _splashCycleTimer = null;
+  /* Auto-cycle views when in idle phase */
+  /* Auto-cycle removed — default stays gcd=1 */
   /* Expose control functions */
   window.splashSetZoom = function(z){
     _splashZoom = z;
     var el = document.getElementById('sp-zoom-val');
     if(el) el.textContent = z.toFixed(2)+'×';
   };
+  window.splashSetLift = function(n){
+    n = Math.max(0, n);
+    _splashLiftN = n;
+    var sl = document.getElementById('sp-lift-sl');
+    if(sl) sl.value = Math.min(n, 512);
+    var inp = document.getElementById('sp-lift-inp');
+    if(inp) inp.value = n;
+    var el = document.getElementById('sp-lift-val');
+    var labels = ['all','C(1)≈0.5307','C(2)≈0.4131','C(3)≈0.3740','C(4)≈0.3376','C(5)≈0.3198','C(6)≈0.3027'];
+    if(el) el.textContent = n===0?'all':(n<=6?labels[n]:('n='+n+' lifts'));
+  };
   window.splashSetMod = function(m){
+    m = Math.max(2, Math.min(m, 9999));
     _splashMod = m;
+    window._splashMod = m;
     curMMAX = m;
+    MTARGET = m;
     rings = buildRings(m);
     registerPoints();
     var el = document.getElementById('sp-mod-val');
     if(el) el.textContent = m;
-    /* Stop auto-expand phase if user took over */
+    var sl = document.getElementById('sp-mod-sl');
+    if(sl) sl.value = Math.min(m, 512);
+    var inp = document.getElementById('sp-mod-inp');
+    if(inp) inp.value = m;
     if(PHASE==='expand'||PHASE==='rings') PHASE='text';
+    if(window.splashUpdateStats) window.splashUpdateStats();
   };
   window.splashToggleGCD = function(){
-    _splashShowNC = !_splashShowNC;
+    _splashViewCycle = (_splashViewCycle+1)%3;
+    _splashShowNC = _splashViewCycle!==0;
+    window._splashHideNC = _splashViewCycle===1;
+    /* Pause auto-cycle when user manually toggles */
+    if(_splashCycleTimer){clearInterval(_splashCycleTimer);_splashCycleTimer=null;}
     rings = buildRings(_splashMod||curMMAX);
     registerPoints();
     var btn = document.getElementById('sp-gcd-btn');
     if(btn){
-      btn.classList.toggle('active', _splashShowNC);
-      btn.textContent = _splashShowNC ? '-Non-coprime' : '+Non-coprime';
+      var labels=['gcd=1','Non-gcd=1','Combined'];
+      btn.textContent = labels[_splashViewCycle];
+      btn.classList.toggle('active',_splashViewCycle>0);
     }
   };
 
@@ -1432,9 +1586,14 @@ function buildSplashRings(){
     for(var M=2;M<=mmax;M++){
       var pts=[];
       for(var r=0;r<M;r++){
-        var isCP = r===0 ? false : gcd(r,M)===1;
-        if(!isCP && !_splashShowNC) continue;
-        if(r===0 && !_splashShowNC) continue;
+        var g = r===0 ? M : gcd(r,M);
+        var isCP = g===1;
+        /* View: 0=coprime only, 1=non-coprime only (gcd≥2), 2=both */
+        if(_splashViewCycle===0 && !isCP) continue;
+        if(_splashViewCycle===1 && isCP) continue;
+        /* In coprime-only view, skip r=0 (gcd=M>1) */
+        if(_splashViewCycle===0 && r===0) continue;
+        if(window._splashHideNC && !isCP) continue;
         var theta=2*Math.PI*r/M - Math.PI/2;
         var rr=(M-1)/(mmax-1)*maxR*0.93+maxR*0.05;
         pts.push({r:r,M:M,theta:theta,
@@ -1442,6 +1601,7 @@ function buildSplashRings(){
           y:cy+rr*Math.sin(theta),
           rr:rr,
           isCP:isCP,
+          g:g,
           lifts:isCP&&gcd(r,M+1)===1,
           isP:isPrime(M)
         });
@@ -1479,25 +1639,13 @@ function buildSplashRings(){
     globalT+=dt;
     phaseT+=dt;
 
+    /* Always use logical viewport dimensions for drawing coords */
+    W=window.innerWidth;H=window.innerHeight;
+    cx=W/2;cy=H/2;
     ctx.clearRect(0,0,W,H);
 
     /* ── Starfield ── */
-    for(var si=0;si<STARS.length;si++){
-      var st=STARS[si];
-      var a=Math.sin(globalT*0.001*st.speed+st.phase)*0.5+0.5;
-      ctx.beginPath();
-      ctx.arc(st.x,st.y,st.r*(0.6+a*0.8),0,2*Math.PI);
-      ctx.fillStyle=SCOLS[st.col]+(0.15+a*0.65)+')';
-      ctx.fill();
-      /* sparkle cross */
-      if(a>0.85){
-        var sz=st.r*3*(a-0.85)*7;
-        ctx.strokeStyle=SCOLS[st.col]+(a-0.85)*4+')';
-        ctx.lineWidth=0.6;
-        ctx.beginPath();ctx.moveTo(st.x-sz,st.y);ctx.lineTo(st.x+sz,st.y);ctx.stroke();
-        ctx.beginPath();ctx.moveTo(st.x,st.y-sz);ctx.lineTo(st.x,st.y+sz);ctx.stroke();
-      }
-    }
+
 
     /* ── Ripples ── */
     for(var ri=RIPPLES.length-1;ri>=0;ri--){
@@ -1571,26 +1719,32 @@ function buildSplashRings(){
       ctx.stroke();
     }
 
-    /* Lift lines — drawn before dots */
+    /* Lift lines — filtered by lift depth */
     for(var i=0;i<n-1;i++){
       var rngA=rings[i],rngB=rings[i+1];
       for(var pi=0;pi<rngA.pts.length;pi++){
         var pa=rngA.pts[pi];
+        if(!pa.isCP) continue;
+        if(_splashLiftN>0){
+          var _lOk=true;
+          for(var _li=1;_li<=_splashLiftN;_li++){if(gcd(pa.r,pa.M+_li)!==1){_lOk=false;break;}}
+          if(!_lOk) continue;
+        }
         for(var pj=0;pj<rngB.pts.length;pj++){
           var pb=rngB.pts[pj];
           if(pb.r===pa.r){
             var wave=Math.sin(gt*1.8-i*0.4+pi*0.2)*0.5+0.5;
-            /* Apply zoom to positions */
-            var paz={x:cx+(pa.x-cx)*_splashZoom,y:cy+(pa.y-cy)*_splashZoom};
-            var pbz={x:cx+(pb.x-cx)*_splashZoom,y:cy+(pb.y-cy)*_splashZoom};
+            var paz={x:cx+pa.rr*_splashZoom*Math.cos(pa.theta),y:cy+pa.rr*_splashZoom*Math.sin(pa.theta)};
+            var pbz={x:cx+pb.rr*_splashZoom*Math.cos(pb.theta),y:cy+pb.rr*_splashZoom*Math.sin(pb.theta)};
+            var lw=(_splashLiftLineThick||0.9)*(_textHidden?1.4:1.0)*(0.8+wave*0.4);
             if(pa.lifts){
               ctx.beginPath();ctx.moveTo(paz.x,paz.y);ctx.lineTo(pbz.x,pbz.y);
-              ctx.strokeStyle='rgba(43,191,176,'+(0.07+wave*0.18)+')';
-              ctx.lineWidth=0.7;ctx.stroke();
+              ctx.strokeStyle='rgba(43,191,176,'+(0.18+wave*0.42)+')';
+              ctx.lineWidth=lw;ctx.stroke();
             } else {
               ctx.beginPath();ctx.moveTo(paz.x,paz.y);ctx.lineTo(pbz.x,pbz.y);
-              ctx.strokeStyle='rgba(232,85,64,'+(0.04+wave*0.1)+')';
-              ctx.lineWidth=0.5;ctx.stroke();
+              ctx.strokeStyle='rgba(232,85,64,'+(0.10+wave*0.22)+')';
+              ctx.lineWidth=lw*0.7;ctx.stroke();
             }
             break;
           }
@@ -1605,15 +1759,48 @@ function buildSplashRings(){
       for(var pi=0;pi<rng.pts.length;pi++){
         var p=rng.pts[pi];
         var pulse2=Math.sin(gt*1.4+i*0.5+pi*0.31)*0.5+0.5;
-        var baseR=rng.isP?2.0:1.3;
-        var sz=baseR*(0.7+pulse2*0.65);
+        var baseR2=p.isCP?(p.isP?2.0:1.3):(p.isP?2.2:1.7);
+        var sz=baseR2*(0.7+pulse2*0.65);
+        /* Nth lift filter: skip points that don't survive N consecutive lifts */
+        if(_splashLiftN>0&&p.isCP){
+          var _liftOk=true;
+          for(var _li=1;_li<=_splashLiftN;_li++){
+            if(gcd(p.r,p.M+_li)!==1){_liftOk=false;break;}
+          }
+          if(!_liftOk) continue;
+        }
+        var g2=p.g||(p.r===0?p.M:gcd(p.r,p.M));
         var col=DCOLS[p.r%6];
-        /* Non-coprime points: different color scheme */
-        if(!p.isCP){col='255,255,255';} /* white for non-coprime */
-        var alpha=p.isCP?(p.lifts?(0.45+pulse2*0.55):(0.3+pulse2*0.3)):(0.12+pulse2*0.18);
+        if(!p.isCP){
+          /* Color by gcd value: each divisor gets its own hue */
+          var g2=p.g||gcd(p.r||0,p.M);
+          /* Map gcd to a distinct color: 2=coral,3=blue,4=purple,5=teal,6=green,7+=orange */
+          var ncCols=['232,85,64','74,128,240','144,96,208','43,191,176','68,204,136',
+                      '232,168,67','180,80,180','80,160,220','200,100,80','120,200,80'];
+          col=ncCols[Math.min(g2-2,ncCols.length-1)]||'200,180,140';
+        } /* white for non-coprime */
+        /* NC dots sized larger so they're visible even on small rings */
+        var baseNC=p.isP?2.4:2.0;
+        if(!p.isCP){ sz=baseNC*(0.8+pulse2*0.5); }
+        var alpha=p.isCP?(p.lifts?(0.55+pulse2*0.45):(0.35+pulse2*0.35)):(0.65+pulse2*0.30);
+        /* Residue tracker: dim all except tracked r */
+        var _isTracked = Object.keys(_splashResidueTracker).length>0;
+        var _thisTracked = typeof _splashResidueTracker!=='undefined'&&_splashResidueTracker[p.r];
+        if(_isTracked && !_thisTracked){
+          /* Dim non-tracked point heavily */
+          ctx.globalAlpha = 0.08;
+        }
+        if(typeof _splashResidueTracker!=='undefined'&&_splashResidueTracker[p.r]){
+          ctx.globalAlpha = 1.0;
+          var _rc=_splashResidueTracker[p.r];
+          /* parse hex or rgba */
+          col=_rc.replace('#','').length===6?
+            (function(h){return parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16);}((_rc.replace('#',''))))
+            :_rc;
+        }
         /* Apply zoom */
-        var px=cx+(p.x-cx)*_splashZoom;
-        var py=cy+(p.y-cy)*_splashZoom;
+        var px=cx+p.rr*_splashZoom*Math.cos(p.theta);
+        var py=cy+p.rr*_splashZoom*Math.sin(p.theta);
         if(pulse2>0.88&&sz>2){
           ctx.beginPath();ctx.arc(px,py,sz*2.8,0,2*Math.PI);
           var grd=ctx.createRadialGradient(px,py,0,px,py,sz*2.8);
@@ -1624,8 +1811,79 @@ function buildSplashRings(){
         ctx.beginPath();ctx.arc(px,py,sz,0,2*Math.PI);
         ctx.fillStyle='rgba('+col+','+alpha+')';
         ctx.fill();
+        ctx.globalAlpha=1.0;
+        /* Tracked residue: draw animated orbit ring */
+        if(_thisTracked){
+          var orb=sz*2.5+Math.sin(gt*4+p.M*0.3)*sz*0.8;
+          ctx.beginPath();ctx.arc(px,py,orb,0,2*Math.PI);
+          ctx.strokeStyle='rgba('+col+',0.5)';
+          ctx.lineWidth=1.0;ctx.stroke();
+        }
       }
-      /* Fraction labels r/M for M=1..4, fade in after expand starts */
+      /* GCD connector lines: connect each point to next one in ring */
+    if(_splashShowGCDLines){
+      for(var ri=0;ri<n;ri++){
+        var rng2=rings[ri];
+        var allPts=[];
+        /* Build all points for this ring in angular order */
+        for(var r2=0;r2<rng2.M;r2++){
+          var g3=r2===0?rng2.M:gcd(r2,rng2.M);
+          var isCP2=g3===1;
+          if(_splashViewCycle===0&&!isCP2) continue;
+          if(_splashViewCycle===1&&isCP2) continue;
+          var th2=2*Math.PI*r2/rng2.M-Math.PI/2;
+          allPts.push({r:r2,theta:th2,isCP:isCP2,g:g3});
+        }
+        if(allPts.length<2) continue;
+        /* Sort by theta */
+        allPts.sort(function(a,b){return a.theta-b.theta;});
+        ctx.save();
+        for(var qi=0;qi<allPts.length;qi++){
+          var pa2=allPts[qi],pb2=allPts[(qi+1)%allPts.length];
+          var ax2=cx+rng2.rr*_splashZoom*Math.cos(pa2.theta);
+          var ay2=cy+rng2.rr*_splashZoom*Math.sin(pa2.theta);
+          var bx2=cx+rng2.rr*_splashZoom*Math.cos(pb2.theta);
+          var by2=cy+rng2.rr*_splashZoom*Math.sin(pb2.theta);
+          var wave2=Math.sin(globalT*0.001+ri*0.4)*0.5+0.5;
+          ctx.beginPath();ctx.moveTo(ax2,ay2);ctx.lineTo(bx2,by2);
+          ctx.strokeStyle='rgba(255,255,255,'+(0.09+wave2*0.12)+')';
+          ctx.lineWidth=_splashGCDLineThick||0.5;ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
+    /* Gap-2n lines for gcd=1 admissible pairs */
+    if(_splashShowGapLines){
+      var gapArr=Array.isArray(_splashGapN)?_splashGapN:[_splashGapN||2];
+      /* If 6n preset, expand to 6,12,18,24,... */
+      if(_splashGapN==='6n') gapArr=[6,12,18,24,30];
+      var gapCols=['rgba(212,168,67,','rgba(43,191,176,','rgba(144,96,208,','rgba(232,85,64,'];
+      for(var ri=0;ri<n;ri++){
+        var rng3=rings[ri];
+        for(var gi=0;gi<gapArr.length;gi++){
+          var gapN2=gapArr[gi];
+          var gcol=gapCols[gi%gapCols.length];
+          for(var r3=1;r3<rng3.M;r3++){
+            if(gcd(r3,rng3.M)!==1) continue;
+            var r4=((r3+gapN2-1)%rng3.M)+1;
+            if(r4<=0) r4+=rng3.M;
+            if(r4===r3||r4===0||r4>=rng3.M||gcd(r4,rng3.M)!==1) continue;
+            var th3=2*Math.PI*r3/rng3.M-Math.PI/2;
+            var th4=2*Math.PI*r4/rng3.M-Math.PI/2;
+            var ax3=cx+rng3.rr*_splashZoom*Math.cos(th3);
+            var ay3=cy+rng3.rr*_splashZoom*Math.sin(th3);
+            var bx3=cx+rng3.rr*_splashZoom*Math.cos(th4);
+            var by3=cy+rng3.rr*_splashZoom*Math.sin(th4);
+            ctx.beginPath();ctx.moveTo(ax3,ay3);ctx.lineTo(bx3,by3);
+            ctx.strokeStyle=gcol+'0.28)';
+            ctx.lineWidth=_splashGapLineThick||0.6;ctx.stroke();
+          }
+        }
+      }
+    }
+
+    /* Fraction labels r/M for M=1..4, fade in after expand starts */
       if(rng.M>=1&&rng.M<=4){
         var fadeIn=PHASE==='text'?1.0:PHASE==='expand'?Math.min(1,phaseT/2000):0;
         if(fadeIn>0){
@@ -1664,7 +1922,14 @@ function buildSplashRings(){
     var hov = window._splashHoverPt&&window._splashHoverPt();
     var sel = window._splashSelPts&&window._splashSelPts()||[];
     /* Zoom helper */
-    function zp(p){return {x:cx+(p.x-cx)*_splashZoom,y:cy+(p.y-cy)*_splashZoom};}
+    function zp(p){
+      /* Use stored theta+rr for accurate zoom-invariant position */
+      if(p.rr&&p.theta!==undefined){
+        return {x:cx+p.rr*_splashZoom*Math.cos(p.theta),
+                y:cy+p.rr*_splashZoom*Math.sin(p.theta)};
+      }
+      return {x:cx+(p.x-cx)*_splashZoom,y:cy+(p.y-cy)*_splashZoom};
+    }
 
     /* Draw selection connection lines */
     if(sel.length>=2){
@@ -1706,6 +1971,20 @@ function buildSplashRings(){
     }
   }
 
+  setTimeout(function(){if(window.splashUpdateStats)window.splashUpdateStats();},100);
+  /* ── Handle resize ── */
+  window.addEventListener('resize', function(){
+    var dprR=Math.min(window.devicePixelRatio||1,3);
+    var nW=window.innerWidth,nH=window.innerHeight;
+    cv.width=Math.round(nW*dprR);
+    cv.height=Math.round(nH*dprR);
+    cv.style.width=nW+'px';
+    cv.style.height=nH+'px';
+    ctx.setTransform(dprR,0,0,dprR,0,0);
+    rings=buildRings(_splashMod||curMMAX);
+    registerPoints();
+  });
+
   /* ── Kick off ── */
   /* Register flat point list for hit-testing after each frame rebuild */
   function registerPoints(){
@@ -1730,6 +2009,17 @@ buildSplashRings();
 function enterSite(){
   var splash = document.getElementById('splash');
   var app = document.getElementById('app');
+  /* Exit fullscreen first — prevents freeze when app renders outside fullscreen context */
+  if(document.fullscreenElement){
+    document.exitFullscreen && document.exitFullscreen();
+    setTimeout(function(){ doEnter(splash, app); }, 200);
+  } else {
+    doEnter(splash, app);
+  }
+}
+function doEnter(splash, app){
+  /* If text is hidden, ignore accidental enter clicks */
+  if(_textHidden) return;
   if(app) app.classList.add('visible');
   splash.classList.add('out');
   setTimeout(function(){
@@ -1792,6 +2082,9 @@ window.sv=sv;window.tog=tog;
 
 
 /* ── SPLASH INTERACTION ENGINE ── */
+/* Module-level so buildSplashRings can access it */
+var _textHidden = false;
+
 (function(){
 
 /* Global selection state */
@@ -1799,10 +2092,10 @@ var _selPts   = [];   /* array of selected point objects */
 var _hoverPt  = null;
 var _allPts   = [];   /* flat list of all rendered points {r,M,x,y,lifts,isP} */
 var _splashCV = null;
-var _textHidden = false;
 
 /* Expose for draw loop to register points */
 window._splashRegisterPts = function(pts){ _allPts = pts; };
+  window._splashAllPts = function(){ return _allPts; };
 
 /* ── Toggle text visibility ── */
 window.splashToggleText = function(){
@@ -1811,14 +2104,407 @@ window.splashToggleText = function(){
   var btn    = document.getElementById('sp-hide-btn');
   if(_textHidden){
     splash.classList.add('text-hidden');
+    if(btn) btn.classList.add('active');
     if(btn) btn.textContent = 'Show Text';
+    /* Hide non-coprime in explore mode only when in coprime-only view */
+    window._splashHideNC = (typeof _splashViewCycle==='undefined'||_splashViewCycle===0);
   } else {
     splash.classList.remove('text-hidden');
+    if(btn) btn.classList.remove('active');
     if(btn) btn.textContent = 'Hide Text';
+    window._splashHideNC = false;
+  }
+  /* Rebuild rings to apply filter */
+  if(typeof buildRings === 'function' && typeof rings !== 'undefined'){
+    rings = buildRings(typeof _splashMod !== 'undefined' && _splashMod ? _splashMod : (typeof curMMAX !== 'undefined' ? curMMAX : 18));
+    if(typeof registerPoints === 'function') registerPoints();
   }
 };
 
 /* ── Clear selections ── */
+window.splashFullscreen = function(){
+  var el = document.getElementById('splash');
+  if(!el) return;
+  var btn = document.getElementById('sp-fs-btn');
+  if(!document.fullscreenElement){
+    el.requestFullscreen && el.requestFullscreen();
+    if(btn) btn.textContent='⛶ Exit Full';
+  } else {
+    document.exitFullscreen && document.exitFullscreen();
+    if(btn) btn.textContent='⛶ Fullscreen';
+  }
+  /* Update canvas size after fullscreen change */
+  setTimeout(function(){
+    var cv2=document.getElementById('splash-canvas');
+    if(!cv2) return;
+    var dpr2=Math.min(window.devicePixelRatio||1,3);
+    var nW=window.innerWidth, nH=window.innerHeight;
+    cv2.width=Math.round(nW*dpr2);
+    cv2.height=Math.round(nH*dpr2);
+    cv2.style.width=nW+'px';
+    cv2.style.height=nH+'px';
+    cv2.getContext('2d').setTransform(dpr2,0,0,dpr2,0,0);
+  }, 300);
+};
+document.addEventListener('fullscreenchange', function(){
+  var btn2=document.getElementById('sp-fs-btn');
+  if(btn2) btn2.textContent=document.fullscreenElement?'⛶ Exit Full':'⛶ Fullscreen';
+});
+
+/* ── Panel toggle ── */
+window.splashTogglePanel = function(){
+  var dd=document.getElementById('sp-dd');
+  var btn=document.getElementById('sp-dd-btn');
+  if(!dd) return;
+  var vis=dd.style.display!=='none';
+  dd.style.display=vis?'none':'block';
+  if(btn) btn.textContent=vis?'⚙ Controls ▾':'⚙ Controls ▴';
+};
+
+/* ── Toggle feature flags ── */
+window.splashToggle = function(feat){
+  if(feat==='gcdlines'){
+    _splashShowGCDLines=!_splashShowGCDLines;
+    var b=document.getElementById('sp-gcdlines-btn');
+    if(b) b.style.borderColor=_splashShowGCDLines?'rgba(255,255,255,.6)':'rgba(255,255,255,.2)';
+    if(b) b.style.color=_splashShowGCDLines?'rgba(220,210,190,1)':'rgba(180,170,150,.7)';
+  } else if(feat==='gaplines'){
+    _splashShowGapLines=!_splashShowGapLines;
+    var b2=document.getElementById('sp-gaplines-btn');
+    if(b2) b2.style.borderColor=_splashShowGapLines?'rgba(212,168,67,.8)':'rgba(212,168,67,.3)';
+    if(b2) b2.style.color=_splashShowGapLines?'rgba(212,168,67,1)':'rgba(212,168,67,.65)';
+  } else if(feat==='residue'){
+    _splashResidueMode=!_splashResidueMode;
+    var b3=document.getElementById('sp-res-btn');
+    if(b3) b3.classList.toggle('active',_splashResidueMode);
+  }
+};
+window.splashSetGapN = function(n){
+  _splashGapN=Math.max(1,Math.round(n));
+};
+window.splashSetGapVals = function(s){
+  if(s==='6n'){ _splashGapN='6n'; return; }
+  var parts=s.split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return x>0;});
+  _splashGapN = parts.length>0 ? parts : [2];
+};
+window.splashGapPreset = function(s){
+  document.getElementById('sp-gap-vals').value=s;
+  window.splashSetGapVals(s);
+};
+window.splashSetThick = function(type, v){
+  if(type==='gcd') _splashGCDLineThick=v;
+  else if(type==='lift') _splashLiftLineThick=v;
+  else if(type==='gap') _splashGapLineThick=v;
+};
+window.splashTrackResidue = function(r){
+  if(!r||r<1) return;
+  if(_splashResidueTracker[r]){
+    delete _splashResidueTracker[r];
+  } else {
+    _splashResidueTracker[r]=_splashResidueColors[_splashResColorIdx%_splashResidueColors.length];
+    _splashResColorIdx++;
+  }
+  /* Update active display */
+  var el=document.getElementById('sp-res-active');
+  if(el){
+    var keys=Object.keys(_splashResidueTracker);
+    el.innerHTML=keys.length?'Tracking r: '+keys.map(function(k){return '<span style="color:'+_splashResidueTracker[k]+'">'+k+'</span>';}).join(', '):'';
+  }
+};
+window.splashClearResidues = function(){
+  _splashResidueTracker={};
+  _splashResColorIdx=0;
+};
+
+/* ── PLAY ENGINE ── */
+/* All state via window.* since we're outside buildSplashRings closure */
+var _playTimer = null;
+var _playIdx = 0;   /* which preset we're on (0-9, cycles) */
+
+window.splashPlay = function(){
+  if(_playTimer){
+    clearInterval(_playTimer);
+    _playTimer=null;
+    var btn=document.getElementById('sp-play-btn');
+    if(btn){btn.textContent='\u25b6 Play';btn.style.color='rgba(68,204,136,.85)';btn.style.borderColor='rgba(68,204,136,.5)';}
+    return;
+  }
+  var btn=document.getElementById('sp-play-btn');
+  if(btn){btn.textContent='\u23f9 Stop';btn.style.color='rgba(232,85,64,.9)';btn.style.borderColor='rgba(232,85,64,.6)';}
+
+  var names=['Birth of Rings','Lift Filtering','Non-Coprime Reveal',
+    'Twin Prime Geometry','GCD Polygons','Primorial Meditation',
+    'Consecutive Lifts','Mod Sweep','Equator Dance','Full Synthesis'];
+  var pIdx=_playIdx % PLAY_PRESETS.length;
+  var preset = PLAY_PRESETS[pIdx];
+  _playIdx++;
+  var btn2=document.getElementById('sp-play-name');
+  if(btn2) btn2.textContent='⏹ '+(names[pIdx]||'Play '+(pIdx+1));
+  var stepI=0;
+
+  _playTimer=setInterval(function(){
+    if(stepI>=preset.length){
+      clearInterval(_playTimer);_playTimer=null;
+      var b=document.getElementById('sp-play-btn');
+      if(b){b.textContent='\u25b6 Play';b.style.color='rgba(68,204,136,.85)';b.style.borderColor='rgba(68,204,136,.5)';}
+      return;
+    }
+    preset[stepI]();
+    stepI++;
+  },80);
+};
+
+/* Helper: set zoom */
+function _pSetZoom(z){
+  if(window.splashSetZoom) window.splashSetZoom(z);
+}
+/* Helper: set mod */
+function _pSetMod(m){
+  m=Math.max(2,Math.round(m));
+  if(window.splashSetMod) window.splashSetMod(m);
+}
+/* Helper: set lift */
+function _pSetLift(n){
+  if(window.splashSetLift) window.splashSetLift(n);
+}
+/* Helper: set view cycle */
+function _pSetView(v){
+  window._splashViewCycle=v;
+  window._splashShowNC=v!==0;
+  window._splashHideNC=v===1;
+}
+/* Helper: toggle GCD lines */
+function _pGCDLines(on){window._splashShowGCDLines=on;}
+/* Helper: toggle gap lines */
+function _pGapLines(on,gaps){
+  window._splashShowGapLines=on;
+  if(gaps) window._splashGapN=gaps;
+}
+/* Helper: ease value from a to b over steps */
+function _pEase(a,b,i,n){var t=i/n;var e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;return a+(b-a)*e;}
+/* Helper: build frames from a to b */
+function _frames(n,fn){var a=[];for(var i=0;i<=n;i++){(function(ii){a.push(function(){fn(ii,n);});})(i);}return a;}
+/* Helper: hold n frames */
+function _hold(n,fn){var a=[];for(var i=0;i<n;i++) a.push(fn||function(){});return a;}
+
+/* ════════════════════════════════════════════════════════
+   10 MATHEMATICAL PLAY PRESETS
+   Each tells a story about this geometry.
+════════════════════════════════════════════════════════ */
+var PLAY_PRESETS=[
+
+/* 0 — BIRTH OF THE RINGS: mod grows 2→60, zoom out, C(N) falls */
+(function(){
+  var f=[];
+  f=f.concat(_hold(5)); /* pause */
+  f=f.concat(_frames(80,function(i,n){_pSetMod(_pEase(2,60,i,n));}));
+  f=f.concat(_frames(40,function(i,n){_pSetZoom(_pEase(1.0,0.7,i,n));}));
+  f=f.concat(_hold(20));
+  f=f.concat(_frames(40,function(i,n){_pSetZoom(_pEase(0.7,1.0,i,n));}));
+  return f;
+})(),
+
+/* 1 — LIFT FILTERING: gcd=1 view, zoom in, sweep lift depth 0→6→0 */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pGCDLines(false);_pGapLines(false);});
+  f=f.concat(_frames(30,function(i,n){_pSetZoom(_pEase(1.0,1.8,i,n));}));
+  f=f.concat(_hold(10));
+  /* lift sweeps up */
+  for(var l=0;l<=6;l++){(function(ll){
+    f=f.concat(_hold(18,function(){_pSetLift(ll);}));
+  })(l);}
+  /* lift sweeps back */
+  for(var l=5;l>=0;l--){(function(ll){
+    f=f.concat(_hold(15,function(){_pSetLift(ll);}));
+  })(l);}
+  f=f.concat(_frames(30,function(i,n){_pSetZoom(_pEase(1.8,1.0,i,n));}));
+  return f;
+})(),
+
+/* 2 — NON-COPRIME REVEAL: switch view gcd=1 → combined → gcd>1 → back */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pSetZoom(1.0);_pSetLift(0);});
+  f=f.concat(_hold(25));
+  f.push(function(){_pSetView(2);}); /* combined */
+  f=f.concat(_hold(60));
+  f.push(function(){_pSetView(1);}); /* non-coprime only */
+  f=f.concat(_hold(60));
+  f.push(function(){_pSetView(2);}); /* combined */
+  f=f.concat(_hold(30));
+  f.push(function(){_pSetView(0);}); /* back to coprime */
+  f=f.concat(_hold(20));
+  return f;
+})(),
+
+/* 3 — TWIN PRIME GEOMETRY: gap-2 lines appear at small mod, grow */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pGapLines(false);_pSetLift(0);});
+  f=f.concat(_frames(30,function(i,n){_pSetMod(Math.round(_pEase(60,12,i,n)));}));
+  f=f.concat(_hold(15));
+  f.push(function(){_pGapLines(true,[2]);});
+  f=f.concat(_hold(40));
+  f=f.concat(_frames(50,function(i,n){_pSetMod(Math.round(_pEase(12,30,i,n)));}));
+  f=f.concat(_hold(30));
+  f.push(function(){window._splashGapN=[2,6];}); /* twin+sexy */
+  f=f.concat(_hold(40));
+  f.push(function(){window._splashGapN=[2,4,6];}); /* all three */
+  f=f.concat(_hold(40));
+  f.push(function(){_pGapLines(false);});
+  return f;
+})(),
+
+/* 4 — GCD RING CONNECTORS: polygon structure per ring */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pGCDLines(false);_pGapLines(false);_pSetLift(0);});
+  f=f.concat(_frames(40,function(i,n){_pSetMod(Math.round(_pEase(60,6,i,n)));}));
+  f=f.concat(_hold(10));
+  f.push(function(){_pGCDLines(true);}); /* hexagon at mod 6 */
+  f=f.concat(_hold(35));
+  f=f.concat(_frames(50,function(i,n){_pSetMod(Math.round(_pEase(6,30,i,n)));}));
+  f=f.concat(_hold(35));
+  f=f.concat(_frames(40,function(i,n){_pSetMod(Math.round(_pEase(30,60,i,n)));}));
+  f=f.concat(_hold(25));
+  f.push(function(){_pGCDLines(false);});
+  return f;
+})(),
+
+/* 5 — ZOOM PULSE MEDITATION: breathe in/out at mod 30 (primorial) */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pGCDLines(true);_pSetMod(30);_pSetLift(0);});
+  f=f.concat(_hold(15));
+  /* 3 breath cycles */
+  for(var c=0;c<3;c++){
+    f=f.concat(_frames(35,function(i,n){_pSetZoom(_pEase(0.8,2.2,i,n));}));
+    f=f.concat(_frames(35,function(i,n){_pSetZoom(_pEase(2.2,0.8,i,n));}));
+  }
+  f.push(function(){_pSetZoom(1.0);_pGCDLines(false);});
+  return f;
+})(),
+
+/* 6 — CONSECUTIVE LIFTS: survivors at each level — who makes it through */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pGapLines(false);_pGCDLines(false);_pSetMod(60);});
+  f=f.concat(_frames(25,function(i,n){_pSetZoom(_pEase(1.0,1.4,i,n));}));
+  f=f.concat(_hold(10));
+  for(var l=0;l<=6;l++){(function(ll){
+    f=f.concat(_hold(22,function(){_pSetLift(ll);}));
+  })(l);}
+  f=f.concat(_hold(15));
+  f=f.concat(_frames(25,function(i,n){_pSetLift(Math.round(_pEase(6,0,i,n)));}));
+  f=f.concat(_frames(25,function(i,n){_pSetZoom(_pEase(1.4,1.0,i,n));}));
+  return f;
+})(),
+
+/* 7 — MOD SWEEP WITH GCD LINES: watch polygon change 4→5→6→...→12 */
+(function(){
+  var f=[];
+  var mods=[4,5,6,7,8,9,10,11,12];
+  f.push(function(){_pSetView(0);_pGCDLines(true);_pGapLines(false);_pSetLift(0);_pSetZoom(1.2);});
+  for(var mi=0;mi<mods.length;mi++){(function(m){
+    f=f.concat(_hold(5,function(){_pSetMod(m);}));
+    f=f.concat(_hold(28));
+  })(mods[mi]);}
+  f=f.concat(_frames(40,function(i,n){_pSetMod(Math.round(_pEase(12,60,i,n)));}));
+  f.push(function(){_pGCDLines(false);_pSetZoom(1.0);});
+  return f;
+})(),
+
+/* 8 — EQUATOR DANCE: zoom into the equator band (r≈M/2), lift filter shows barrier */
+(function(){
+  var f=[];
+  f.push(function(){_pSetView(0);_pGCDLines(false);_pGapLines(false);_pSetMod(60);});
+  f=f.concat(_frames(40,function(i,n){_pSetZoom(_pEase(1.0,3.5,i,n));}));
+  f=f.concat(_hold(20));
+  /* lift sweep to show who survives near equator */
+  for(var l=0;l<=4;l++){(function(ll){
+    f=f.concat(_hold(20,function(){_pSetLift(ll);}));
+  })(l);}
+  f=f.concat(_hold(15));
+  for(var l=3;l>=0;l--){(function(ll){
+    f=f.concat(_hold(15,function(){_pSetLift(ll);}));
+  })(l);}
+  f=f.concat(_frames(40,function(i,n){_pSetZoom(_pEase(3.5,1.0,i,n));}));
+  return f;
+})(),
+
+/* 9 — FULL SYNTHESIS: everything together, build up the full picture */
+(function(){
+  var f=[];
+  /* Start clean */
+  f.push(function(){_pSetView(0);_pGCDLines(false);_pGapLines(false);_pSetLift(0);_pSetZoom(1.0);_pSetMod(2);});
+  f=f.concat(_hold(5));
+  /* Grow from 2 to 60 */
+  f=f.concat(_frames(60,function(i,n){_pSetMod(Math.round(_pEase(2,60,i,n)));}));
+  f=f.concat(_hold(15));
+  /* Add connectors */
+  f.push(function(){_pGCDLines(true);});
+  f=f.concat(_hold(25));
+  /* Add twin prime gap lines */
+  f.push(function(){_pGapLines(true,[2]);});
+  f=f.concat(_hold(25));
+  /* Reveal non-coprime */
+  f.push(function(){_pSetView(2);});
+  f=f.concat(_hold(30));
+  /* Lift filter */
+  for(var l=0;l<=3;l++){(function(ll){
+    f=f.concat(_hold(18,function(){_pSetLift(ll);}));
+  })(l);}
+  f=f.concat(_hold(10));
+  /* Zoom pulse */
+  f=f.concat(_frames(30,function(i,n){_pSetZoom(_pEase(1.0,1.6,i,n));}));
+  f=f.concat(_frames(30,function(i,n){_pSetZoom(_pEase(1.6,1.0,i,n));}));
+  /* Clean reset */
+  f.push(function(){_pSetView(0);_pGCDLines(false);_pGapLines(false);_pSetLift(0);});
+  f=f.concat(_hold(20));
+  return f;
+})(),
+
+]; /* end PLAY_PRESETS */
+
+
+function splashUpdateStats(overrideN){
+  var M=overrideN||(typeof window._splashMod!=='undefined'?window._splashMod:18);
+  var total=0,cop=0,lifts=0;
+  if(typeof gcd==='function'){
+    for(var r2=1;r2<M;r2++){
+      total++;
+      if(gcd(r2,M)===1){ cop++; if(gcd(r2,M+1)===1) lifts++; }
+    }
+  }
+  /* C(N) = prod_p f_p(N): lift survival at current N */
+  function isPrimeLocal(n){if(n<2)return false;for(var k=2;k*k<=n;k++)if(n%k===0)return false;return true;}
+  var CN=1.0;
+  for(var p=2;p<=Math.min(M+200,600);p++){
+    if(!isPrimeLocal(p)) continue;
+    var fp;
+    if(p<=M){ /* saturated */ fp=p/(p+1); }
+    else { /* active: p > N = M */ fp=(p*p-M-1)/(p*p-1); if(fp<=0)continue; }
+    CN*=fp;
+  }
+  /* D(N) = -sum_{p>M} 1/(p^2 - M), truncated to p<=600 */
+  var DN=0.0;
+  for(var p2=2;p2<=600;p2++){
+    if(!isPrimeLocal(p2)) continue;
+    if(p2>M) DN -= 1.0/(p2*p2-M);
+  }
+  var setEl=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+  setEl('sp-stat-cp',cop);
+  setEl('sp-stat-ratio',(total>0?(cop/total*100).toFixed(1):'—')+'%');
+  setEl('sp-stat-lifts',lifts);
+  setEl('sp-stat-lratio',(cop>0?(lifts/cop*100).toFixed(1):'—')+'%');
+  setEl('sp-stat-ltotal',(total>0?(lifts/total*100).toFixed(1):'—')+'%');
+  setEl('sp-stat-rings',M);
+  setEl('sp-stat-CN',CN.toFixed(6));
+  setEl('sp-stat-DN',DN.toFixed(6));
+}
+window.splashUpdateStats=splashUpdateStats;
+
 window.splashClearSel = function(){
   _selPts = [];
   document.getElementById('sp-connect-bar').style.display = 'none';
@@ -1827,18 +2513,21 @@ window.splashClearSel = function(){
 
 /* ── Hit test: find nearest point within radius ── */
 function hitTest(mx, my){
-  var best = null, bestD = 18;
+  var best = null, bestD = 22;
   var cv2 = document.getElementById('splash-canvas');
-  var W2 = cv2?cv2.width:window.innerWidth;
-  var H2 = cv2?cv2.height:window.innerHeight;
-  var cx2 = W2/2, cy2 = H2/2;
+  /* mx/my are in PHYSICAL pixels (from mouse event scaled by cv.width/rect.width)
+     p.x/p.y are in LOGICAL pixels (cx = window.innerWidth/2)
+     Convert mx/my to logical: divide by DPR */
+  var dpr2 = Math.min(window.devicePixelRatio||1,3);
+  var lmx = mx/dpr2, lmy = my/dpr2;
+  var lcx = window.innerWidth/2, lcy = window.innerHeight/2;
   var z = (window._splashZoomVal&&window._splashZoomVal())||1;
   for(var i=0;i<_allPts.length;i++){
     var p = _allPts[i];
-    /* Apply same zoom transform as drawRingsScene */
-    var zpx = cx2+(p.x-cx2)*z;
-    var zpy = cy2+(p.y-cy2)*z;
-    var d = Math.sqrt((zpx-mx)*(zpx-mx)+(zpy-my)*(zpy-my));
+    /* Recompute logical position from stored theta+rr for accuracy */
+    var lx = p.rr ? lcx+p.rr*z*Math.cos(p.theta) : lcx+(p.x-lcx)*z;
+    var ly = p.rr ? lcy+p.rr*z*Math.sin(p.theta) : lcy+(p.y-lcy)*z;
+    var d = Math.sqrt((lx-lmx)*(lx-lmx)+(ly-lmy)*(ly-lmy));
     if(d < bestD){ bestD=d; best=p; }
   }
   return best;
@@ -1853,7 +2542,8 @@ function pointInfo(p){
   lines.push('<span style="color:#d4a843;font-size:11px">r='+p.r+' on ring M='+p.M+'</span>');
   lines.push('Fraction: '+p.r+'/'+p.M+' = '+(p.r/p.M).toFixed(4));
   lines.push('Angle: '+(p.r/p.M*360).toFixed(1)+'°');
-  lines.push('gcd('+p.r+','+p.M+') = '+gcd(p.r,p.M));
+  var gv=p.g||gcd(p.r||0,p.M);
+  lines.push('gcd('+p.r+','+p.M+') = '+gv+(gv===1?' → coprime':' → gcd='+gv));
   lines.push('Coprime: <span style="color:'+(gcd(p.r,p.M)===1?'#2bbfb0':'#e85540')+'">'+(gcd(p.r,p.M)===1?'YES ✓':'NO ✗')+'</span>');
   if(gcd(p.r,p.M)===1){
     var liftGcd = gcd(p.r,p.M+1);
@@ -1984,6 +2674,51 @@ window._splashSelPts  = function(){ return _selPts; };
 window._splashHoverPt = function(){ return _hoverPt; };
   window._splashZoomVal = function(){ return typeof _splashZoom!=='undefined'?_splashZoom:1; };
 
+  /* ── Block clicks on splash-content area when text is hidden ── */
+  var _splashContentEl = document.querySelector('.splash-content');
+  if(_splashContentEl){
+    _splashContentEl.addEventListener('click', function(e){
+      /* When text is hidden the content is invisible but still receives clicks */
+      /* Check if we're in hidden mode and the click target is in the content zone */
+      if(_textHidden){
+        e.stopPropagation();
+        e.preventDefault();
+        /* Try to find a ring point at this position instead */
+        var cvEl = document.getElementById('splash-canvas');
+        if(!cvEl) return;
+        var rect = cvEl.getBoundingClientRect();
+        var mx = (e.clientX-rect.left)*(cvEl.width/rect.width);
+        var my = (e.clientY-rect.top)*(cvEl.height/rect.height);
+        var pt = window._splashAllPts && window._splashAllPts();
+        if(!pt) return;
+        var best=null,bestD=28;
+        for(var ii=0;ii<pt.length;ii++){
+          var p2=pt[ii];
+          var z2=typeof _splashZoom!=='undefined'?_splashZoom:1;
+          var zpx=W/2+(p2.x-W/2)*z2, zpy=H/2+(p2.y-H/2)*z2;
+          var dd=Math.sqrt((zpx-mx)*(zpx-mx)+(zpy-my)*(zpy-my));
+          if(dd<bestD){bestD=dd;best=p2;}
+        }
+        if(best){
+          if(_splashResidueMode&&typeof _splashResidueTracker!=='undefined'){
+            /* Color all points with same r value */
+            var r3=best.r;
+            if(_splashResidueTracker[r3]){
+              delete _splashResidueTracker[r3];
+            } else {
+              _splashResidueTracker[r3]=_splashResidueColors[_splashResColorIdx%_splashResidueColors.length];
+              _splashResColorIdx++;
+            }
+          } else {
+            var idx2=_selPts.findIndex(function(s){return s.r===best.r&&s.M===best.M;});
+            if(idx2>=0) _selPts.splice(idx2,1); else _selPts.push(best);
+          }
+          showConnectionBar(_selPts);
+        }
+      }
+    }, true); /* capture phase so we intercept before enterSite */
+  }
+
 initSplashEvents();
 
 })();
@@ -1998,8 +2733,15 @@ function startMainStars(){
   if(!cv) return;
 
   function resize(){
-    cv.width  = window.innerWidth;
-    cv.height = window.innerHeight;
+    var dpr2=Math.min(window.devicePixelRatio||1,3);
+    var vW=window.innerWidth, vH=window.innerHeight;
+    cv.width=Math.round(vW*dpr2);
+    cv.height=Math.round(vH*dpr2);
+    cv.style.width=vW+'px';
+    cv.style.height=vH+'px';
+    /* Reset scale on each resize */
+    var c2=cv.getContext('2d');
+    c2.setTransform(dpr2,0,0,dpr2,0,0);
   }
   resize();
   window.addEventListener('resize', resize);
@@ -2008,7 +2750,7 @@ function startMainStars(){
   cv.style.opacity = '0.7';
 
   var ctx = cv.getContext('2d');
-  var W = cv.width, H = cv.height;
+  var W = window.innerWidth, H = window.innerHeight;
 
   /* Generate stars */
   var SCOLS = ['rgba(212,168,67,','rgba(43,191,176,','rgba(144,96,208,','rgba(232,85,64,','rgba(255,255,255,'];
@@ -2042,13 +2784,21 @@ function startMainStars(){
     }
 
     /* Match canvas to window (in case resize fired) */
-    if(cv.width !== window.innerWidth){
-      cv.width=window.innerWidth;
-      cv.height=window.innerHeight;
+    /* Recheck size on each frame for responsive correctness */
+    var _vW=window.innerWidth,_vH=window.innerHeight;
+    var _dpr=Math.min(window.devicePixelRatio||1,3);
+    if(cv.width!==Math.round(_vW*_dpr)){
+      cv.width=Math.round(_vW*_dpr);
+      cv.height=Math.round(_vH*_dpr);
+      cv.style.width=_vW+'px';
+      cv.style.height=_vH+'px';
+      ctx.setTransform(_dpr,0,0,_dpr,0,0);
     }
 
     ctx.clearRect(0,0,cv.width,cv.height);
 
+    /* Logical viewport dimensions for star positioning */
+    var W = window.innerWidth, H = window.innerHeight;
     var gt = t * 0.001;
 
     for(var i=0;i<stars.length;i++){
@@ -2210,6 +2960,10 @@ function dotColor(mode,r,M,isP){
     case 'primorial':return isPrimorial(M)?'rgba(212,168,67,'+(op/100)+')':'rgba(80,70,100,'+(op*0.4/100)+')';
     case 'gapclass':{var g2=gcd(r+2,M)===1,g4=gcd(r+4,M)===1,g6=gcd(r+6,M)===1;if(g2)return'rgba(120,210,120,'+(op/100)+')';if(g4)return'rgba(100,170,224,'+(op/100)+')';if(g6)return'rgba(200,120,224,'+(op/100)+')';return'rgba(80,70,100,'+(op*0.35/100)+')';}
     case 'residue6':{var c6=['#e8a830','#2bbfb0','#ff6650','#5588ff','#aa80ff','#44cc88'];return colA(c6[r%6],op);}
+    case 'gcdcolor':{/* Color by gcd — matches opener */
+      var gc3=gcd(r,M);if(gc3===1)return colA(c1,op);
+      var ncC=['rgba(232,85,64,','rgba(74,128,240,','rgba(144,96,208,','rgba(43,191,176,','rgba(68,204,136,','rgba(232,168,67,'];
+      return ncC[Math.min(gc3-2,ncC.length-1)]+(op/100)+')';}
     default:return colA(c1,op);
   }
 }
@@ -2302,8 +3056,10 @@ function draw(){
     rings.push({M:M,rr:ringR(M,N,maxR),isP:isP,pts:pts,ghostPts:ghostPts});
   }
 
+  var primeRingsOnly=gc2('btn-prime-rings');
   if(guidesOn)for(var i=0;i<rings.length;i++){
     var ring=rings[i];
+    if(primeRingsOnly&&!ring.isP) continue;
     var hl=(hlFrom>0&&ring.M>=hlFrom&&(hlTo<=0||ring.M<=hlTo));
     ctx.beginPath();ctx.arc(cx2,cy2,ring.rr,0,2*Math.PI);
     if(hl){ctx.strokeStyle='rgba(212,168,67,0.4)';ctx.lineWidth=1.5;}
@@ -2805,6 +3561,40 @@ window.addEventListener('load',function(){setup();setTimeout(function(){draw();}
     <div class="an-chart-card">
       <div class="an-chart-title">J_χ(N) for χ₃, χ₄, χ₅ — Chebyshev bias per character</div>
       <div id="an-plot-10" class="an-chart-plot"></div>
+    </div>
+  </div>
+
+  <!-- ── Staircase section ── -->
+  <div class="an-section-lbl">D(x) Jump Staircase — Per-Prime Scrubber</div>
+  <div class="an-chart-card" style="padding:18px 16px 14px;">
+    <div class="an-chart-title">Scrub through every prime — see each exact jump 1/(p(p−1)) build toward J</div>
+    
+    <!-- Slider row -->
+    <div style="display:flex;align-items:center;gap:14px;margin:10px 0 6px;flex-wrap:wrap;">
+      <span style="font-family:var(--mono);font-size:9px;color:var(--ink4);letter-spacing:.1em;">PRIME INDEX n</span>
+      <input type="range" id="sc-slider" min="1" max="1000" value="1000" step="1"
+        oninput="scSlide(+this.value)"
+        style="flex:1;min-width:120px;accent-color:var(--teal);cursor:pointer;">
+      <span id="sc-slider-val" style="font-family:var(--mono);font-size:10px;color:var(--teal);min-width:120px;">Loading…</span>
+      <input type="number" id="sc-jump-input" placeholder="jump to prime…"
+        style="width:130px;font-family:var(--mono);font-size:9px;
+        background:var(--deep);border:1px solid var(--border2);color:var(--ink2);padding:4px 8px;"
+        onkeydown="if(event.key==='Enter')scJumpTo(+this.value)">
+    </div>
+
+    <!-- Canvas -->
+    <canvas id="sc-chart" style="width:100%;height:280px;display:block;background:#030208;border-radius:3px;"></canvas>
+
+    <!-- Live stats -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
+      <div class="stat-box"><span class="stat-lbl">Prime p</span><span class="stat-val" id="sc-prime" style="color:var(--teal);">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">Jump 1/(p(p−1))</span><span class="stat-val gold" id="sc-jump">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">D(p) cumulative</span><span class="stat-val" id="sc-cum">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">% of J</span><span class="stat-val coral" id="sc-pct">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">Twin prime?</span><span class="stat-val" id="sc-twin">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">Next prime</span><span class="stat-val" id="sc-next">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">Prime gap</span><span class="stat-val" id="sc-gap">—</span></div>
+      <div class="stat-box"><span class="stat-lbl">Index n</span><span class="stat-val" id="sc-n">—</span></div>
     </div>
   </div>
 
@@ -3417,5 +4207,255 @@ window.switchTab=function(t){
 
 </script>
 
+
+<script>
+/* ════════════════════════════════════════
+   D(x) STAIRCASE ENGINE
+   Per-prime scrubber integrated with analysis tab
+════════════════════════════════════════ */
+(function(){
+'use strict';
+
+var SC_PRIMES = null, SC_JUMPS = null, SC_CUM = null, SC_TWIN = null;
+var SC_N = 0, SC_ACTIVE = 1000, SC_DINF = 0;
+var SC_INIT = false;
+var scCV = null, scCtx = null, scW = 0, scH = 0;
+
+function scSieve(limit){
+  var s = new Uint8Array(limit+1), out = [];
+  s[0]=s[1]=1;
+  for(var i=2;i<=limit;i++) if(!s[i]) for(var j=i*i;j<=limit;j+=i) s[j]=1;
+  for(var i=2;i<=limit;i++) if(!s[i]) out.push(i);
+  return out;
+}
+
+function scInit(){
+  if(SC_INIT) return;
+  SC_INIT = true;
+  setTimeout(function(){
+    var primes = scSieve(200000); /* primes to 200k */
+    SC_N = primes.length;
+    SC_PRIMES = new Int32Array(primes);
+    SC_JUMPS  = new Float64Array(SC_N);
+    SC_CUM    = new Float64Array(SC_N);
+    SC_TWIN   = new Uint8Array(SC_N);
+    for(var i=0;i<SC_N;i++){
+      var p = SC_PRIMES[i];
+      SC_JUMPS[i] = 1/(p*(p-1));
+      SC_TWIN[i]  = i<SC_N-1 && SC_PRIMES[i+1]-p===2 ? 1 : 0;
+      SC_CUM[i]   = (i===0?0:SC_CUM[i-1]) + SC_JUMPS[i];
+    }
+    SC_DINF = SC_CUM[SC_N-1];
+    SC_ACTIVE = SC_N;
+
+    /* Wire slider */
+    var sl = document.getElementById('sc-slider');
+    if(sl){ sl.max = SC_N; sl.value = SC_N; }
+    scRender();
+    scStats(SC_N);
+    scLabel(SC_N);
+  }, 50);
+}
+
+function scStats(n){
+  var i=n-1, p=SC_PRIMES[i];
+  var el=function(id){return document.getElementById(id);};
+  var set=function(id,html){var e=el(id);if(e)e.innerHTML=html;};
+  set('sc-n',    '<em>'+n.toLocaleString()+'</em>');
+  set('sc-prime','<em>'+p.toLocaleString()+'</em>');
+  set('sc-jump', '<em>'+SC_JUMPS[i].toExponential(6)+'</em>');
+  set('sc-cum',  '<em>'+SC_CUM[i].toFixed(10)+'</em>');
+  set('sc-pct',  '<em>'+(SC_CUM[i]/SC_DINF*100).toFixed(6)+'%</em>');
+  if(SC_TWIN[i]){
+    set('sc-twin','<span style="color:#e85540">★ Yes ('+p+', '+(p+2)+')</span>');
+  } else {
+    set('sc-twin','<span style="color:var(--ink4)">No</span>');
+  }
+  if(i<SC_N-1){
+    set('sc-next','<em>'+SC_PRIMES[i+1].toLocaleString()+'</em>');
+    set('sc-gap', '<em>'+(SC_PRIMES[i+1]-p)+'</em>');
+  } else {
+    set('sc-next','—'); set('sc-gap','—');
+  }
+}
+
+function scLabel(n){
+  var i=n-1, p=SC_PRIMES[i];
+  var el=document.getElementById('sc-slider-val');
+  if(el) el.textContent='n='+n.toLocaleString()+' · p='+p.toLocaleString();
+}
+
+function scRender(){
+  var cv=document.getElementById('sc-chart');
+  if(!cv||!SC_PRIMES) return;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var rect=cv.getBoundingClientRect();
+  var W=rect.width||cv.clientWidth||600;
+  var H=rect.height||cv.clientHeight||280;
+  if(cv.width!==Math.round(W*dpr)){
+    cv.width=Math.round(W*dpr);
+    cv.height=Math.round(H*dpr);
+  }
+  var ctx=cv.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+
+  var n=SC_ACTIVE;
+  var PAD={top:28,right:20,bottom:44,left:72};
+  var CW=W-PAD.left-PAD.right, CH=H-PAD.top-PAD.bottom;
+  var maxJ=SC_JUMPS[0]*1.1;
+
+  /* Y helpers */
+  var yOf=function(j){return PAD.top+CH*(1-Math.min(j,maxJ)/maxJ);};
+  var xOf=function(i){return PAD.left+i/(n-1||1)*CW;};
+
+  /* Grid */
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;
+  for(var g=0;g<=5;g++){
+    var gy=PAD.top+g/5*CH;
+    ctx.beginPath();ctx.moveTo(PAD.left,gy);ctx.lineTo(PAD.left+CW,gy);ctx.stroke();
+  }
+
+  /* Axes */
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(PAD.left,PAD.top);ctx.lineTo(PAD.left,PAD.top+CH);
+  ctx.lineTo(PAD.left+CW,PAD.top+CH);ctx.stroke();
+
+  /* Y labels */
+  ctx.fillStyle='rgba(120,115,105,.8)';ctx.font='9px DM Mono,monospace';ctx.textAlign='right';
+  for(var yi=0;yi<=4;yi++){
+    var yv=maxJ*(1-yi/4);
+    ctx.fillText(yv.toExponential(2),PAD.left-5,PAD.top+yi/4*CH+4);
+  }
+
+  /* Dim future */
+  if(n<SC_N){
+    ctx.save();ctx.globalAlpha=.12;
+    ctx.strokeStyle='#2bbfb0';ctx.lineWidth=1.5;
+    ctx.beginPath();
+    var step2=Math.max(1,Math.floor((SC_N-n)/200));
+    var first2=true;
+    for(var ii=n;ii<SC_N;ii+=step2){
+      var xx=PAD.left+ii/(SC_N-1)*CW, yy=yOf(SC_JUMPS[ii]);
+      if(first2){ctx.moveTo(xx,yy);first2=false;} else ctx.lineTo(xx,yy);
+    }
+    ctx.stroke();ctx.restore();
+  }
+
+  /* Glow fill under active curve */
+  var SAMPLE=Math.min(n,800);
+  var step=Math.max(1,Math.floor(n/SAMPLE));
+  ctx.save();
+  ctx.beginPath();ctx.moveTo(xOf(0),PAD.top+CH);
+  for(var ii=0;ii<n;ii+=step){ctx.lineTo(xOf(ii),yOf(SC_JUMPS[ii]));}
+  ctx.lineTo(xOf(n-1),PAD.top+CH);ctx.closePath();
+  var grd=ctx.createLinearGradient(0,PAD.top,0,PAD.top+CH);
+  grd.addColorStop(0,'rgba(43,191,176,.14)');grd.addColorStop(1,'rgba(43,191,176,.01)');
+  ctx.fillStyle=grd;ctx.fill();ctx.restore();
+
+  /* Main staircase line */
+  ctx.beginPath();
+  ctx.strokeStyle='#2bbfb0';ctx.lineWidth=2;ctx.lineJoin='round';
+  var first3=true;
+  for(var ii=0;ii<n;ii+=step){
+    var xx=xOf(ii), yy=yOf(SC_JUMPS[ii]);
+    if(first3){ctx.moveTo(xx,yy);first3=false;} else ctx.lineTo(xx,yy);
+  }
+  ctx.stroke();
+
+  /* Twin prime markers */
+  var TWIN_LIMIT=2500;
+  if(n<=TWIN_LIMIT){
+    for(var ii=0;ii<n;ii++){
+      if(!SC_TWIN[ii]) continue;
+      var xx=xOf(ii),yy=yOf(SC_JUMPS[ii]);
+      ctx.beginPath();ctx.arc(xx,yy,6,0,2*Math.PI);
+      ctx.fillStyle='rgba(232,85,64,.12)';ctx.fill();
+      /* Star */
+      ctx.save();ctx.translate(xx,yy);
+      ctx.beginPath();
+      for(var sp=0;sp<5;sp++){
+        var a=sp*4*Math.PI/5-Math.PI/2;
+        var b=(sp*4*Math.PI/5+2*Math.PI/5)-Math.PI/2;
+        if(sp===0)ctx.moveTo(Math.cos(a)*4,Math.sin(a)*4);
+        ctx.lineTo(Math.cos(a)*4,Math.sin(a)*4);
+        ctx.lineTo(Math.cos(b)*1.8,Math.sin(b)*1.8);
+      }
+      ctx.closePath();
+      ctx.fillStyle='#e85540';ctx.fill();
+      ctx.strokeStyle='#e85540';ctx.lineWidth=0.6;ctx.stroke();
+      ctx.restore();
+    }
+  } else {
+    ctx.fillStyle='#e85540';
+    for(var ii=0;ii<n;ii+=step){
+      if(!SC_TWIN[ii]) continue;
+      var xx=xOf(ii),yy=yOf(SC_JUMPS[ii]);
+      ctx.beginPath();ctx.arc(xx,yy,2,0,2*Math.PI);ctx.fill();
+    }
+  }
+
+  /* Gold cursor */
+  var ax=xOf(n-1), ay=yOf(SC_JUMPS[n-1]);
+  ctx.strokeStyle='rgba(212,168,67,.6)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();ctx.moveTo(ax,PAD.top+4);ctx.lineTo(ax,PAD.top+CH);ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(ax,ay,6,0,2*Math.PI);
+  ctx.fillStyle='#d4a843';ctx.fill();
+  ctx.strokeStyle='#030208';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.fillStyle='#d4a843';ctx.font='bold 9px DM Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('n='+n, ax, PAD.top+11);
+
+  /* J line */
+  var jy=yOf(0.77315663699919);
+  if(jy>PAD.top&&jy<PAD.top+CH){
+    ctx.strokeStyle='rgba(212,168,67,.2)';ctx.lineWidth=1;ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(PAD.left,jy);ctx.lineTo(PAD.left+CW,jy);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(212,168,67,.5)';ctx.font='8px DM Mono,monospace';ctx.textAlign='left';
+    ctx.fillText('J≈'+SC_CUM[n-1].toFixed(4),PAD.left+4,jy-4);
+  }
+}
+
+/* ── Public controls ── */
+window.scSlide = function(n){
+  if(!SC_PRIMES) return;
+  n = Math.max(1, Math.min(n, SC_N));
+  SC_ACTIVE = n;
+  scRender();
+  scStats(n);
+  scLabel(n);
+};
+window.scJumpTo = function(p){
+  if(!SC_PRIMES) return;
+  for(var i=0;i<SC_N;i++){
+    if(SC_PRIMES[i]>=p){
+      var sl=document.getElementById('sc-slider');
+      if(sl) sl.value=i+1;
+      scSlide(i+1); return;
+    }
+  }
+};
+
+/* ── Init when analysis tab opens ── */
+var _scTabInit=false;
+var _origSwitch2=window.switchTab;
+window.switchTab=function(t){
+  _origSwitch2(t);
+  if(t==='analysis'&&!_scTabInit){
+    _scTabInit=true;
+    setTimeout(function(){scInit();},300);
+  }
+};
+
+/* Redraw on resize */
+window.addEventListener('resize',function(){
+  if(SC_INIT) setTimeout(scRender,100);
+});
+
+})();
+
+</script>
 </body>
    </html>
