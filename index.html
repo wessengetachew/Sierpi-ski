@@ -1508,17 +1508,31 @@ function buildSplashRings(){
   var _splashResColorIdx = 0;
   var _splashResidueMode = false;
   var _splashCycleTimer = null;
+  /* Initialize window.* so external fns can read/write these flags */
+  window._splashShowGCDLines  = window._splashShowGCDLines||false;
+  window._splashShowGapLines  = window._splashShowGapLines||false;
+  window._splashGapN          = window._splashGapN||[2];
+  window._splashGCDLineThick  = window._splashGCDLineThick||1.0;
+  window._splashGapLineThick  = window._splashGapLineThick||1.2;
+  window._splashLiftLineThick = window._splashLiftLineThick||0.9;
+  window._splashLiftN         = window._splashLiftN||0;
+  window._splashViewCycle     = window._splashViewCycle||0;
+  window._splashZoom          = window._splashZoom||1;
+  window._splashResidueTracker= window._splashResidueTracker||{};
+  window._splashResidueMode   = window._splashResidueMode||false;
   /* Auto-cycle views when in idle phase */
   /* Auto-cycle removed — default stays gcd=1 */
   /* Expose control functions */
   window.splashSetZoom = function(z){
     _splashZoom = z;
+    window._splashZoom = z;
     var el = document.getElementById('sp-zoom-val');
     if(el) el.textContent = z.toFixed(2)+'×';
   };
   window.splashSetLift = function(n){
     n = Math.max(0, n);
     _splashLiftN = n;
+    window._splashLiftN = n;
     var sl = document.getElementById('sp-lift-sl');
     if(sl) sl.value = Math.min(n, 512);
     var inp = document.getElementById('sp-lift-inp');
@@ -1546,6 +1560,7 @@ function buildSplashRings(){
   };
   window.splashToggleGCD = function(){
     _splashViewCycle = (_splashViewCycle+1)%3;
+    window._splashViewCycle = _splashViewCycle;
     _splashShowNC = _splashViewCycle!==0;
     window._splashHideNC = _splashViewCycle===1;
     /* Pause auto-cycle when user manually toggles */
@@ -1703,6 +1718,17 @@ function buildSplashRings(){
 
   /* ── Draw rings, lift lines, dots ── */
   function drawRingsScene(gt,masterAlpha){
+    /* Sync externally-controlled state from window.* */
+    var _splashShowGCDLines = window._splashShowGCDLines||false;
+    var _splashShowGapLines = window._splashShowGapLines||false;
+    var _splashGapN         = window._splashGapN||[2];
+    var _splashGCDLineThick = window._splashGCDLineThick||0.5;
+    var _splashGapLineThick = window._splashGapLineThick||0.6;
+    var _splashLiftLineThick= window._splashLiftLineThick||0.9;
+    var _splashLiftN        = (typeof window._splashLiftN!=='undefined')?window._splashLiftN:0;
+    var _splashViewCycle    = window._splashViewCycle||0;
+    var _splashZoom         = window._splashZoom||1;
+    var _splashResidueTracker= window._splashResidueTracker||{};
     var n=rings.length;
 
     /* Guide circles */
@@ -1820,67 +1846,148 @@ function buildSplashRings(){
           ctx.lineWidth=1.0;ctx.stroke();
         }
       }
-      /* GCD connector lines: connect each point to next one in ring */
-    if(_splashShowGCDLines){
-      for(var ri=0;ri<n;ri++){
-        var rng2=rings[ri];
-        var allPts=[];
-        /* Build all points for this ring in angular order */
-        for(var r2=0;r2<rng2.M;r2++){
-          var g3=r2===0?rng2.M:gcd(r2,rng2.M);
-          var isCP2=g3===1;
-          if(_splashViewCycle===0&&!isCP2) continue;
-          if(_splashViewCycle===1&&isCP2) continue;
-          var th2=2*Math.PI*r2/rng2.M-Math.PI/2;
-          allPts.push({r:r2,theta:th2,isCP:isCP2,g:g3});
+      /* ── LIFT TRAJECTORIES (reference: drawAllLiftTrajectories) ── */
+    /* Iterate residue r across all rings where gcd(r,M)=1 */
+    var _liftLW = _splashLiftLineThick||0.9;
+    var _liftAl = _textHidden ? 0.55 : 0.32;
+    for(var _r=1;_r<n+2;_r++){
+      var _prev=null;
+      for(var _mi=0;_mi<rings.length;_mi++){
+        var _rng=rings[_mi], _M=_rng.M;
+        if(gcd(_r,_M)!==1){_prev=null;continue;}
+        /* Check lift depth filter */
+        if(_splashLiftN>0){
+          var _ok=true;
+          for(var _li=1;_li<=_splashLiftN;_li++){if(gcd(_r,_M+_li)!==1){_ok=false;break;}}
+          if(!_ok){_prev=null;continue;}
         }
-        if(allPts.length<2) continue;
-        /* Sort by theta */
-        allPts.sort(function(a,b){return a.theta-b.theta;});
+        var _px=cx+_rng.rr*_splashZoom*Math.cos(2*Math.PI*_r/_M-Math.PI/2);
+        var _py=cy+_rng.rr*_splashZoom*Math.sin(2*Math.PI*_r/_M-Math.PI/2);
+        if(_prev){
+          /* Check consecutive (no skipped rings) */
+          var _consec=true;
+          for(var _mm=_prev.M+1;_mm<_M;_mm++){if(gcd(_r,_mm)===1){_consec=false;break;}}
+          if(_consec){
+            var _lifts=gcd(_r,_prev.M+1)===1;
+            var _wave=Math.sin(globalT*0.001*1.8-_mi*0.4+_r*0.2)*0.5+0.5;
+            var _lw2=_liftLW*(0.7+_wave*0.4)*(_textHidden?1.4:1.0);
+            ctx.beginPath();ctx.moveTo(_prev.x,_prev.y);ctx.lineTo(_px,_py);
+            if(_lifts){
+              ctx.strokeStyle='rgba(43,191,176,'+(_liftAl+_wave*0.3)+')';
+              ctx.lineWidth=_lw2;
+            } else {
+              ctx.strokeStyle='rgba(232,85,64,'+(_liftAl*0.55+_wave*0.15)+')';
+              ctx.lineWidth=_lw2*0.6;
+            }
+            ctx.stroke();
+          }
+        }
+        _prev={x:_px,y:_py,M:_M};
+      }
+    }
+
+    /* ── SAME-RING GCD CONNECTORS (polygon per ring) ── */
+    /* GCD connector polygon lines per ring */
+    if(_splashShowGCDLines){
+      for(var _ri=0;_ri<rings.length;_ri++){
+        var _rng=rings[_ri];
+        /* Collect sorted coprime points for this ring */
+        var _rpts=[];
+        for(var _pi=0;_pi<_rng.pts.length;_pi++){
+          var _pp=_rng.pts[_pi];
+          if(!_pp.isCP) continue;
+          var _th=2*Math.PI*_pp.r/_rng.M-Math.PI/2;
+          _rpts.push({
+            x:cx+_rng.rr*_splashZoom*Math.cos(_th),
+            y:cy+_rng.rr*_splashZoom*Math.sin(_th),
+            theta:_th
+          });
+        }
+        if(_rpts.length<2) continue;
+        _rpts.sort(function(a,b){return a.theta-b.theta;});
+        var _wv2=Math.sin(globalT*0.001+_ri*0.4)*0.5+0.5;
         ctx.save();
-        for(var qi=0;qi<allPts.length;qi++){
-          var pa2=allPts[qi],pb2=allPts[(qi+1)%allPts.length];
-          var ax2=cx+rng2.rr*_splashZoom*Math.cos(pa2.theta);
-          var ay2=cy+rng2.rr*_splashZoom*Math.sin(pa2.theta);
-          var bx2=cx+rng2.rr*_splashZoom*Math.cos(pb2.theta);
-          var by2=cy+rng2.rr*_splashZoom*Math.sin(pb2.theta);
-          var wave2=Math.sin(globalT*0.001+ri*0.4)*0.5+0.5;
-          ctx.beginPath();ctx.moveTo(ax2,ay2);ctx.lineTo(bx2,by2);
-          ctx.strokeStyle='rgba(255,255,255,'+(0.09+wave2*0.12)+')';
-          ctx.lineWidth=_splashGCDLineThick||0.5;ctx.stroke();
+        for(var _qi=0;_qi<_rpts.length;_qi++){
+          var _pa=_rpts[_qi], _pb=_rpts[(_qi+1)%_rpts.length];
+          ctx.beginPath();ctx.moveTo(_pa.x,_pa.y);ctx.lineTo(_pb.x,_pb.y);
+          ctx.strokeStyle='rgba(220,200,160,'+(0.22+_wv2*0.28)+')';
+          ctx.lineWidth=(_splashGCDLineThick||0.5)*1.8;ctx.stroke();
         }
         ctx.restore();
       }
     }
 
-    /* Gap-2n lines for gcd=1 admissible pairs */
+    /* ── GAP CHORDS (reference: drawGapChords) ── */
+    /* Only gcd=1 admissible pairs: connect r to r+gap within same ring */
+    /* Gap chord lines connecting admissible r, r+n pairs */
     if(_splashShowGapLines){
-      var gapArr=Array.isArray(_splashGapN)?_splashGapN:[_splashGapN||2];
-      /* If 6n preset, expand to 6,12,18,24,... */
-      if(_splashGapN==='6n') gapArr=[6,12,18,24,30];
-      var gapCols=['rgba(212,168,67,','rgba(43,191,176,','rgba(144,96,208,','rgba(232,85,64,'];
-      for(var ri=0;ri<n;ri++){
-        var rng3=rings[ri];
-        for(var gi=0;gi<gapArr.length;gi++){
-          var gapN2=gapArr[gi];
-          var gcol=gapCols[gi%gapCols.length];
-          for(var r3=1;r3<rng3.M;r3++){
-            if(gcd(r3,rng3.M)!==1) continue;
-            var r4=((r3+gapN2-1)%rng3.M)+1;
-            if(r4<=0) r4+=rng3.M;
-            if(r4===r3||r4===0||r4>=rng3.M||gcd(r4,rng3.M)!==1) continue;
-            var th3=2*Math.PI*r3/rng3.M-Math.PI/2;
-            var th4=2*Math.PI*r4/rng3.M-Math.PI/2;
-            var ax3=cx+rng3.rr*_splashZoom*Math.cos(th3);
-            var ay3=cy+rng3.rr*_splashZoom*Math.sin(th3);
-            var bx3=cx+rng3.rr*_splashZoom*Math.cos(th4);
-            var by3=cy+rng3.rr*_splashZoom*Math.sin(th4);
-            ctx.beginPath();ctx.moveTo(ax3,ay3);ctx.lineTo(bx3,by3);
-            ctx.strokeStyle=gcol+'0.28)';
-            ctx.lineWidth=_splashGapLineThick||0.6;ctx.stroke();
+      var _gaps=Array.isArray(_splashGapN)?_splashGapN:
+                (_splashGapN==='6n'?[6,12,18,24,30]:[_splashGapN||2]);
+      var _gapCols=['rgba(120,210,120,','rgba(100,170,220,','rgba(200,120,220,',
+                    'rgba(220,160,60,','rgba(180,90,200,','rgba(80,200,180,'];
+      var _gapThick=_splashGapLineThick||0.6;
+      ctx.save();
+      for(var _ri=0;_ri<rings.length;_ri++){
+        var _rng=rings[_ri], _M=_rng.M;
+        if(_M<3) continue;
+        /* Build set of coprime residues for fast lookup */
+        var _cset={};
+        for(var _pi=0;_pi<_rng.pts.length;_pi++){
+          if(_rng.pts[_pi].isCP) _cset[_rng.pts[_pi].r]=true;
+        }
+        for(var _gi=0;_gi<_gaps.length;_gi++){
+          var _gn=_gaps[_gi];
+          var _gcol=_gapCols[_gi%_gapCols.length];
+          for(var _r=1;_r<_M;_r++){
+            if(!_cset[_r]) continue;
+            var _r2=_r+_gn;
+            if(_r2>=_M||!_cset[_r2]) continue;
+            var _th1=2*Math.PI*_r/_M-Math.PI/2;
+            var _th2=2*Math.PI*_r2/_M-Math.PI/2;
+            ctx.beginPath();
+            ctx.moveTo(cx+_rng.rr*_splashZoom*Math.cos(_th1),
+                       cy+_rng.rr*_splashZoom*Math.sin(_th1));
+            ctx.lineTo(cx+_rng.rr*_splashZoom*Math.cos(_th2),
+                       cy+_rng.rr*_splashZoom*Math.sin(_th2));
+            var _gwave=Math.sin(globalT*0.0015+_ri*0.3)*0.5+0.5;
+            ctx.strokeStyle=_gcol+(0.50+_gwave*0.30)+')';
+            ctx.lineWidth=(_gapThick)*2.0;ctx.stroke();
           }
         }
       }
+      ctx.restore();
+    }
+
+        /* ── RESIDUE TRACKER PATHS (reference: drawCustomR) ── */
+    /* For each tracked residue, draw its complete path across all rings */
+    if(_splashResidueTracker&&Object.keys(_splashResidueTracker).length>0){
+      Object.keys(_splashResidueTracker).forEach(function(_tr){
+        var _r=+_tr;
+        var _col=_splashResidueTracker[_tr]||'#d4a843';
+        var _rgb=_col.replace('#','');
+        var _rc=parseInt(_rgb.slice(0,2),16)+','+parseInt(_rgb.slice(2,4),16)+','+parseInt(_rgb.slice(4,6),16);
+        var _lC=null;
+        for(var _mi=0;_mi<rings.length;_mi++){
+          var _rng=rings[_mi], _M=_rng.M;
+          if(gcd(_r,_M)!==1) continue;
+          var _th=2*Math.PI*_r/_M-Math.PI/2;
+          var _px=cx+_rng.rr*_splashZoom*Math.cos(_th);
+          var _py=cy+_rng.rr*_splashZoom*Math.sin(_th);
+          if(_lC){
+            ctx.beginPath();ctx.moveTo(_lC.x,_lC.y);ctx.lineTo(_px,_py);
+            ctx.strokeStyle='rgba('+_rc+',0.5)';
+            ctx.lineWidth=1.5;ctx.stroke();
+          }
+          /* Pulsing dot on path */
+          var _pulse=Math.sin(globalT*0.002+_M*0.3)*0.5+0.5;
+          ctx.beginPath();ctx.arc(_px,_py,3+_pulse*2,0,2*Math.PI);
+          ctx.fillStyle='rgba('+_rc+','+(0.7+_pulse*0.3)+')';ctx.fill();
+          /* Orbit ring */
+          ctx.beginPath();ctx.arc(_px,_py,5+_pulse*3,0,2*Math.PI);
+          ctx.strokeStyle='rgba('+_rc+',0.35)';ctx.lineWidth=1;ctx.stroke();
+          _lC={x:_px,y:_py};
+        }
+      });
     }
 
     /* Fraction labels r/M for M=1..4, fade in after expand starts */
@@ -2164,37 +2271,37 @@ window.splashTogglePanel = function(){
 /* ── Toggle feature flags ── */
 window.splashToggle = function(feat){
   if(feat==='gcdlines'){
-    _splashShowGCDLines=!_splashShowGCDLines;
+    window._splashShowGCDLines=!window._splashShowGCDLines;
     var b=document.getElementById('sp-gcdlines-btn');
-    if(b) b.style.borderColor=_splashShowGCDLines?'rgba(255,255,255,.6)':'rgba(255,255,255,.2)';
-    if(b) b.style.color=_splashShowGCDLines?'rgba(220,210,190,1)':'rgba(180,170,150,.7)';
+    if(b){b.style.borderColor=window._splashShowGCDLines?'rgba(255,255,255,.6)':'rgba(255,255,255,.2)';
+    b.style.color=window._splashShowGCDLines?'rgba(220,210,190,1)':'rgba(180,170,150,.7)';}
   } else if(feat==='gaplines'){
-    _splashShowGapLines=!_splashShowGapLines;
+    window._splashShowGapLines=!window._splashShowGapLines;
     var b2=document.getElementById('sp-gaplines-btn');
-    if(b2) b2.style.borderColor=_splashShowGapLines?'rgba(212,168,67,.8)':'rgba(212,168,67,.3)';
-    if(b2) b2.style.color=_splashShowGapLines?'rgba(212,168,67,1)':'rgba(212,168,67,.65)';
+    if(b2){b2.style.borderColor=window._splashShowGapLines?'rgba(212,168,67,.8)':'rgba(212,168,67,.3)';
+    b2.style.color=window._splashShowGapLines?'rgba(212,168,67,1)':'rgba(212,168,67,.65)';}
   } else if(feat==='residue'){
-    _splashResidueMode=!_splashResidueMode;
+    window._splashResidueMode=!(window._splashResidueMode||false);
     var b3=document.getElementById('sp-res-btn');
-    if(b3) b3.classList.toggle('active',_splashResidueMode);
+    if(b3) b3.classList.toggle('active',window._splashResidueMode);
   }
 };
 window.splashSetGapN = function(n){
   _splashGapN=Math.max(1,Math.round(n));
 };
 window.splashSetGapVals = function(s){
-  if(s==='6n'){ _splashGapN='6n'; return; }
+  if(s==='6n'){ window._splashGapN='6n'; return; }
   var parts=s.split(',').map(function(x){return parseInt(x.trim());}).filter(function(x){return x>0;});
-  _splashGapN = parts.length>0 ? parts : [2];
+  window._splashGapN = parts.length>0 ? parts : [2];
 };
 window.splashGapPreset = function(s){
   document.getElementById('sp-gap-vals').value=s;
   window.splashSetGapVals(s);
 };
 window.splashSetThick = function(type, v){
-  if(type==='gcd') _splashGCDLineThick=v;
-  else if(type==='lift') _splashLiftLineThick=v;
-  else if(type==='gap') _splashGapLineThick=v;
+  if(type==='gcd') window._splashGCDLineThick=v;
+  else if(type==='lift') window._splashLiftLineThick=v;
+  else if(type==='gap') window._splashGapLineThick=v;
 };
 window.splashTrackResidue = function(r){
   if(!r||r<1) return;
@@ -2471,10 +2578,12 @@ var PLAY_PRESETS=[
 function splashUpdateStats(overrideN){
   var M=overrideN||(typeof window._splashMod!=='undefined'?window._splashMod:18);
   var total=0,cop=0,lifts=0;
-  if(typeof gcd==='function'){
-    for(var r2=1;r2<M;r2++){
+  function _gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+  /* Cumulative: sum over ALL rings 2..M */
+  for(var _m=2;_m<=M;_m++){
+    for(var r2=1;r2<_m;r2++){
       total++;
-      if(gcd(r2,M)===1){ cop++; if(gcd(r2,M+1)===1) lifts++; }
+      if(_gcd(r2,_m)===1){ cop++; if(_gcd(r2,_m+1)===1) lifts++; }
     }
   }
   /* C(N) = prod_p f_p(N): lift survival at current N */
@@ -4458,4 +4567,4 @@ window.addEventListener('resize',function(){
 
 </script>
 </body>
-   </html>
+</html>
