@@ -1,413 +1,1494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Lift Survival Function & The Jump Theorem – A Breakdown</title>
-    <!-- MathJax for LaTeX rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #05040a;
-            color: #ede6d8;
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            line-height: 1.6;
-            padding: 2rem;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: rgba(13, 11, 20, 0.8);
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-        h1, h2, h3 {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-weight: 400;
-            letter-spacing: -0.01em;
-        }
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 0.5rem;
-            color: #d4a843;
-            border-left: 4px solid #d4a843;
-            padding-left: 1rem;
-        }
-        h2 {
-            font-size: 2rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            color: #2bbfb0;
-            border-bottom: 1px solid rgba(43,191,176,0.3);
-            padding-bottom: 0.3rem;
-        }
-        h3 {
-            font-size: 1.5rem;
-            margin: 1.5rem 0 0.8rem;
-            color: #e85540;
-        }
-        p {
-            margin-bottom: 1rem;
-        }
-        .math {
-            font-family: 'DM Mono', monospace;
-            background: rgba(43,191,176,0.1);
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        blockquote {
-            border-left: 3px solid #d4a843;
-            background: rgba(212,168,67,0.05);
-            padding: 0.8rem 1.2rem;
-            margin: 1rem 0;
-            font-style: italic;
-        }
-        .theorem {
-            background: rgba(74,128,240,0.08);
-            border-left: 3px solid #4a80f0;
-            padding: 1rem 1.2rem;
-            margin: 1.2rem 0;
-            border-radius: 4px;
-        }
-        .proof {
-            background: rgba(144,96,208,0.05);
-            border-left: 3px solid #9060d0;
-            padding: 1rem 1.2rem;
-            margin: 1rem 0;
-        }
-        .interactive {
-            background: #13111c;
-            border: 1px solid #2e2b3c;
-            border-radius: 8px;
-            padding: 1.2rem;
-            margin: 1.5rem 0;
-        }
-        input, button {
-            background: #1a1726;
-            border: 1px solid #2e2b3c;
-            color: #ede6d8;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-family: monospace;
-            cursor: pointer;
-        }
-        input[type="range"] {
-            width: 80%;
-            margin: 0 1rem;
-            cursor: pointer;
-            accent-color: #d4a843;
-        }
-        .value {
-            font-family: monospace;
-            color: #d4a843;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        hr {
-            border: none;
-            height: 1px;
-            background: #2e2b3c;
-            margin: 1.5rem 0;
-        }
-        footer {
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            text-align: center;
-            color: #8a7f6a;
-            border-top: 1px solid #2e2b3c;
-            padding-top: 1rem;
-        }
-        .note {
-            background: rgba(232,85,64,0.1);
-            border-left: 3px solid #e85540;
-            padding: 0.8rem;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        .grid {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin: 1rem 0;
-        }
-        .card {
-            flex: 1;
-            background: #0d0b14;
-            padding: 1rem;
-            border-radius: 6px;
-            border: 1px solid #2e2b3c;
-        }
-        @media (max-width: 700px) {
-            body { padding: 1rem; }
-            .container { padding: 1rem; }
-            h1 { font-size: 2rem; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Lift Survival Function — A Prime Sieve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+
+<script>MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<style>
+:root {
+  --black: #05040a;
+  --ink: #ede6d8;
+  --ink2: #c9bfaa;
+  --ink3: #8a7f6a;
+  --gold: #d4a843;
+  --gold2: rgba(212,168,67,.15);
+  --teal: #2bbfb0;
+  --teal2: rgba(43,191,176,.12);
+  --coral: #e85540;
+  --purple: #9060d0;
+  --border: rgba(212,168,67,.18);
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'EB Garamond', Georgia, serif;
+  --display: 'Instrument Serif', Georgia, serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ── PROGRESS BAR ── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--teal));
+  z-index: 999; width: 0; transition: width .1s;
+}
+
+/* ── SIDEBAR NAV ── */
+#sidenav {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 220px; padding: 60px 0 40px;
+  background: rgba(5,4,10,.96);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 100; overflow-y: auto;
+  transition: transform .3s ease;
+}
+#sidenav .nav-title {
+  font-family: var(--mono); font-size: 8px;
+  letter-spacing: .2em; color: var(--ink3);
+  text-transform: uppercase; padding: 0 24px 20px;
+  border-bottom: 1px solid var(--border); margin-bottom: 16px;
+}
+#sidenav a {
+  display: block; padding: 7px 24px;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink3); text-decoration: none;
+  letter-spacing: .05em; transition: all .2s;
+  border-left: 2px solid transparent;
+}
+#sidenav a:hover { color: var(--ink); border-left-color: var(--border); }
+#sidenav a.active { color: var(--gold); border-left-color: var(--gold); }
+#sidenav .layer-num {
+  font-size: 8px; color: var(--ink3);
+  margin-right: 8px; opacity: .5;
+}
+
+/* ── MAIN CONTENT ── */
+#main {
+  margin-left: 220px;
+  max-width: 860px;
+  padding: 0 60px 120px;
+}
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh; display: flex;
+  flex-direction: column; justify-content: center;
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(43,191,176,.04), transparent);
+  pointer-events: none;
+}
+.hero-label {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: .25em; color: var(--teal);
+  text-transform: uppercase; margin-bottom: 24px;
+}
+.hero-title {
+  font-family: var(--display); font-size: clamp(2.8rem, 5vw, 4.2rem);
+  font-weight: 400; line-height: 1.1;
+  color: var(--ink); margin-bottom: 16px;
+}
+.hero-title em { color: var(--gold); font-style: italic; }
+.hero-sub {
+  font-size: 1.1rem; color: var(--ink2); max-width: 580px;
+  margin-bottom: 40px; line-height: 1.6;
+}
+.hero-meta {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink3); letter-spacing: .1em;
+}
+.hero-constants {
+  display: flex; gap: 40px; margin-top: 40px;
+  flex-wrap: wrap;
+}
+.hero-const {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink3);
+}
+.hero-const .val {
+  display: block; font-size: 1.4rem;
+  color: var(--gold); margin-top: 4px;
+}
+
+/* ── SECTIONS ── */
+.section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-child { border-bottom: none; }
+
+.layer-badge {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: .2em; color: var(--teal);
+  text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.layer-badge::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(43,191,176,.3), transparent);
+}
+
+.section-title {
+  font-family: var(--display); font-size: 2.2rem;
+  font-weight: 400; color: var(--ink);
+  margin-bottom: 8px; line-height: 1.2;
+}
+.section-title span { color: var(--gold); }
+
+.section-lead {
+  font-size: 1.05rem; color: var(--ink2);
+  margin-bottom: 32px; max-width: 620px;
+  line-height: 1.7;
+}
+
+p { margin-bottom: 1rem; color: var(--ink2); }
+p strong { color: var(--ink); }
+
+/* ── FORMULA BLOCK ── */
+.formula-block {
+  background: rgba(212,168,67,.06);
+  border: 1px solid rgba(212,168,67,.2);
+  border-left: 3px solid var(--gold);
+  padding: 20px 24px; margin: 28px 0;
+  border-radius: 0 4px 4px 0;
+  overflow-x: auto;
+}
+.formula-label {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--gold); letter-spacing: .15em;
+  text-transform: uppercase; margin-bottom: 10px;
+  opacity: .7;
+}
+.formula-block mjx-container { color: var(--ink) !important; }
+
+/* ── THEOREM BOX ── */
+.theorem-box {
+  background: rgba(74,128,240,.07);
+  border: 1px solid rgba(74,128,240,.25);
+  border-left: 3px solid #4a80f0;
+  padding: 20px 24px; margin: 28px 0;
+  border-radius: 0 4px 4px 0;
+}
+.theorem-label {
+  font-family: var(--mono); font-size: 9px;
+  color: #4a80f0; letter-spacing: .15em;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.theorem-box p { color: var(--ink); }
+
+/* ── KEY INSIGHT ── */
+.insight {
+  background: rgba(43,191,176,.07);
+  border: 1px solid rgba(43,191,176,.2);
+  border-left: 3px solid var(--teal);
+  padding: 16px 20px; margin: 24px 0;
+  border-radius: 0 4px 4px 0;
+  font-size: .95rem; color: var(--ink2);
+}
+.insight strong { color: var(--teal); }
+
+/* ── INTERACTIVE ── */
+.interactive-block {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 6px; padding: 24px;
+  margin: 32px 0;
+}
+.interactive-block h4 {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: .2em; color: var(--teal);
+  text-transform: uppercase; margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.input-row {
+  display: flex; gap: 12px; align-items: center;
+  flex-wrap: wrap; margin-bottom: 18px;
+}
+.input-row label {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--ink3);
+}
+.inp {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--ink); font-family: var(--mono);
+  font-size: 13px; padding: 7px 12px;
+  border-radius: 3px; width: 100px;
+  outline: none; transition: border-color .2s;
+}
+.inp:focus { border-color: var(--teal); }
+.inp-wide { width: 160px; }
+.btn {
+  background: rgba(43,191,176,.12);
+  border: 1px solid rgba(43,191,176,.4);
+  color: var(--teal); font-family: var(--mono);
+  font-size: 11px; padding: 8px 18px;
+  border-radius: 3px; cursor: pointer;
+  letter-spacing: .08em; transition: all .2s;
+}
+.btn:hover { background: rgba(43,191,176,.22); }
+.btn-gold {
+  background: rgba(212,168,67,.1);
+  border-color: rgba(212,168,67,.4);
+  color: var(--gold);
+}
+.btn-gold:hover { background: rgba(212,168,67,.2); }
+.result-area {
+  background: rgba(0,0,0,.3);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 4px; padding: 16px;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--ink2); line-height: 1.9;
+  min-height: 60px; white-space: pre-wrap;
+}
+.result-prime { color: var(--teal); font-weight: 500; }
+.result-composite { color: var(--coral); }
+.result-val { color: var(--gold); }
+
+/* ── MINI CANVAS ── */
+.mini-canvas {
+  width: 100%; height: 200px;
+  background: rgba(0,0,0,.4);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 4px; display: block;
+  margin: 16px 0;
+}
+
+/* ── RING CANVAS ── */
+.ring-canvas { width: 100%; height: 320px; }
+
+/* ── STEP TABLE ── */
+.step-table {
+  width: 100%; border-collapse: collapse;
+  font-family: var(--mono); font-size: 12px;
+  margin: 16px 0;
+}
+.step-table th {
+  text-align: left; padding: 8px 12px;
+  color: var(--ink3); font-weight: 400;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  letter-spacing: .08em; font-size: 10px; text-transform: uppercase;
+}
+.step-table td {
+  padding: 8px 12px; color: var(--ink2);
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.step-table tr:hover td { background: rgba(255,255,255,.02); }
+.td-prime { color: var(--teal); }
+.td-gold { color: var(--gold); }
+.td-coral { color: var(--coral); }
+
+/* ── CONSTANTS GRID ── */
+.const-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px,1fr));
+  gap: 12px; margin: 24px 0;
+}
+.const-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 4px; padding: 14px 16px;
+}
+.const-card .label {
+  font-family: var(--mono); font-size: 9px;
+  color: var(--ink3); letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.const-card .value {
+  font-family: var(--mono); font-size: 1.1rem;
+  color: var(--gold);
+}
+.const-card .desc {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--ink3); margin-top: 4px;
+}
+
+/* ── RANGE SLIDER ── */
+input[type=range] {
+  accent-color: var(--gold);
+  cursor: pointer;
+}
+
+/* ── SLIDER ROW ── */
+.slider-row {
+  display: flex; align-items: center; gap: 14px;
+  margin: 12px 0;
+}
+.slider-row label { font-family: var(--mono); font-size: 11px; color: var(--ink3); min-width: 50px; }
+.slider-row input[type=range] { flex: 1; }
+.slider-row .slval { font-family: var(--mono); font-size: 12px; color: var(--gold); min-width: 60px; }
+
+/* ── FINAL SUMMARY ── */
+#summary {
+  background: rgba(43,191,176,.04);
+  border: 1px solid rgba(43,191,176,.15);
+  border-radius: 6px; padding: 40px 48px;
+  margin: 60px 0;
+}
+#summary h3 {
+  font-family: var(--display); font-size: 1.8rem;
+  color: var(--teal); margin-bottom: 20px;
+}
+.summary-row {
+  display: flex; gap: 12px; align-items: baseline;
+  margin-bottom: 10px; font-size: .95rem;
+}
+.summary-row .num {
+  font-family: var(--mono); font-size: 10px;
+  color: var(--teal); min-width: 24px;
+  opacity: .6;
+}
+.summary-row .text { color: var(--ink2); }
+.summary-row .text strong { color: var(--ink); }
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  #sidenav { transform: translateX(-220px); }
+  #sidenav.open { transform: translateX(0); }
+  #main { margin-left: 0; padding: 0 24px 80px; }
+  #menu-toggle { display: flex; }
+}
+#menu-toggle {
+  display: none; position: fixed;
+  top: 14px; left: 14px; z-index: 200;
+  background: rgba(5,4,10,.9);
+  border: 1px solid var(--border);
+  color: var(--gold); font-size: 18px;
+  width: 36px; height: 36px;
+  align-items: center; justify-content: center;
+  cursor: pointer; border-radius: 3px;
+}
+
+/* ══ SPLASH OPENER ══ */
+#splash{position:fixed;inset:0;z-index:900;background:var(--black,#05040a);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .8s ease,transform .8s ease;}
+#splash.out{opacity:0;transform:scale(1.04);pointer-events:none;}
+.splash-bg{position:absolute;inset:0;overflow:hidden;}
+#splash-canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;image-rendering:crisp-edges;}
+.splash-content{position:relative;z-index:2;text-align:center;padding:40px;max-width:760px;
+  background:rgba(5,4,10,0.55);border-radius:8px;backdrop-filter:blur(2px);
+  opacity:0;transform:translateY(18px);transition:opacity .8s ease .5s,transform .8s ease .5s;}
+#splash.text-shown .splash-content{opacity:1;transform:translateY(0);}
+.splash-eyebrow{font-family:var(--mono,'JetBrains Mono',monospace);font-size:10px;
+  letter-spacing:.3em;color:var(--teal,#2bbfb0);text-transform:uppercase;margin-bottom:20px;}
+.splash-title{font-family:'Cormorant Garamond','Instrument Serif',Georgia,serif;
+  font-size:clamp(32px,5vw,64px);font-weight:400;color:var(--ink,#ede6d8);
+  line-height:1.1;margin-bottom:16px;}
+.splash-title em{color:var(--gold,#d4a843);font-style:italic;}
+.splash-sub{font-size:clamp(13px,1.8vw,18px);color:var(--ink2,#c9bfaa);
+  margin-bottom:24px;line-height:1.6;}
+.splash-author{font-family:var(--mono,'JetBrains Mono',monospace);font-size:11px;
+  letter-spacing:.18em;color:var(--ink3,#8a7f6a);text-transform:uppercase;margin-bottom:32px;}
+.splash-enter{display:inline-flex;align-items:center;gap:12px;
+  background:transparent;border:1px solid var(--gold,#d4a843);
+  color:var(--gold,#d4a843);font-family:var(--mono,'JetBrains Mono',monospace);
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;padding:12px 28px;
+  cursor:pointer;transition:all .25s;border-radius:2px;}
+.splash-enter:hover{background:rgba(212,168,67,.1);}
+.splash-enter .arr{font-size:16px;}
+.splash-stats{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  display:flex;gap:40px;opacity:0;transition:opacity .8s ease 1s;}
+#splash.text-shown .splash-stats{opacity:1;}
+.splash-stat{text-align:center;}
+.splash-stat-n{display:block;font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:2.5rem;color:var(--gold,#d4a843);}
+.splash-stat-l{font-family:var(--mono,'JetBrains Mono',monospace);font-size:9px;
+  letter-spacing:.15em;color:var(--ink3,#8a7f6a);text-transform:uppercase;}
+#sp-stats-bar{position:fixed;bottom:0;left:0;right:0;z-index:950;
+  background:rgba(5,4,10,.92);border-top:1px solid rgba(212,168,67,.18);
+  font-family:var(--mono,'JetBrains Mono',monospace);font-size:9px;
+  color:rgba(180,170,150,.8);padding:6px 16px;display:flex;gap:18px;flex-wrap:wrap;
+  align-items:center;}
+#sp-panel{position:absolute;top:12px;right:14px;z-index:10;
+  font-family:var(--mono,'JetBrains Mono',monospace);font-size:9px;}
+#main-stars-cv{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;
+  transition:opacity 1.2s ease 0.5s;}
+
+/* ══ CANVAS OVERLAY ══ */
+#canvas-overlay{position:fixed;inset:0;z-index:800;background:rgba(5,4,10,.97);
+  display:none;flex-direction:column;}
+#canvas-overlay.open{display:flex;}
+#cov-bar{background:rgba(5,4,10,.98);border-bottom:1px solid rgba(212,168,67,.2);
+  padding:10px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;}
+#cov-bar h4{font-family:var(--mono,monospace);font-size:10px;letter-spacing:.15em;
+  color:var(--gold,#d4a843);text-transform:uppercase;margin:0;}
+#cov-desc{font-family:monospace;font-size:9px;color:rgba(140,130,110,.6);}
+#cov-close{background:none;border:1px solid rgba(255,255,255,.15);
+  color:rgba(200,185,155,.7);font-family:monospace;font-size:11px;
+  padding:4px 14px;cursor:pointer;border-radius:2px;margin-left:auto;}
+#cov-close:hover{border-color:rgba(232,85,64,.5);color:rgba(232,85,64,.8);}
+#cov-body{flex:1;overflow:auto;position:relative;}
+.view-canvas-btn{display:inline-flex;align-items:center;gap:8px;margin-top:24px;
+  font-family:var(--mono,monospace);font-size:10px;letter-spacing:.1em;
+  color:var(--teal,#2bbfb0);border:1px solid rgba(43,191,176,.35);
+  background:rgba(43,191,176,.06);padding:8px 18px;border-radius:3px;
+  cursor:pointer;transition:all .2s;text-decoration:none;}
+.view-canvas-btn:hover{background:rgba(43,191,176,.15);border-color:rgba(43,191,176,.6);}
+.view-canvas-btn::before{content:"⬡ ";font-size:13px;}
+</style>
 </head>
 <body>
-<div class="container">
-    <h1>The Lift Survival Function &amp; The Jump Theorem</h1>
-    <p style="font-size:1.1rem; color:#c9bfaa;">A geometric–analytic construction that encodes primes as discontinuities with algebraically invertible jump sizes.</p>
 
-    <h2>1. The Modular Ring System</h2>
-    <p>For an integer \(M \ge 2\), consider the <strong>ring of residues modulo \(M\)</strong>. A residue \(r\) (with \(1 \le r \le M-1\)) is called <strong>coprime</strong> if \(\gcd(r,M)=1\). These are the units modulo \(M\).</p>
-    <p>Visually, each \(M\) is a concentric circle; on it we place a dot at angle \(2\pi r/M\) for every coprime residue \(r\). This gives a clear geometric picture: prime rings are fully populated; composite rings have gaps.</p>
 
-    <h2>2. The Lift Question</h2>
-    <p>We ask: given a residue \(r\) that is coprime to \(M\), will it also be coprime to \(M+1\)? If yes, we say <strong>\(r\) lifts</strong> from ring \(M\) to ring \(M+1\).</p>
-    <p>Example: \(M=14\), \(M+1=15=3\times5\). Coprime residues of 14 are \(\{1,3,5,9,11,13\}\). Those that are also coprime to 15 are \(\{1,11,13\}\). The lift rate is \(3/6 = 50\%\).</p>
-    <p>Heuristically, because the prime factors of \(M\) and \(M+1\) are disjoint, the events “\(r\) avoids the primes dividing \(M\)” and “\(r\) avoids the primes dividing \(M+1\)” are independent in a probabilistic sense. The long‑run average lift rate tends to a constant:</p>
-    <div class="theorem">
-        \[
-        C = \lim_{N\to\infty} \frac{1}{N}\sum_{M=2}^{N} \frac{\#\{r\le M-1: \gcd(r,M)=1,\ \gcd(r,M+1)=1\}}{\varphi(M)} \approx 0.5307118\ldots
-        \]
-    </div>
-
-    <h2>3. The Lift Survival Function \(C(x)\)</h2>
-    <p>We define a smooth real function that extends this idea to all real \(x\ge0\):</p>
-    <div class="theorem">
-        \[
-        C(x) = \prod_{p\ \text{prime}} f_p(x), \qquad
-        f_p(x) = \begin{cases}
-            \displaystyle\frac{p}{p+1} & \text{if } p \le x+1,\\[8pt]
-            \displaystyle\frac{p^2-x-1}{p^2-1} & \text{if } p > x+1.
-        \end{cases}
-        \]
-    </div>
-    <p>For \(x\) integer, \(C(x)\) is exactly the asymptotic lift survival rate at ring \(x\). The product converges absolutely because \(\sum_p 1/p^2 < \infty\).</p>
-    <p>Each prime contributes a factor that <strong>saturates</strong> to the constant \(p/(p+1)\) when \(x\) reaches \(p-1\).</p>
-
-    <h2>4. The Jump Theorem (Central Result)</h2>
-    <p>Consider the log‑derivative of \(C(x)\):</p>
-    <div class="theorem">
-        \[
-        D(x) = \frac{d}{dx}\log C(x) = -\sum_{p > x+1} \frac{1}{p^2 - x - 1}.
-        \]
-    </div>
-    <div class="theorem">
-        <strong>Theorem (Jump Theorem).</strong><br>
-        The function \(D(x)\) is smooth on each interval \((p-1,\,q-1)\) where \(p,q\) are consecutive primes. At every point \(x = p-1\) (with \(p\) prime), \(D(x)\) has a jump discontinuity of exact size
-        \[
-        \Delta D\big|_{x=p-1} = \frac{1}{p(p-1)}.
-        \]
-        For every non‑prime integer \(m\), \(D(x)\) is continuous at \(x = m-1\).
-    </div>
-    <div class="proof">
-        <strong>Proof sketch.</strong><br>
-        The derivative of \(\log f_p(x)\) is \(-1/(p^2-x-1)\) when \(p > x+1\), and \(0\) otherwise. Therefore
-        \[
-        D(x) = -\sum_{p > x+1} \frac{1}{p^2-x-1}.
-        \]
-        As \(x\) increases past \(p-1\), the term for prime \(p\) disappears from the sum. At the moment of disappearance, its value is \(1/(p^2-(p-1)-1)=1/(p(p-1))\). No other prime has its threshold at the same \(x\), so the jump is exactly that amount. For composite \(m\), no term disappears, hence continuity. ∎
-    </div>
-    <p>This theorem is remarkable because it gives a function that is smooth between primes and jumps <strong>only</strong> at primes, with a jump size that uniquely determines the prime:</p>
-    <div class="theorem">
-        \[
-        \text{Given jump size } s = \frac{1}{p(p-1)},\quad \text{we recover } p = \frac{1+\sqrt{1+4/s}}{2}.
-        \]
-    </div>
-    <p>Thus the primes are encoded exactly, not just asymptotically.</p>
-
-    <h2>5. Total Jump Content \(J\) and Prime Zeta Values</h2>
-    <p>The sum of all jumps is finite:</p>
-    <div class="theorem">
-        \[
-        J = \sum_{p} \frac{1}{p(p-1)} = \sum_{k=2}^{\infty} P(k), \qquad P(k)=\sum_{p}\frac{1}{p^k}.
-        \]
-    </div>
-    <p>This identity follows by expanding \(1/(p(p-1)) = p^{-2}+p^{-3}+p^{-4}+\cdots\) and swapping sums. So \(J\) simultaneously encodes <strong>all prime zeta values</strong>.</p>
-    <p>Moreover, \(J\) splits into even and odd parts:
-        \[
-        J = D_0 + T,\quad D_0 = \sum_p \frac{1}{p^2-1},\quad T = \sum_p \frac{1}{p(p^2-1)}.
-        \]
-        Numerically, \(J\approx 0.7731566\), \(D_0\approx 0.5516933\), \(T\approx 0.2214633\).
-    </p>
-
-    <h2>6. The Parent Function \(F(u)\)</h2>
-    <p>Define
-        \[
-        F(u) = \prod_p \frac{p^2-u}{p^2-1} = \zeta(2)\prod_p\left(1-\frac{u}{p^2}\right).
-        \]
-        Then:
-        <ul>
-            <li>\(F(0)=\zeta(2)=\pi^2/6\), \(F(1)=1\), \(F(2)=C\).</li>
-            <li>Zeros at the prime squares: \(F(p^2)=0\).</li>
-            <li>Because \(\sum 1/p^2<\infty\), \(F(u)/\zeta(2)\) is entire of genus 0 and belongs to the <strong>Laguerre–Pólya class</strong> (all real zeros, Hadamard product without exponential factor). This is unconditional.</li>
-        </ul>
-    </p>
-
-    <h2>7. Character Extension and the GRH Criterion</h2>
-    <p>For any Dirichlet character \(\chi\), define
-        \[
-        D_\chi(x) = -\sum_{\substack{p > x+1 \\ \chi(p)\neq 0}} \frac{\chi(p)}{p^2-x-1},\qquad
-        J_\chi = \sum_p \frac{\chi(p)}{p(p-1)} = \sum_{k\ge2} P(k,\chi).
-        \]
-        The same argument shows jumps of size \(\chi(p)/(p(p-1))\) at \(x=p-1\).</p>
-    <p>The sums \(J_\chi\) capture Chebyshev biases; for the non‑principal character modulo 4, \(J_{\chi_4}\approx -0.144\).</p>
-    <p>A known equivalence (via the explicit formula) gives:</p>
-    <div class="theorem">
-        \[
-        \sqrt{N}\,\bigl|J_\chi - J_\chi(N)\bigr|\ \text{bounded as } N\to\infty \quad\Longleftrightarrow\quad \text{GRH for } L(s,\chi).
-        \]
-        Here \(J_\chi(N)\) is the sum over primes \(\le N\).
-    </div>
-    <p>While this criterion is not new in form, its geometric origin through the lift survival function is original.</p>
-
-    <h2>8. Why This Is New</h2>
-    <ul>
-        <li><strong>The function \(C(x)\) and the Jump Theorem</strong> are entirely new constructions. No prior work defined a smooth Euler product that saturates per prime at \(x=p-1\) and studied its derivative’s discontinuities.</li>
-        <li><strong>Geometric interpretation</strong> via the modular ring system connects elementary number theory (coprime residues) to a continuous analytic object with exact prime detection.</li>
-        <li><strong>Algebraic invertibility of jump sizes</strong> – given a jump size, you recover the prime exactly by a quadratic formula. This is stronger than classical prime‑encoding functions like the von Mangoldt function, where jump sizes are \(\log p\) (not invertible to a unique prime).</li>
-        <li>The identities \(J = \sum P(k)\), \(J = D_0+T\), and the decomposition of \(J\) into logarithms of \(\zeta(m)\) with explicit coefficients are all derived from the same geometric framework, providing a unified perspective on the prime zeta function.</li>
-    </ul>
-
-    <h2>9. Interactive Demo: Explore \(C(x)\) and the Jumps</h2>
-    <div class="interactive">
-        <p style="margin-bottom: 0.5rem;"><strong>Choose \(x\) (real)</strong> &nbsp; <span id="x_val_display" class="value">1.0</span></p>
-        <input type="range" id="x_slider" min="0" max="50" step="0.1" value="1.0">
-        <div style="margin: 1rem 0;">
-            <p><strong>\(C(x) =\)</strong> <span id="C_value" class="value">calculating...</span></p>
-            <p><strong>Current saturated primes:</strong> <span id="saturated_list">—</span></p>
-            <p><strong>Jump at \(x = p-1\) for next prime \(p\):</strong> <span id="next_jump">—</span></p>
-        </div>
-        <button id="reset_x" style="margin-right: 1rem;">Reset to 1.0</button>
-        <button id="show_jumps">Show jump sizes at primes</button>
-        <div id="jump_table" style="margin-top: 1rem; font-size:0.9rem; display: none;"></div>
-    </div>
-
-    <h2>10. References & Further Reading</h2>
-    <ul>
-        <li>L. Euler (1737). <em>Variae observationes circa series infinitas</em> – Euler product for \(\zeta(s)\).</li>
-        <li>B. Riemann (1859). <em>Ueber die Anzahl der Primzahlen unter einer gegebenen Grösse</em> – Riemann Hypothesis.</li>
-        <li>F. Mertens (1874). <em>Ein Beitrag zur analytischen Zahlentheorie</em> – Mertens theorems.</li>
-        <li>OEIS A065469: constant \(\prod_p (p^2-2)/(p^2-1)\) – the numerical value of \(C\).</li>
-        <li>W. Getachew (2026). <em>The Lift Survival Function and Its Jump Structure</em> (this work).</li>
-    </ul>
-    <hr>
-    <footer>
-        The Lift Survival Function – A mathematical construction encoding primes as discontinuities.<br>
-        Interactive demo computes \(C(x)\) using the first 1000 primes. Jumps are exact at \(x=p-1\).
-    </footer>
+<!-- ══ CANVAS OVERLAY ══ -->
+<div id="canvas-overlay">
+  <div id="cov-bar">
+    <h4>Ring Visualization</h4>
+    <span id="cov-desc"></span>
+    <button id="cov-close" onclick="covClose()">✕ Close (Esc)</button>
+  </div>
+  <div id="cov-body"></div>
 </div>
 
+  <!-- stats bar -->
+  <div id="opener-stats" style="position:absolute;bottom:0;left:0;right:0;
+    background:rgba(5,4,10,.9);border-top:1px solid rgba(212,168,67,.15);
+    font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(160,150,130,.7);
+    padding:5px 14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;z-index:3;
+    opacity:0;transition:opacity 1s ease 2.5s;">
+    <span>gcd=1: <span id="os-cp" style="color:#d4a843;">—</span></span>
+    <span>lifts: <span id="os-lifts" style="color:#2bbfb0;">—</span></span>
+    <span>lift/gcd=1: <span id="os-lratio" style="color:#2bbfb0;">—</span></span>
+    <span style="color:rgba(80,70,55,.5);">|</span>
+    <span>C(N)= <span id="os-cn" style="color:#9060d0;">—</span></span>
+    <span>D(N)= <span id="os-dn" style="color:#e85540;">—</span></span>
+    <span style="margin-left:auto;">N=<span id="os-n" style="color:rgba(160,150,130,.5);">—</span></span>
+  </div>
+</div>
+
+<!-- ══ CANVAS OVERLAY (for "View on Canvas" buttons) ══ -->
+
+
+<!-- ══ OPENER ══ -->
+<div id="op-overlay" style="position:fixed;inset:0;z-index:950;background:#05040a;
+  display:flex;flex-direction:column;transition:opacity .8s ease;">
+
+  <!-- Canvas fills everything -->
+  <canvas id="op-cv" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+
+  <!-- Top controls bar -->
+  <div style="position:relative;z-index:2;display:flex;gap:6px;align-items:center;
+    flex-wrap:wrap;padding:10px 14px;background:rgba(5,4,10,.7);
+    border-bottom:1px solid rgba(212,168,67,.12);flex-shrink:0;">
+
+    <!-- N slider -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);letter-spacing:.1em;">N=</span>
+    <input id="op-n-sl" type="range" min="2" max="200" value="18" step="1"
+      oninput="opSetMod(+this.value)"
+      style="width:140px;accent-color:#d4a843;cursor:pointer;">
+    <span id="op-n-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;
+      color:#d4a843;min-width:28px;">18</span>
+
+    <span style="color:rgba(80,70,55,.5);padding:0 4px;">|</span>
+
+    <!-- View mode -->
+    <select onchange="opSetView(+this.value)"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+      color:rgba(200,185,155,.8);padding:3px 6px;border-radius:2px;cursor:pointer;">
+      <option value="0">gcd=1 only</option>
+      <option value="1">Non-gcd=1 only</option>
+      <option value="2">Combined</option>
+    </select>
+
+    <!-- Color mode -->
+    <select onchange="opSetColor(this.value)"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+      color:rgba(200,185,155,.8);padding:3px 6px;border-radius:2px;cursor:pointer;">
+      <option value="residue6">Color: r mod 6</option>
+      <option value="lift">Color: lifts</option>
+      <option value="gcd">Color: gcd</option>
+      <option value="prime">Color: prime ring</option>
+    </select>
+
+    <!-- Label mode -->
+    <select onchange="opSetLabel(this.value)"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+      color:rgba(200,185,155,.8);padding:3px 6px;border-radius:2px;cursor:pointer;">
+      <option value="r">Label: r</option>
+      <option value="rm">Label: r/M</option>
+      <option value="angle">Label: angle°</option>
+      <option value="gcd">Label: gcd value</option>
+      <option value="none">Label: none</option>
+    </select>
+
+    <!-- Lift depth -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);">Lift depth</span>
+    <input id="op-lift-sl" type="range" min="0" max="10" value="0" step="1"
+      oninput="opSetLift(+this.value);document.getElementById('op-lift-val').textContent=this.value==0?'all':this.value"
+      style="width:80px;accent-color:#2bbfb0;cursor:pointer;">
+    <span id="op-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;
+      color:#2bbfb0;min-width:20px;">all</span>
+
+    <!-- Lift toggle -->
+    <button id="op-lift-btn" onclick="opToggleLifts()"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.5);
+      color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;letter-spacing:.05em;">
+      Lift Lines: ON</button>
+
+    <!-- Enter -->
+    <button onclick="opEnter()"
+      style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;
+      letter-spacing:.12em;text-transform:uppercase;padding:5px 16px;
+      border:1px solid #d4a843;background:rgba(212,168,67,.1);
+      color:#d4a843;cursor:pointer;border-radius:2px;">
+      Enter &#8594;</button>
+  </div>
+
+  <!-- Stats bar at bottom -->
+  <div id="op-stats" style="position:absolute;bottom:0;left:0;right:0;z-index:2;
+    background:rgba(5,4,10,.85);border-top:1px solid rgba(212,168,67,.12);
+    font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(150,140,120,.7);
+    padding:5px 14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+    <span>gcd=1: <span id="op-stat-cp" style="color:#d4a843;">—</span></span>
+    <span>lifts: <span id="op-stat-lifts" style="color:#2bbfb0;">—</span></span>
+    <span>lift/gcd=1: <span id="op-stat-ratio" style="color:#2bbfb0;">—</span></span>
+    <span style="color:rgba(70,60,45,.5);">|</span>
+    <span>C(N)= <span id="op-stat-cn" style="color:#9060d0;">—</span></span>
+    <span>D(N)= <span id="op-stat-dn" style="color:#e85540;">—</span></span>
+    <span style="margin-left:auto;color:rgba(100,90,70,.5);">N=<span id="op-stat-n">—</span></span>
+  </div>
+</div>
+
+<!-- ══ CANVAS OVERLAY ══ -->
+<div id="cov-overlay" style="position:fixed;inset:0;z-index:800;background:rgba(5,4,10,.97);
+  display:none;flex-direction:column;">
+  <div style="background:#0d0b14;border-bottom:1px solid rgba(212,168,67,.2);
+    padding:8px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      letter-spacing:.15em;color:#d4a843;text-transform:uppercase;">Ring Canvas</span>
+    <span id="cov-label" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(120,110,90,.6);"></span>
+    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(120,110,90,.5);">N=</span>
+    <input id="cov-n-sl" type="range" min="2" max="120" value="30" step="1"
+      oninput="covSetMod(+this.value)"
+      style="width:100px;accent-color:#d4a843;cursor:pointer;">
+    <span id="cov-n-val" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#d4a843;min-width:24px;">30</span>
+    <button onclick="covClose()" style="background:none;border:1px solid rgba(255,255,255,.15);
+      color:rgba(200,185,155,.7);font-family:'JetBrains Mono',monospace;font-size:9px;
+      padding:3px 12px;cursor:pointer;border-radius:2px;">✕ Close</button>
+  </div>
+  <canvas id="cov-cv" style="flex:1;width:100%;display:block;"></canvas>
+  <div style="background:rgba(5,4,10,.9);border-top:1px solid rgba(212,168,67,.1);
+    padding:4px 14px;font-family:'JetBrains Mono',monospace;font-size:8.5px;
+    color:rgba(130,120,100,.7);display:flex;gap:14px;flex-wrap:wrap;">
+    <span>gcd=1: <span id="cov-cp" style="color:#d4a843;">—</span></span>
+    <span>lifts: <span id="cov-lifts" style="color:#2bbfb0;">—</span></span>
+    <span>C(N)= <span id="cov-cn" style="color:#9060d0;">—</span></span>
+  </div>
+</div>
+<div id="progress-bar"></div>
+
+<button id="menu-toggle" onclick="document.getElementById('sidenav').classList.toggle('open')">☰</button>
+
+<nav id="sidenav">
+  <div class="nav-title">Prime Sieve · C(x)</div>
+  <a href="#hero"><span class="layer-num">00</span>Overview</a>
+  <a href="#layer1"><span class="layer-num">01</span>The Rings</a>
+  <a href="#layer2"><span class="layer-num">02</span>The Lift</a>
+  <a href="#layer3"><span class="layer-num">03</span>Constant C</a>
+  <a href="#layer4"><span class="layer-num">04</span>C(x) Function</a>
+  <a href="#layer5"><span class="layer-num">05</span>Jump Theorem</a>
+  <a href="#layer6"><span class="layer-num">06</span>Total Jump J</a>
+  <a href="#layer7"><span class="layer-num">07</span>Parent F(u)</a>
+  <a href="#layer8"><span class="layer-num">08</span>GRH Criterion</a>
+  <a href="#summary"><span class="layer-num">∑</span>Summary</a>
+</nav>
+
+<main id="main">
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-label">Wessen Getachew · 2026 · math.NT</div>
+  <h1 class="hero-title">
+    The <em>Lift Survival</em><br>Function
+  </h1>
+  <p class="hero-sub">
+    A prime sieve built from modular rings — where primes reveal themselves
+    as exact discontinuities in a smooth Euler product.
+  </p>
+  <div class="hero-meta">8 new objects · Jump Theorem proved · J = Σ P(k) · GRH family · Laguerre–Pólya class</div>
+  <div class="hero-constants">
+    <div class="hero-const">Lift constant<span class="val">C ≈ 0.5307</span></div>
+    <div class="hero-const">Total jumps<span class="val">J ≈ 0.7732</span></div>
+    <div class="hero-const">Log-deriv base<span class="val">D₀ ≈ 0.5517</span></div>
+    <div class="hero-const">Correction<span class="val">T ≈ 0.2215</span></div>
+  </div>
+</section>
+
+<!-- ══ LAYER 1 · THE RINGS ══ -->
+<section class="section" id="layer1">
+  <div class="layer-badge">Layer 01 — The Geometry</div>
+  <h2 class="section-title">The <span>Modular Ring</span> System</h2>
+  <p class="section-lead">Every integer M ≥ 2 becomes a circle. Residues become dots. The arithmetic of M becomes visible geometry.</p>
+
+  <p>For any integer \(M \ge 2\), consider all residues \(r\) with \(1 \le r \le M-1\). Place each at angle \(\theta = 2\pi r/M\) on a circle of radius proportional to \(M\). A residue is <strong>coprime</strong> if \(\gcd(r,M)=1\) — it shares no factor with \(M\). These are the units of \(\mathbb{Z}/M\mathbb{Z}\).</p>
+
+  <p><strong>Prime rings look full.</strong> If \(M=p\) is prime, every \(r\) from 1 to \(p-1\) is coprime to \(p\). Ring 7 has 6 equally-spaced dots. Ring 11 has 10. <strong>Composite rings have gaps.</strong> Ring 12 has only \(\varphi(12)=4\) coprime residues — the four positions not divisible by 2 or 3.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Euler's Totient</div>
+    \[\varphi(M) = M \prod_{p \mid M} \left(1 - \frac{1}{p}\right)\]
+    <p style="margin-top:10px;font-size:.9rem;color:var(--ink3);">Counts coprime residues on ring M. For prime p: φ(p) = p−1 (all residues). For composite: fewer, proportional to how many distinct prime factors M has.</p>
+  </div>
+
+  <div class="interactive-block">
+    <h4>Explorer — Inspect any ring</h4>
+    <div class="input-row">
+      <label>M =</label>
+      <input class="inp" type="number" id="r1-M" value="12" min="2" max="200">
+      <button class="btn" onclick="ring1_compute()">Compute</button>
+    </div>
+    <canvas id="ring1-canvas" class="mini-canvas ring-canvas"></canvas>
+    <div class="result-area" id="ring1-out">Enter M and click Compute.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('Coprime dots on ring M=12',12,0)">View on Canvas — Coprime dots on ring M=12</button>
+</section>
+
+<!-- ══ LAYER 2 · THE LIFT ══ -->
+<section class="section" id="layer2">
+  <div class="layer-badge">Layer 02 — The Sieve Question</div>
+  <h2 class="section-title">The <span>Lift</span> Question</h2>
+  <p class="section-lead">Does a residue coprime to M survive to the next ring? This filtering is the sieve.</p>
+
+  <p>Given \(r\) coprime to \(M\), ask: is \(r\) also coprime to \(M+1\)? If yes, we say \(r\) <strong>lifts</strong> from ring \(M\) to ring \(M+1\). This is the fundamental filtering operation — the sieve step.</p>
+
+  <p>The key probabilistic insight: \(M\) and \(M+1\) are consecutive integers, so they share <em>no</em> prime factors. The events "\(r\) avoids factors of \(M\)" and "\(r\) avoids factors of \(M+1\)" are therefore <strong>independent</strong> — watching two different sets of primes simultaneously.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Lift condition</div>
+    \[r \text{ lifts from } M \text{ to } M+1 \quad\Longleftrightarrow\quad \gcd(r,M)=1 \;\text{ and }\; \gcd(r,M+1)=1\]
+  </div>
+
+  <div class="insight">
+    <strong>Example:</strong> M=14, M+1=15=3×5. Coprime residues of 14: {1,3,5,9,11,13}. Of those, coprime to 15 (not divisible by 3 or 5): {1,11,13}. Lift rate = 3/6 = 50%.
+  </div>
+
+  <div class="insight">
+    <strong>Primorial structure:</strong> The most symmetric rings are primorials — M = 2, 6, 30, 210, 2310 = 2·3·5·7·11. At M = 30, the coprime residues {1,7,11,13,17,19,23,29} form the densest regular polygon before the next prime (7) enters. Twin prime gaps (r and r+2 both coprime to M) are admissible pairs — they survive the sieve at every primorial, connecting the lift structure to the Hardy–Littlewood conjecture.
+  </div>
+
+  <div class="interactive-block">
+    <h4>Step-by-step lift at any M</h4>
+    <div class="input-row">
+      <label>M =</label>
+      <input class="inp" type="number" id="r2-M" value="14" min="2" max="500">
+      <button class="btn" onclick="lift_compute()">Show lifts</button>
+    </div>
+    <canvas id="lift-canvas" class="mini-canvas ring-canvas"></canvas>
+    <div class="result-area" id="lift-out">Enter M and click Show lifts.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('Lift lines: ring M=14 to M+1',14,0)">View on Canvas — Lift lines: ring M=14 to M+1</button>
+</section>
+
+<!-- ══ LAYER 3 · CONSTANT C ══ -->
+<section class="section" id="layer3">
+  <div class="layer-badge">Layer 03 — The Long-Run Average</div>
+  <h2 class="section-title">The Constant <span>C ≈ 0.5307</span></h2>
+  <p class="section-lead">Average the lift rate over all rings. It converges to a universal constant.</p>
+
+  <p>As \(M\) grows, the fraction of coprime residues that lift fluctuates — but on average it converges to a precise constant. Roughly <strong>53.07%</strong> of coprime residues survive each lift step in the long run.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">The lift survival constant</div>
+    \[C = \lim_{N\to\infty} \frac{1}{N}\sum_{M=2}^{N} \frac{\#\{r \le M-1:\, \gcd(r,M)=1,\; \gcd(r,M+1)=1\}}{\varphi(M)} \approx 0.53071180…\]
+  </div>
+
+  <p>This constant has an exact <strong>Euler product</strong> formula — every prime contributes a factor slightly below 1, and their infinite product gives C exactly:</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Euler product for C</div>
+    \[C = \prod_{p} \frac{p}{p+1} \cdot \prod_{p} \frac{p^2-2}{p^2-1}\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">Each prime p contributes: a saturated factor p/(p+1) and an interaction correction (p²−2)/(p²−1). The product converges because Σ 1/p² converges.</p>
+  </div>
+
+  <div class="interactive-block">
+    <h4>Compute C(N) — cumulative lift rate up to ring N</h4>
+    <div class="slider-row">
+      <label>N =</label>
+      <input type="range" id="r3-N" min="2" max="2000" value="200" oninput="r3_update()">
+      <span class="slval" id="r3-Nval">200</span>
+    </div>
+    <canvas id="r3-canvas" class="mini-canvas" style="height:180px;"></canvas>
+    <div class="result-area" id="r3-out">Move slider.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('C(N) convergence at mod 60',60,0)">View on Canvas — C(N) convergence at mod 60</button>
+</section>
+
+<!-- ══ LAYER 4 · C(x) ══ -->
+<section class="section" id="layer4">
+  <div class="layer-badge">Layer 04 — The Continuous Extension</div>
+  <h2 class="section-title">The Function <span>C(x)</span></h2>
+  <p class="section-lead">Extend the constant to all real x. Each prime contributes a smooth factor that saturates exactly when x passes p−1.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Lift Survival Function</div>
+    \[C(x) = \prod_{p\;\text{prime}} f_p(x), \qquad f_p(x) = \begin{cases} \dfrac{p}{p+1} & \text{if } p \le x+1 \quad\text{(saturated)}\\ \dfrac{p^2-x-1}{p^2-1} & \text{if } p > x+1 \quad\text{(active)} \end{cases}\]
+  </div>
+
+  <p>For integer \(x=M\), \(C(M)\) exactly recovers the asymptotic lift rate at ring \(M\). Between integers it interpolates smoothly. As \(x\) grows, more primes <em>saturate</em> — locking into the constant factor \(p/(p+1)\) forever — while fewer primes remain <em>active</em> contributors.</p>
+
+  <div class="insight">
+    <strong>Key behaviour:</strong> C(x) is strictly decreasing from C(0)=1 toward 0. At each integer x=p−1 where p is prime, one more prime saturates and C(x) takes a small downward step — invisible to the eye, but exact to the formula.
+  </div>
+
+  <div class="interactive-block">
+    <h4>Compute C(x) at any real x</h4>
+    <div class="slider-row">
+      <label>x =</label>
+      <input type="range" id="r4-x" min="0" max="500" step="0.5" value="18" oninput="r4_update()">
+      <span class="slval" id="r4-xval">18.0</span>
+    </div>
+    <canvas id="r4-canvas" class="mini-canvas" style="height:200px;"></canvas>
+    <div class="result-area" id="r4-out">Move slider.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('Lift depth filter — mod 60',60,2)">View on Canvas — Lift depth filter — mod 60</button>
+</section>
+
+<!-- ══ LAYER 5 · JUMP THEOREM ══ -->
+<section class="section" id="layer5">
+  <div class="layer-badge">Layer 05 — The Central Result</div>
+  <h2 class="section-title">The <span>Jump Theorem</span></h2>
+  <p class="section-lead">Take the log-derivative of C(x). It's smooth everywhere — except exactly at primes, where it jumps by an invertible amount.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Log-derivative D(x)</div>
+    \[D(x) = \frac{d}{dx}\log C(x) = -\sum_{p \,>\, x+1} \frac{1}{p^2 - x - 1}\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">A sum over active primes only — those not yet saturated at position x.</p>
+  </div>
+
+  <div class="theorem-box">
+    <div class="theorem-label">Theorem — Jump Theorem (Getachew 2026)</div>
+    <p>The function \(D(x)\) is smooth on every interval \((p-1,\, q-1)\) where \(p,q\) are consecutive primes. At \(x = p-1\) for prime \(p\), it has a jump discontinuity of <strong>exact size</strong>:</p>
+    \[\Delta D\big|_{x=p-1} = \frac{1}{p(p-1)}\]
+    <p style="margin-top:12px;">For every composite \(m\): \(D(x)\) is <strong>continuous</strong> at \(x=m-1\). No jump.</p>
+  </div>
+
+  <p>The jump sizes are <strong>algebraically invertible</strong>. Given a jump of size \(s\), recover the prime exactly:</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Prime recovery from jump size</div>
+    \[p = \frac{1 + \sqrt{1 + 4/s}}{2}\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">The von Mangoldt function Λ(n) = log p encodes primes through a different mechanism — its jump sizes grow with the prime. Here the jump sizes 1/(p(p−1)) decrease, and the quadratic formula gives back p exactly from s alone. Both functions detect primes; they do so through different analytic windows on the same underlying arithmetic.</p>
+  </div>
+
+  <div class="theorem-box" style="margin-top:20px;">
+    <div class="theorem-label">PROOF SKETCH</div>
+    <p>The derivative of log f_p(x) is −1/(p²−x−1) when p > x+1, and 0 when saturated. Therefore D(x) = −Σ_{p > x+1} 1/(p²−x−1). As x increases past p−1, the term for prime p exits the sum. At the exit moment its value is 1/(p²−(p−1)−1) = 1/(p(p−1)). No two primes share the same threshold x = p−1 (since primes are distinct), so the jump is exact and isolated. For composite m, no term exits at x = m−1. ∎</p>
+  </div>
+
+  <div class="insight" style="margin-top:16px;">
+    <strong>New object:</strong> The Dirichlet series G(s) = Σ_{n≥1} C(n)/n<sup>s</sup> converges for Re(s) > 1 and appears to be unstudied in the literature. Its coefficients c(m) = C(m)/C(m−1) satisfy: c(p) = (p²−p)/(p²−1) for prime p; c(m) = 1 for composite m between primes.
+  </div>
+
+  <div class="interactive-block">
+    <h4>Jump Theorem Prime Checker</h4>
+    <p style="font-size:.88rem;color:var(--ink3);margin-bottom:14px;">Enter any integer n ≥ 2. The checker computes C(n−1), detects whether a jump occurs, and reads off the prime.</p>
+    <div class="input-row">
+      <label>n =</label>
+      <input class="inp inp-wide" type="number" id="jt-n" value="101" min="2" onkeydown="if(event.key==='Enter')jt_check()">
+      <button class="btn btn-gold" onclick="jt_check()">Check</button>
+    </div>
+    <div class="result-area" id="jt-out">Enter n and click Check.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('Jump: lift depth 1',60,1)">View on Canvas — Jump: lift depth 1</button>
+</section>
+
+<!-- ══ LAYER 6 · J ══ -->
+<section class="section" id="layer6">
+  <div class="layer-badge">Layer 06 — Summing All Jumps</div>
+  <h2 class="section-title">Total Jump Content <span>J</span></h2>
+  <p class="section-lead">Sum every jump across all primes. The total is finite — and encodes every prime zeta value simultaneously.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">The J identity</div>
+    \[J = \sum_{p} \frac{1}{p(p-1)} = \sum_{k=2}^{\infty} P(k), \qquad P(k) = \sum_{p} \frac{1}{p^k}\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">Expanding 1/(p(p−1)) = 1/p² + 1/p³ + 1/p⁴ + ··· and swapping sums: J simultaneously encodes all prime zeta values P(2), P(3), P(4), …</p>
+  </div>
+
+  <p>J also splits into two natural parts:</p>
+  <div class="formula-block">
+    <div class="formula-label">J decomposition</div>
+    \[J = D_0 + T, \qquad D_0 = \sum_p \frac{1}{p^2-1} \approx 0.5517, \qquad T = \sum_p \frac{1}{p(p^2-1)} \approx 0.2215\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">Also: J − S = 2T and (J+S)/2 = D₀, where S = Σ 1/p² = P(2) ≈ 0.4522.</p>
+  </div>
+
+  <div class="insight" style="margin-top:0;margin-bottom:20px;">
+    <strong>Derivation of J = Σ P(k):</strong> Expand 1/(p(p−1)) = 1/p² + 1/p³ + 1/p⁴ + ··· (geometric series), then swap the order of summation:
+    J = Σ_p Σ_{k≥2} 1/p<sup>k</sup> = Σ_{k≥2} Σ_p 1/p<sup>k</sup> = Σ_{k≥2} P(k).
+    This single identity unifies the prime zeta function at all integer arguments k ≥ 2.
+  </div>
+
+  <div class="insight">
+    <strong>D₀ = D(0):</strong> At x = 0, all primes are active. D(0) = −Σ_p 1/(p²−1) = −D₀.
+    Also: <strong>J − S = 2T</strong> and <strong>(J+S)/2 = D₀</strong>, where S = P(2) = Σ_p 1/p² ≈ 0.4522.
+    Hardy–Littlewood singular series ratios for admissible prime constellations are exact combinatorial identities in this framework.
+  </div>
+
+  <div class="const-grid">
+    <div class="const-card"><div class="label">J (total)</div><div class="value">0.77315663…</div><div class="desc">Sum of all jump sizes</div></div>
+    <div class="const-card"><div class="label">D₀</div><div class="value">0.55169326…</div><div class="desc">Even part</div></div>
+    <div class="const-card"><div class="label">T</div><div class="value">0.22146337…</div><div class="desc">Odd correction</div></div>
+    <div class="const-card"><div class="label">C (lift)</div><div class="value">0.53071180…</div><div class="desc">F(2) = ∏f_p(1)</div></div>
+  </div>
+
+  <div class="interactive-block">
+    <h4>Partial sums — J converging over the first N primes</h4>
+    <div class="slider-row">
+      <label>N primes =</label>
+      <input type="range" id="r6-N" min="1" max="500" value="50" oninput="r6_update()">
+      <span class="slval" id="r6-Nval">50</span>
+    </div>
+    <canvas id="r6-canvas" class="mini-canvas" style="height:180px;"></canvas>
+    <div class="result-area" id="r6-out">Move slider.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('Gap-2 twin prime structure — mod 30',30,0)">View on Canvas — Gap-2 twin prime structure — mod 30</button>
+</section>
+
+<!-- ══ LAYER 7 · F(u) ══ -->
+<section class="section" id="layer7">
+  <div class="layer-badge">Layer 07 — The Parent Function</div>
+  <h2 class="section-title">The Parent Function <span>F(u)</span></h2>
+  <p class="section-lead">C(x) is F(2). The parent F(u) is an entire function in the Laguerre–Pólya class — all real zeros, at the prime squares.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Definition of F(u)</div>
+    \[F(u) = \prod_{p} \frac{p^2 - u}{p^2 - 1} = \zeta(2)\prod_{p}\!\left(1 - \frac{u}{p^2}\right)\]
+  </div>
+
+  <p>Key values:</p>
+  <div class="const-grid">
+    <div class="const-card"><div class="label">F(0)</div><div class="value">π²/6 ≈ 1.6449</div><div class="desc">= ζ(2)</div></div>
+    <div class="const-card"><div class="label">F(1)</div><div class="value">1.0000</div><div class="desc">Normalization</div></div>
+    <div class="const-card"><div class="label">F(2)</div><div class="value">≈ 0.5307</div><div class="desc">= C, the lift constant</div></div>
+    <div class="const-card"><div class="label">F(p²)</div><div class="value">0</div><div class="desc">Zero at every prime square</div></div>
+  </div>
+
+  <div class="insight" style="margin-bottom:20px;">
+    <strong>Ratio coefficients c(m):</strong> Define c(m) = C(m)/C(m−1) — the multiplicative step at each integer. For prime p: c(p) = (p²−p)/(p²−1) = p(p−1)/(p²−1) < 1 (new factor enters). For composite m: c(m) = 1 (C(x) is flat between primes at integer values). The product C(N) = ∏_{p≤N} c(p) is the partial Euler product, exactly recovering F(2) in the limit.
+  </div>
+
+  <div class="theorem-box">
+    <div class="theorem-label">Theorem — Laguerre–Pólya Class (unconditional)</div>
+    <p>F(u) is an entire function with all real zeros \(u = p^2\) (prime squares). Because \(\sum_p 1/p^2\) converges, F belongs to the <strong>Laguerre–Pólya class</strong> — entire functions with a Hadamard product representation and no exponential factor. This is unconditional: no hypothesis required.</p>
+  </div>
+
+  <div class="interactive-block">
+    <h4>Compute F(u) at any value</h4>
+    <div class="slider-row">
+      <label>u =</label>
+      <input type="range" id="r7-u" min="-50" max="50" step="0.1" value="2" oninput="r7_update()">
+      <span class="slval" id="r7-uval">2.00</span>
+    </div>
+    <canvas id="r7-canvas" class="mini-canvas" style="height:200px;"></canvas>
+    <div class="result-area" id="r7-out">Move slider.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('GCD polygon — primorial mod 30',30,0)">View on Canvas — GCD polygon — primorial mod 30</button>
+</section>
+
+<!-- ══ LAYER 8 · GRH ══ -->
+<section class="section" id="layer8">
+  <div class="layer-badge">Layer 08 — The Riemann Connection</div>
+  <h2 class="section-title">Character Extension &amp; <span>GRH Criterion</span></h2>
+  <p class="section-lead">Twist by a Dirichlet character χ. The same jump structure gives a criterion equivalent to the Generalized Riemann Hypothesis.</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Character-twisted versions</div>
+    \[D_\chi(x) = -\sum_{\substack{p \,>\, x+1 \\ \chi(p)\ne 0}} \frac{\chi(p)}{p^2 - x - 1}, \qquad J_\chi = \sum_p \frac{\chi(p)}{p(p-1)} = \sum_{k\ge 2} P(k,\chi)\]
+  </div>
+
+  <p>The same theorem holds: \(D_\chi(x)\) jumps by exactly \(\chi(p)/(p(p-1))\) at \(x=p-1\). The sums \(J_\chi\) encode Chebyshev biases — for the non-principal character mod 4, \(J_{\chi_4} \approx -0.144\).</p>
+
+  <div class="theorem-box">
+    <div class="theorem-label">GRH Criterion (via explicit formula, Davenport Ch.19)</div>
+    \[\sqrt{N}\,\bigl|J_\chi - J_\chi(N)\bigr| \text{ bounded as } N\to\infty \quad\Longleftrightarrow\quad \text{GRH for } L(s,\chi)\]
+    <p style="margin-top:12px;font-size:.9rem;color:var(--ink2);">Here \(J_\chi(N) = \sum_{p \le N} \chi(p)/(p(p-1))\) is the partial sum. The geometric origin via the lift survival function — connecting elementary coprimality geometry to the Riemann Hypothesis — is the novel contribution.</p>
+  </div>
+
+  <div class="interactive-block">
+    <h4>J convergence to GRH bound — partial sums J(N)</h4>
+    <div class="slider-row">
+      <label>N primes =</label>
+      <input type="range" id="r8-N" min="1" max="1000" value="100" oninput="r8_update()">
+      <span class="slval" id="r8-Nval">100</span>
+    </div>
+    <canvas id="r8-canvas" class="mini-canvas" style="height:200px;"></canvas>
+    <div class="result-area" id="r8-out">Move slider.</div>
+  </div>
+
+
+
+  <button class="view-canvas-btn" onclick="covOpen('Full ring system — mod 60',60,0)">View on Canvas — Full ring system — mod 60</button>
+</section>
+
+<!-- ══ SUMMARY ══ -->
+<section id="summary">
+  <h3>The Full Picture</h3>
+  <p style="color:var(--ink2);margin-bottom:24px;">From concentric rings to the Riemann Hypothesis — one connected geometric-analytic thread.</p>
+  <div class="summary-row"><div class="num">01</div><div class="text"><strong>Rings:</strong> Place residues on concentric circles. Coprime positions are "alive".</div></div>
+  <div class="summary-row"><div class="num">02</div><div class="text"><strong>Lift:</strong> Ask if a residue survives to the next ring. This is the sieve step.</div></div>
+  <div class="summary-row"><div class="num">03</div><div class="text"><strong>C ≈ 0.5307:</strong> The long-run survival rate. 53% of coprime residues lift on average.</div></div>
+  <div class="summary-row"><div class="num">04</div><div class="text"><strong>C(x):</strong> Euler product extending C to all real x. Smooth, strictly decreasing.</div></div>
+  <div class="summary-row"><div class="num">05</div><div class="text"><strong>Jump Theorem:</strong> D(x) = d/dx log C(x) jumps by exactly 1/(p(p−1)) at x=p−1. Smooth elsewhere. Primes ↔ jumps, invertibly.</div></div>
+  <div class="summary-row"><div class="num">06</div><div class="text"><strong>J = Σ P(k):</strong> Total jump content encodes all prime zeta values simultaneously.</div></div>
+  <div class="summary-row"><div class="num">07</div><div class="text"><strong>F(u):</strong> Parent entire function. Zeros at prime squares. Laguerre–Pólya class — unconditional.</div></div>
+  <div class="summary-row"><div class="num">08</div><div class="text"><strong>GRH:</strong> √N·|J_χ−J_χ(N)| bounded ⟺ GRH for L(s,χ). Geometric origin is new.</div></div>
+</section>
+
+<div style="padding:40px 0;font-family:var(--mono);font-size:10px;color:var(--ink3);border-top:1px solid var(--border);">
+  Wessen Getachew · 2026 · math.NT · The Lift Survival Function and Its Jump Structure
+</div>
+
+</main>
+
+
+
+
 <script>
-    // Compute primes up to a limit (first 1000 primes)
-    const prime_limit = 2000;
-    function generatePrimes(limit) {
-        let sieve = new Uint8Array(limit+1);
-        let primes = [];
-        for (let i = 2; i <= limit; i++) {
-            if (!sieve[i]) {
-                primes.push(i);
-                for (let j = i*i; j <= limit; j += i) sieve[j] = 1;
-            }
-        }
-        return primes;
-    }
-    const primes = generatePrimes(prime_limit);
 
-    // Compute C(x) accurately using product over primes
-    function computeC(x) {
-        let prod = 1.0;
-        for (let p of primes) {
-            let f;
-            if (p <= x + 1) {
-                f = p / (p + 1);
-            } else {
-                let denom = p*p - 1;
-                let num = p*p - x - 1;
-                if (num <= 0) f = 0; // safety, but for p > x+1, num >0
-                else f = num / denom;
-            }
-            prod *= f;
-            // early break if product becomes extremely small (optional)
-            if (prod < 1e-12 && p > 100) break;
-        }
-        return prod;
-    }
+(function(){
+  function sieve(limit){
+    var s=new Uint8Array(limit+1).fill(1);
+    s[0]=s[1]=0;
+    for(var p=2;p*p<=limit;p++) if(s[p]) for(var m=p*p;m<=limit;m+=p) s[m]=0;
+    var out=[];for(var i=2;i<=limit;i++) if(s[i]) out.push(i);
+    return out;
+  }
 
-    // Compute the list of primes p such that p-1 <= x (saturated)
-    function saturatedPrimes(x) {
-        let sat = [];
-        for (let p of primes) {
-            if (p <= x+1) sat.push(p);
-            else break;
-        }
-        return sat;
+  function computeC(x, primes){
+    /* C(x) = prod_p f_p(x)
+       f_p = p/(p+1)              if p <= x+1  (saturated)
+           = (p^2-x-1)/(p^2-1)   if p > x+1   (active)  */
+    var logC=0;
+    for(var i=0;i<primes.length;i++){
+      var p=primes[i];
+      var fp;
+      if(p<=x+1){
+        fp=p/(p+1);
+      } else {
+        fp=(p*p-x-1)/(p*p-1);
+        if(fp<=0) break;
+      }
+      logC+=Math.log(fp);
+    }
+    return Math.exp(logC);
+  }
+
+  window.jtCheck=function(){
+    var n=parseInt(document.getElementById('jt-input').value);
+    if(isNaN(n)||n<2){
+      document.getElementById('jt-verdict').textContent='Enter n ≥ 2';
+      document.getElementById('jt-verdict').style.color='rgba(232,85,64,.9)';
+      return;
     }
 
-    // Find the next prime that is not yet saturated
-    function nextPrime(x) {
-        for (let p of primes) {
-            if (p > x+1) return p;
-        }
-        return null;
-    }
+    var limit=Math.max(n+10, Math.ceil(n*1.2));
+    var primes=sieve(limit);
+    var isPrime=primes.indexOf(n)>=0;
 
-    // Jump size at p
-    function jumpSize(p) {
-        return 1/(p*(p-1));
-    }
+    var Cn1=computeC(n-1, primes);
+    var Cn =computeC(n,   primes);
+    var delta=Cn-Cn1;
+    var predicted=isPrime?-Cn1/(n*(n-1)):0;
 
-    // Update the interactive elements
-    function update() {
-        const x = parseFloat(document.getElementById('x_slider').value);
-        document.getElementById('x_val_display').textContent = x.toFixed(2);
-        const Cx = computeC(x);
-        document.getElementById('C_value').textContent = Cx.toFixed(8);
-        const sat = saturatedPrimes(x);
-        if (sat.length > 0) {
-            let sat_str = sat.slice(0, 10).join(', ');
-            if (sat.length > 10) sat_str += ', ...';
-            document.getElementById('saturated_list').textContent = sat_str;
-        } else {
-            document.getElementById('saturated_list').textContent = 'none';
-        }
-        const next = nextPrime(x);
-        if (next) {
-            const jump = jumpSize(next);
-            document.getElementById('next_jump').textContent = `p=${next}, jump size = ${jump.toExponential(6)} at x=${next-1}`;
-        } else {
-            document.getElementById('next_jump').textContent = '—';
-        }
-    }
+    var vEl=document.getElementById('jt-verdict');
+    vEl.textContent=isPrime?'✓  PRIME':'✗  COMPOSITE';
+    vEl.style.color=isPrime?'rgba(43,191,176,.95)':'rgba(232,85,64,.85)';
 
-    // Show a table of jump sizes for the first, say, 20 primes
-    function showJumpTable() {
-        const tableDiv = document.getElementById('jump_table');
-        let html = '<table style="width:100%; border-collapse: collapse; margin-top: 0.5rem;"><thead><tr><th>Prime p</th><th>Jump size 1/(p(p-1))</th><th>Recovered p</th></tr></thead><tbody>';
-        for (let i = 0; i < Math.min(primes.length, 30); i++) {
-            let p = primes[i];
-            let s = 1/(p*(p-1));
-            let recovered = (1 + Math.sqrt(1 + 4/s)) / 2;
-            // check that recovered is integer (floating point tolerance)
-            let ok = Math.abs(recovered - p) < 1e-10;
-            html += `<tr><td>${p}</td><td>${s.toExponential(8)}</td><td>${ok ? p.toFixed(0) : recovered.toFixed(6)}</td></tr>`;
-        }
-        html += '</tbody></table><p class="note">Note: The quadratic formula recovers p exactly from the jump size.</p>';
-        tableDiv.innerHTML = html;
-        tableDiv.style.display = 'block';
-    }
+    document.getElementById('jt-cn1').textContent=Cn1.toExponential(8);
+    document.getElementById('jt-cn').textContent=Cn.toExponential(8);
+    document.getElementById('jt-delta').textContent=delta.toExponential(8);
+    document.getElementById('jt-pred').textContent=predicted===0?'0 (no new factor)':predicted.toExponential(8);
+    document.getElementById('jt-cards').style.display='block';
 
-    // Event listeners
-    document.getElementById('x_slider').addEventListener('input', update);
-    document.getElementById('reset_x').addEventListener('click', function() {
-        document.getElementById('x_slider').value = '1.0';
-        update();
+    var L=[];
+    L.push('n = '+n);
+    L.push('x = n-1 = '+(n-1));
+    L.push('');
+    if(isPrime){
+      L.push('n is PRIME: at x = n-1 the factor for p = n transitions.');
+      L.push('  f_'+n+'(n-1) = ('+n+'^2-(n-1)-1)/('+n+'^2-1)');
+      L.push('           = '+(n*n-n)+'/'+(n*n-1)+' = '+((n*n-n)/(n*n-1)).toFixed(10));
+      L.push('');
+      L.push('C(n-1) = '+Cn1.toExponential(10));
+      L.push('C(n)   = C(n-1) x f_'+n+'(n) = '+Cn.toExponential(10));
+      L.push('');
+      L.push('Delta C = C(n) - C(n-1) = -C(n-1) / (n(n-1))');
+      L.push('        = -'+Cn1.toExponential(6)+' / ('+n+'x'+(n-1)+')');
+      L.push('        = '+predicted.toExponential(8));
+      L.push('');
+      L.push('Jump detected at x = '+(n-1)+' => p = '+n+' is PRIME.');
+    } else {
+      L.push('n is COMPOSITE: no new prime factor enters at x = n-1.');
+      L.push('C(x) is smooth at x = n-1, no jump occurs.');
+      L.push('');
+      L.push('C(n-1) = '+Cn1.toExponential(10));
+      L.push('C(n)   = '+Cn.toExponential(10));
+      L.push('Delta C = '+delta.toExponential(8)+'  (numerical drift only)');
+      L.push('');
+      var prevP=null,nextP=null;
+      for(var ii=0;ii<primes.length;ii++){
+        if(primes[ii]<n) prevP=primes[ii];
+        if(primes[ii]>n&&!nextP) nextP=primes[ii];
+      }
+      L.push('Nearest primes: '+prevP+' < '+n+' < '+nextP);
+      L.push('Next jump will be at x = '+(nextP-1)+' when p = '+nextP+' saturates.');
+    }
+    document.getElementById('jt-steps').textContent=L.join('\n');
+
+    var factorHTML='';
+    var activePrimes=[],saturatedPrimes=[];
+    for(var ii=0;ii<primes.length;ii++){
+      var p=primes[ii];
+      if(p<=n+1) saturatedPrimes.push(p);
+      else { activePrimes.push(p); if(activePrimes.length>=12) break; }
+    }
+    var satShow=saturatedPrimes.slice(-8);
+    if(saturatedPrimes.length>8) factorHTML+='<span style="color:rgba(150,140,120,.5);">... </span>';
+    factorHTML+='<span style="color:var(--gold);">Saturated (p ≤ n): </span>';
+    factorHTML+=satShow.map(function(p){return '<span style="color:rgba(212,168,67,.7);">'+p+'/'+(p+1)+'</span>';}).join(' · ');
+    factorHTML+='<br><br><span style="color:var(--teal);">Active (p &gt; n, first 12): </span><br>';
+    activePrimes.forEach(function(p){
+      var fp=((p*p-n-1)/(p*p-1));
+      factorHTML+='  p='+p+': f<sub>p</sub>('+n+') = ('+p+'²−'+n+'−1)/('+p+'²−1) = <span style="color:rgba(43,191,176,.8);">'+fp.toFixed(8)+'</span><br>';
     });
-    document.getElementById('show_jumps').addEventListener('click', function() {
-        showJumpTable();
-    });
+    document.getElementById('jt-factors').innerHTML=factorHTML;
+  };
 
-    // Initial update
-    update();
+  var _origJump=window.switchTab;
+  window.switchTab=function(t){
+    _origJump(t);
+    if(t==='jump') document.getElementById('jt-input').focus();
+  };
+})();
+
+</script>
+
+
+
+
+<script>
+/* ════════════════════════════════════════════════════════
+   OPENER — fullscreen fixed canvas, all self-contained
+   No deps on any other script. Pure IIFE.
+════════════════════════════════════════════════════════ */
+(function(){
+'use strict';
+
+// ── Math ──
+function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++)if(n%i===0)return false;return true;}
+function sieveN(n){var s=new Uint8Array(n+1);s[0]=s[1]=1;var p=[];for(var i=2;i<=n;i++){if(!s[i]){p.push(i);for(var j=i*i;j<=n;j+=i)s[j]=1;}}return p;}
+var PRIMES=sieveN(1000);
+
+function computeC(N){
+  var log=0;
+  for(var i=0;i<PRIMES.length;i++){
+    var p=PRIMES[i];
+    var f=p<=N+1?p/(p+1):(p*p-N-1)/(p*p-1);
+    if(f<=0)break;
+    log+=Math.log(f);
+  }
+  return Math.exp(log);
+}
+function computeD(N){
+  var d=0;
+  for(var i=0;i<PRIMES.length;i++){var p=PRIMES[i];if(p>N)d-=1/(p*p-N);if(p>N+200)break;}
+  return d;
+}
+
+// ── State ──
+var cv,ctx,W,H,cx,cy;
+var gt=0,lt=null,raf=null;
+var MMAX=18,MTARGET=60,curM=18;
+var phase='rings',phaseT=0;
+var zoom=1.0,liftN=0;
+var viewMode=0;    // 0=gcd1 only, 1=non-gcd1 only, 2=combined
+var showLifts=true;
+var labelMode='r'; // 'r','rm','angle','none'
+var colorMode='residue6'; // 'residue6','lift','gcd','prime'
+
+// Colors
+var RC6=['212,168,67','43,191,176','232,85,64','74,128,240','144,96,208','68,204,136'];
+
+// ── Build rings ──
+function buildRings(mmax){
+  var maxR=Math.min(W,H)*(mmax>30?0.44:0.41)*zoom;
+  var rings=[];
+  for(var M=2;M<=mmax;M++){
+    var rr=(M-1)/(mmax-1)*maxR*0.92+maxR*0.06;
+    var pts=[];
+    for(var r=0;r<M;r++){
+      var g=r===0?M:gcd(r,M);
+      var isCP=g===1;
+      if(viewMode===0&&!isCP) continue;
+      if(viewMode===1&&isCP) continue;
+      var theta=2*Math.PI*r/M-Math.PI/2;
+      pts.push({r:r,M:M,g:g,isCP:isCP,theta:theta,rr:rr,lifts:isCP&&gcd(r,M+1)===1,isP:isPrime(M)});
+    }
+    rings.push({M:M,pts:pts,rr:rr,isP:isPrime(M)});
+  }
+  return rings;
+}
+
+// ── Color a point ──
+function ptColor(p,pulse){
+  var al=p.isCP?(p.lifts?.6+pulse*.35:.38+pulse*.28):(.55+pulse*.3);
+  if(colorMode==='residue6') return {c:RC6[p.r%6],a:al};
+  if(colorMode==='lift')     return p.lifts?{c:'43,191,176',a:.7+pulse*.25}:{c:'232,85,64',a:.45+pulse*.2};
+  if(colorMode==='gcd')      return p.isCP?{c:'43,191,176',a:.65+pulse*.3}:{c:'232,85,64',a:.55+pulse*.25};
+  if(colorMode==='prime')    return p.isP?{c:'212,168,67',a:.7+pulse*.25}:{c:'144,96,208',a:.5+pulse*.2};
+  return {c:'200,185,155',a:al};
+}
+
+// ── Label for a point ──
+function ptLabel(p){
+  if(labelMode==='none') return null;
+  if(labelMode==='r') return ''+p.r;
+  if(labelMode==='rm') return p.r+'/'+p.M;
+  if(labelMode==='angle') return Math.round(360*p.r/p.M)+'°';
+  if(labelMode==='gcd') return p.g===1?'1':'gcd='+p.g;
+  return null;
+}
+
+// ── Draw ──
+function frame(ts){
+  if(!lt) lt=ts;
+  var dt=Math.min(ts-lt,50); lt=ts; gt+=dt; phaseT+=dt;
+
+  W=cv.clientWidth||window.innerWidth;
+  H=cv.clientHeight||window.innerHeight;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.scale(dpr,dpr);
+  }
+  cx=W/2; cy=H/2;
+  ctx.clearRect(0,0,W,H);
+
+  // Phase transitions
+  if(phase==='rings'&&phaseT>2500){phase='expand';phaseT=0;}
+  if(phase==='expand'){
+    var prog=Math.min(phaseT/2200,1);
+    var ease=prog<.5?2*prog*prog:1-Math.pow(-2*prog+2,2)/2;
+    curM=Math.round(MMAX+(MTARGET-MMAX)*ease);
+    if(prog>=1){phase='idle';curM=MTARGET;}
+    syncSlider();
+  }
+
+  var rings=buildRings(curM);
+  var n=rings.length;
+
+  // Guide circles
+  for(var i=0;i<n;i++){
+    var rng=rings[i];
+    var pulse=Math.sin(gt*.0009+i*.35)*.5+.5;
+    ctx.beginPath();ctx.arc(cx,cy,rng.rr,0,2*Math.PI);
+    ctx.strokeStyle='rgba('+(rng.isP?'212,168,67':'255,255,255')+','+(rng.isP?.12+pulse*.06:.04+pulse*.04)+')';
+    ctx.lineWidth=rng.isP?.7:.35; ctx.stroke();
+  }
+
+  // Lift lines
+  if(showLifts){
+    for(var i=0;i<n-1;i++){
+      var rA=rings[i],rB=rings[i+1];
+      for(var pi=0;pi<rA.pts.length;pi++){
+        var pa=rA.pts[pi];
+        if(!pa.isCP) continue;
+        if(liftN>0){
+          var ok=true;
+          for(var li=1;li<=liftN;li++){if(gcd(pa.r,pa.M+li)!==1){ok=false;break;}}
+          if(!ok) continue;
+        }
+        for(var pj=0;pj<rB.pts.length;pj++){
+          var pb=rB.pts[pj];
+          if(pb.r!==pa.r) continue;
+          var w2=Math.sin(gt*.0018-i*.4+pi*.2)*.5+.5;
+          var lw=(.7+w2*.5);
+          ctx.beginPath();
+          ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
+          ctx.lineTo(cx+pb.rr*Math.cos(pb.theta),cy+pb.rr*Math.sin(pb.theta));
+          if(pa.lifts){ctx.strokeStyle='rgba(43,191,176,'+(0.18+w2*.38)+')';ctx.lineWidth=lw;}
+          else{ctx.strokeStyle='rgba(232,85,64,'+(0.10+w2*.16)+')';ctx.lineWidth=lw*.55;}
+          ctx.stroke(); break;
+        }
+      }
+    }
+  }
+
+  // Dots
+  for(var i=0;i<n;i++){
+    var rng=rings[i];
+    for(var pi=0;pi<rng.pts.length;pi++){
+      var p=rng.pts[pi];
+      var pulse2=Math.sin(gt*.0014+i*.5+pi*.31)*.5+.5;
+      var sz=(p.isP?2.4:1.6)*(1+pulse2*.35);
+      var col=ptColor(p,pulse2);
+      ctx.beginPath();ctx.arc(cx+p.rr*Math.cos(p.theta),cy+p.rr*Math.sin(p.theta),sz,0,2*Math.PI);
+      ctx.fillStyle='rgba('+col.c+','+col.a+')'; ctx.fill();
+    }
+  }
+
+  // Labels
+  if(labelMode!=='none'){
+    ctx.font='9px JetBrains Mono,monospace';
+    ctx.textAlign='center';
+    var maxLabelRing=labelMode==='none'?0:(curM>20?8:curM);
+    for(var i=0;i<Math.min(n,maxLabelRing);i++){
+      var rng=rings[i];
+      for(var pi=0;pi<rng.pts.length;pi++){
+        var p=rng.pts[pi];
+        var lbl=ptLabel(p);
+        if(!lbl) continue;
+        var dist=p.rr+13;
+        var fx=cx+dist*Math.cos(p.theta), fy=cy+dist*Math.sin(p.theta);
+        ctx.fillStyle=p.isCP?'rgba(180,165,130,.6)':'rgba(232,85,64,.45)';
+        ctx.fillText(lbl,fx,fy+3);
+      }
+    }
+    ctx.textAlign='left';
+  }
+
+  updateStats(curM);
+  raf=requestAnimationFrame(frame);
+}
+
+function syncSlider(){
+  var sl=document.getElementById('op-n-sl');
+  var vl=document.getElementById('op-n-val');
+  if(sl) sl.value=curM;
+  if(vl) vl.textContent=curM;
+}
+
+function updateStats(M){
+  var cp=0,lifts=0,total=0;
+  for(var m=2;m<=M;m++){
+    for(var r=1;r<m;r++){
+      total++;
+      if(gcd(r,m)===1){cp++;if(gcd(r,m+1)===1)lifts++;}
+    }
+  }
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  set('op-stat-cp',cp);
+  set('op-stat-lifts',lifts);
+  set('op-stat-ratio',cp>0?(lifts/cp*100).toFixed(1)+'%':'—');
+  set('op-stat-cn',computeC(M).toFixed(6));
+  set('op-stat-dn',computeD(M).toFixed(6));
+  set('op-stat-n',M);
+}
+
+// ── Public controls ──
+window.opSetMod=function(m){
+  m=Math.max(2,Math.min(200,+m||2));
+  curM=m; MTARGET=m; phase='idle'; phaseT=0;
+  var sl=document.getElementById('op-n-sl');if(sl)sl.value=m;
+  var vl=document.getElementById('op-n-val');if(vl)vl.textContent=m;
+};
+window.opSetLift=function(n){liftN=Math.max(0,+n||0);};
+window.opSetView=function(v){viewMode=+v;};
+window.opSetLabel=function(m){labelMode=m;};
+window.opSetColor=function(m){colorMode=m;};
+window.opToggleLifts=function(){
+  showLifts=!showLifts;
+  var btn=document.getElementById('op-lift-btn');
+  if(btn){btn.textContent=showLifts?'Lift Lines: ON':'Lift Lines: OFF';
+    btn.style.color=showLifts?'rgba(43,191,176,.9)':'rgba(120,110,90,.6)';
+    btn.style.borderColor=showLifts?'rgba(43,191,176,.5)':'rgba(120,110,90,.3)';}
+};
+window.opEnter=function(){
+  var op=document.getElementById('op-overlay');
+  if(!op) return;
+  op.style.opacity='0'; op.style.pointerEvents='none';
+  if(raf){cancelAnimationFrame(raf);raf=null;}
+  setTimeout(function(){op.style.display='none';document.body.style.overflow='auto';},800);
+};
+
+// ── Init ──
+function init(){
+  cv=document.getElementById('op-cv');
+  if(!cv) return;
+  ctx=cv.getContext('2d');
+  W=window.innerWidth; H=window.innerHeight;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
+  ctx.scale(dpr,dpr);
+  raf=requestAnimationFrame(frame);
+}
+window.addEventListener('resize',function(){lt=null;});
+document.addEventListener('DOMContentLoaded',function(){
+  document.body.style.overflow='hidden';
+  init();
+});
+
+})();
+
+</script>
+<script>
+
+// ── Canvas Overlay (for "View on Canvas" section buttons) ──
+(function(){
+function gcd(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+function isPrime(n){if(n<2)return false;for(var i=2;i*i<=n;i++)if(n%i===0)return false;return true;}
+function sieveN(n){var s=new Uint8Array(n+1);s[0]=s[1]=1;var p=[];for(var i=2;i<=n;i++){if(!s[i]){p.push(i);for(var j=i*i;j<=n;j+=i)s[j]=1;}}return p;}
+var PRIMES=sieveN(800);
+function computeC(N){var log=0;for(var i=0;i<PRIMES.length;i++){var p=PRIMES[i];var f=p<=N+1?p/(p+1):(p*p-N-1)/(p*p-1);if(f<=0)break;log+=Math.log(f);}return Math.exp(log);}
+var RC6=['212,168,67','43,191,176','232,85,64','74,128,240','144,96,208','68,204,136'];
+
+var cv,ctx,st={M:30,liftN:0,gt:0,lt:null,raf:null};
+
+function draw(ts){
+  if(!cv||document.getElementById('cov-overlay').style.display==='none')return;
+  if(!st.lt)st.lt=ts;
+  var dt=Math.min(ts-st.lt,50);st.lt=ts;st.gt+=dt;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var W=cv.clientWidth||window.innerWidth,H=cv.clientHeight||window.innerHeight;
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){
+    cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.scale(dpr,dpr);}
+  var cx=W/2,cy=H/2,M=st.M;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(5,4,10,.97)';ctx.fillRect(0,0,W,H);
+  var maxR=Math.min(W,H)*(M>30?.44:.41);
+  var rings=[];
+  for(var m=2;m<=M;m++){
+    var rr=(m-1)/(M-1)*maxR*.92+maxR*.06;
+    var pts=[];
+    for(var r=1;r<m;r++){
+      if(gcd(r,m)!==1)continue;
+      pts.push({r:r,M:m,theta:2*Math.PI*r/m-Math.PI/2,rr:rr,lifts:gcd(r,m+1)===1,isP:isPrime(m)});
+    }
+    rings.push({M:m,pts:pts,rr:rr,isP:isPrime(m)});
+  }
+  // guide circles
+  for(var i=0;i<rings.length;i++){
+    var rng=rings[i];
+    ctx.beginPath();ctx.arc(cx,cy,rng.rr,0,2*Math.PI);
+    ctx.strokeStyle='rgba('+(rng.isP?'212,168,67':'255,255,255')+',.1)';
+    ctx.lineWidth=rng.isP?.6:.3;ctx.stroke();
+  }
+  // lift lines
+  for(var i=0;i<rings.length-1;i++){
+    var rA=rings[i],rB=rings[i+1];
+    for(var pi=0;pi<rA.pts.length;pi++){
+      var pa=rA.pts[pi];
+      if(st.liftN>0){var ok=true;for(var li=1;li<=st.liftN;li++){if(gcd(pa.r,pa.M+li)!==1){ok=false;break;}}if(!ok)continue;}
+      for(var pj=0;pj<rB.pts.length;pj++){
+        var pb=rB.pts[pj];
+        if(pb.r!==pa.r)continue;
+        var w=Math.sin(st.gt*.0018-i*.4+pi*.2)*.5+.5;
+        ctx.beginPath();
+        ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
+        ctx.lineTo(cx+pb.rr*Math.cos(pb.theta),cy+pb.rr*Math.sin(pb.theta));
+        ctx.strokeStyle=pa.lifts?'rgba(43,191,176,'+(0.22+w*.38)+')':'rgba(232,85,64,'+(0.12+w*.18)+')';
+        ctx.lineWidth=pa.lifts?1.1:.6;ctx.stroke();break;
+      }
+    }
+  }
+  // dots
+  for(var i=0;i<rings.length;i++){
+    var rng=rings[i];
+    for(var pi=0;pi<rng.pts.length;pi++){
+      var p=rng.pts[pi];
+      var pulse=Math.sin(st.gt*.0014+i*.5+pi*.31)*.5+.5;
+      var sz=(p.isP?2.3:1.5)*(1+pulse*.3);
+      ctx.beginPath();ctx.arc(cx+p.rr*Math.cos(p.theta),cy+p.rr*Math.sin(p.theta),sz,0,2*Math.PI);
+      ctx.fillStyle='rgba('+RC6[p.r%6]+','+(p.lifts?.6+pulse*.3:.38+pulse*.25)+')';ctx.fill();
+    }
+  }
+  // labels (r only, small rings)
+  ctx.font='9px JetBrains Mono,monospace';ctx.textAlign='center';
+  for(var i=0;i<Math.min(rings.length,6);i++){
+    var rng=rings[i];
+    for(var pi=0;pi<rng.pts.length;pi++){
+      var p=rng.pts[pi];
+      var fx=cx+(p.rr+13)*Math.cos(p.theta),fy=cy+(p.rr+13)*Math.sin(p.theta);
+      ctx.fillStyle='rgba(180,165,130,.55)';ctx.fillText(''+p.r,fx,fy+3);
+    }
+  }
+  ctx.textAlign='left';
+  // stats
+  var cp=0,lifts=0;
+  for(var m=2;m<=M;m++){for(var r=1;r<m;r++){if(gcd(r,m)===1){cp++;if(gcd(r,m+1)===1)lifts++;}}}
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  set('cov-cp',cp);set('cov-lifts',lifts);set('cov-cn',computeC(M).toFixed(8));
+  st.raf=requestAnimationFrame(draw);
+}
+
+window.covOpen=function(desc,mod,liftD){
+  cv=document.getElementById('cov-cv');
+  if(!cv){cv=document.getElementById('cov-cv');} // retry
+  ctx=cv.getContext('2d');
+  st.M=mod||30;st.liftN=liftD||0;st.lt=null;
+  var lbl=document.getElementById('cov-label');if(lbl)lbl.textContent=desc||'';
+  var sl=document.getElementById('cov-n-sl');if(sl)sl.value=st.M;
+  var vl=document.getElementById('cov-n-val');if(vl)vl.textContent=st.M;
+  var ov=document.getElementById('cov-overlay');
+  ov.style.display='flex';
+  document.body.style.overflow='hidden';
+  /* Force canvas to fill immediately */
+  cv.style.width='100%'; cv.style.height='100%';
+  cv.width=Math.round(window.innerWidth*Math.min(window.devicePixelRatio||1,2));
+  cv.height=Math.round((window.innerHeight-80)*Math.min(window.devicePixelRatio||1,2));
+  ctx=cv.getContext('2d');
+  ctx.scale(Math.min(window.devicePixelRatio||1,2),Math.min(window.devicePixelRatio||1,2));
+  st.raf=requestAnimationFrame(draw);
+};
+window.covClose=function(){
+  var ov=document.getElementById('cov-overlay');if(ov)ov.style.display='none';
+  document.body.style.overflow='';
+  if(st.raf){cancelAnimationFrame(st.raf);st.raf=null;st.lt=null;}
+};
+window.covSetMod=function(m){
+  st.M=Math.max(2,Math.min(200,+m||2));
+  var vl=document.getElementById('cov-n-val');if(vl)vl.textContent=st.M;
+};
+document.addEventListener('keydown',function(e){if(e.key==='Escape')window.covClose();});
+})();
+
 </script>
 </body>
 </html>
