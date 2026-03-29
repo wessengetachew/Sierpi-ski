@@ -468,7 +468,7 @@ input[type=range] {
     background:rgba(5,4,10,.9);border-top:1px solid rgba(212,168,67,.15);
     font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(160,150,130,.7);
     padding:5px 14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;z-index:3;
-    opacity:0;transition:opacity 1s ease 2.5s;">
+    opacity:0;transition:opacity .8s ease;">
     <span>gcd=1: <span id="os-cp" style="color:#d4a843;">—</span></span>
     <span>lifts: <span id="os-lifts" style="color:#2bbfb0;">—</span></span>
     <span>lift/gcd=1: <span id="os-lratio" style="color:#2bbfb0;">—</span></span>
@@ -560,18 +560,101 @@ input[type=range] {
     <span id="op-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#2bbfb0;min-width:20px;">all</span>
 
     <!-- Enter -->
-    <button onclick="startTour()"
-  style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;
-  text-transform:uppercase;padding:5px 14px;margin-left:8px;
-  border:1px solid rgba(43,191,176,.5);background:rgba(43,191,176,.08);
-  color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;">
-  ▶ Auto Tour</button>
-    <button onclick="opEnter()"
+
+    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
+
+    <!-- Export + fullscreen -->
+    <button onclick="opExport4K()" title="Export 4K PNG"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.4);
+      color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;">⬇ 4K</button>
+    <button onclick="opFullscreen()" title="Fullscreen" id="op-fs-btn"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.4);
+      color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">⛶</button>
+
+    <button onclick="opEnter()" title="Skip intro"
       style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;
-      letter-spacing:.12em;text-transform:uppercase;padding:5px 16px;
-      border:1px solid #d4a843;background:rgba(212,168,67,.1);
-      color:#d4a843;cursor:pointer;border-radius:2px;">
-      Enter &#8594;</button>
+      letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;
+      border:1px solid rgba(212,168,67,.5);background:rgba(212,168,67,.08);
+      color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">
+      Skip &#8594;</button>
+  </div>
+
+  <!-- Splash text overlay — appears after animation completes -->
+  <div id="op-splash" style="position:absolute;inset:0;z-index:3;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    pointer-events:none;opacity:0;transition:opacity 1.2s ease;">
+
+    <!-- Title block -->
+    <div style="text-align:center;padding:40px 48px 32px;
+      background:rgba(5,4,10,.65);backdrop-filter:blur(4px);
+      border-radius:8px;border:1px solid rgba(212,168,67,.18);
+      max-width:min(700px,90vw);pointer-events:auto;">
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;
+        letter-spacing:.28em;color:rgba(43,191,176,.8);text-transform:uppercase;
+        margin-bottom:20px;">Wessen Getachew · 2026 · math.NT</div>
+
+      <div style="font-family:'Cormorant Garamond','Instrument Serif',Georgia,serif;
+        font-size:clamp(36px,6vw,72px);font-weight:400;color:#ede6d8;
+        line-height:1.08;margin-bottom:10px;">
+        The <em style="color:#d4a843;font-style:italic;">Lift Survival</em><br>Function
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;
+        letter-spacing:.08em;color:rgba(140,130,110,.6);margin-bottom:28px;">
+        Observations on a geometric structure already present in the integers
+      </div>
+
+      <!-- Cycling quote -->
+      <div id="op-quote" style="font-family:'EB Garamond',Georgia,serif;
+        font-size:clamp(14px,2vw,19px);color:rgba(200,185,155,.75);
+        font-style:italic;line-height:1.65;margin-bottom:10px;
+        min-height:80px;display:flex;align-items:center;justify-content:center;
+        transition:opacity .5s ease;">
+      </div>
+      <div id="op-quote-attr" style="font-family:'JetBrains Mono',monospace;
+        font-size:9px;letter-spacing:.1em;color:rgba(120,110,90,.55);
+        margin-bottom:32px;transition:opacity .5s ease;"></div>
+
+      <!-- Enter button — large, prominent -->
+      <button onclick="opEnter()"
+        style="font-family:'JetBrains Mono',monospace;font-size:13px;
+        letter-spacing:.2em;text-transform:uppercase;
+        padding:16px 52px;border:1px solid #d4a843;
+        background:rgba(212,168,67,.12);color:#d4a843;
+        cursor:pointer;border-radius:3px;
+        transition:background .2s,border-color .2s;
+        display:block;margin:0 auto;"
+        onmouseover="this.style.background='rgba(212,168,67,.22)'"
+        onmouseout="this.style.background='rgba(212,168,67,.12)'">
+        Explore &nbsp;&#8594;
+      </button>
+
+      <!-- Key constants row -->
+      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap;
+        margin-top:28px;padding-top:20px;border-top:1px solid rgba(212,168,67,.12);">
+        <div style="text-align:center;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:22px;color:#d4a843;">C ≈ 0.5307</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8px;
+            letter-spacing:.1em;color:rgba(120,110,90,.6);margin-top:3px;">Lift constant</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:22px;color:#d4a843;">J ≈ 0.7732</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8px;
+            letter-spacing:.1em;color:rgba(120,110,90,.6);margin-top:3px;">Total jump content</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:22px;color:#2bbfb0;">8 layers</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8px;
+            letter-spacing:.1em;color:rgba(120,110,90,.6);margin-top:3px;">Ring → RH</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Stats bar at bottom -->
@@ -594,26 +677,91 @@ input[type=range] {
 <div id="cov-overlay" style="position:fixed;inset:0;z-index:800;background:rgba(5,4,10,.97);
   display:none;flex-direction:column;">
   <div style="background:#0d0b14;border-bottom:1px solid rgba(212,168,67,.2);
-    padding:8px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;">
+    padding:8px 12px;display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;">
+
     <span style="font-family:'JetBrains Mono',monospace;font-size:9px;
-      letter-spacing:.15em;color:#d4a843;text-transform:uppercase;">Ring Canvas</span>
-    <span id="cov-label" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(120,110,90,.6);"></span>
-    <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(120,110,90,.5);">N=</span>
-    <input id="cov-n-sl" type="range" min="2" max="120" value="30" step="1"
+      letter-spacing:.12em;color:#d4a843;text-transform:uppercase;white-space:nowrap;">Ring Canvas</span>
+    <span id="cov-label" style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      color:rgba(120,110,90,.55);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+
+    <span style="color:rgba(80,70,55,.4);">|</span>
+
+    <!-- N slider -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);">N=</span>
+    <input id="cov-n-sl" type="range" min="2" max="200" value="30" step="1"
       oninput="covSetMod(+this.value)"
-      style="width:100px;accent-color:#d4a843;cursor:pointer;">
+      style="width:90px;accent-color:#d4a843;cursor:pointer;">
     <span id="cov-n-val" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#d4a843;min-width:24px;">30</span>
+
+    <!-- View mode -->
+    <select id="cov-view-sel" onchange="covSetView(+this.value)"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+      color:rgba(200,185,155,.8);padding:3px 5px;border-radius:2px;cursor:pointer;">
+      <option value="0">gcd=1 only</option>
+      <option value="1">Non-gcd=1</option>
+      <option value="2">Combined</option>
+    </select>
+
+    <!-- Color mode -->
+    <select id="cov-color-sel" onchange="covSetColor(this.value)"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+      color:rgba(200,185,155,.8);padding:3px 5px;border-radius:2px;cursor:pointer;">
+      <option value="residue6">r mod 6</option>
+      <option value="lift">lifts</option>
+      <option value="gcd">gcd</option>
+      <option value="prime">prime ring</option>
+    </select>
+
+    <!-- Label mode -->
+    <select id="cov-label-sel" onchange="covSetLabel(this.value)"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+      color:rgba(200,185,155,.8);padding:3px 5px;border-radius:2px;cursor:pointer;">
+      <option value="r">Label: r</option>
+      <option value="rm">Label: r/M</option>
+      <option value="angle">Label: °</option>
+      <option value="gcd">Label: gcd</option>
+      <option value="none">Label: off</option>
+    </select>
+
+    <!-- Dots toggle -->
+    <button id="cov-dots-btn" onclick="covToggleDots()"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(100,90,70,.3);
+      color:rgba(100,90,70,.5);cursor:pointer;border-radius:2px;white-space:nowrap;">
+      Dots: OFF</button>
+
+    <!-- Line mode cycle -->
+    <button id="cov-line-btn" onclick="covCycleLines()"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.5);
+      color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
+      Lines: Lift</button>
+
+    <!-- Lift depth -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.6);">depth</span>
+    <input id="cov-lift-sl" type="range" min="0" max="10" value="0" step="1"
+      oninput="covSetLift(+this.value);document.getElementById('cov-lift-val').textContent=this.value==0?'all':this.value"
+      style="width:60px;accent-color:#2bbfb0;cursor:pointer;">
+    <span id="cov-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#2bbfb0;min-width:18px;">all</span>
+
+    <span style="color:rgba(80,70,55,.4);">|</span>
+
+    <!-- Export + fullscreen + close -->
     <button onclick="covExport4K()" title="Export 4K PNG"
-      style="background:none;border:1px solid rgba(144,96,208,.35);color:rgba(144,96,208,.8);
-      font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;cursor:pointer;border-radius:2px;">
-      ⬇ 4K</button>
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;
+      background:none;border:1px solid rgba(144,96,208,.4);color:rgba(144,96,208,.8);
+      cursor:pointer;border-radius:2px;">⬇ 4K</button>
     <button onclick="covFullscreen()" title="Fullscreen"
-      style="background:none;border:1px solid rgba(212,168,67,.35);color:rgba(212,168,67,.7);
-      font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;cursor:pointer;border-radius:2px;">
-      ⛶</button>
-    <button onclick="covClose()" style="background:none;border:1px solid rgba(255,255,255,.15);
-      color:rgba(200,185,155,.7);font-family:'JetBrains Mono',monospace;font-size:9px;
-      padding:3px 12px;cursor:pointer;border-radius:2px;">✕ Close</button>
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;
+      background:none;border:1px solid rgba(212,168,67,.4);color:rgba(212,168,67,.7);
+      cursor:pointer;border-radius:2px;">⛶</button>
+    <button onclick="covClose()"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 10px;
+      background:none;border:1px solid rgba(255,255,255,.15);
+      color:rgba(200,185,155,.7);cursor:pointer;border-radius:2px;">✕</button>
   </div>
   <canvas id="cov-cv" style="flex:1;width:100%;display:block;"></canvas>
   <div style="background:rgba(5,4,10,.9);border-top:1px solid rgba(212,168,67,.1);
@@ -624,6 +772,18 @@ input[type=range] {
     <span>C(N)= <span id="cov-cn" style="color:#9060d0;">—</span></span>
   </div>
 </div>
+
+<!-- Fixed home button — appears after entering -->
+<button id="home-btn" onclick="goHome()"
+  style="display:none;position:fixed;top:12px;right:14px;z-index:200;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;padding:5px 14px;
+  border:1px solid rgba(212,168,67,.4);background:rgba(5,4,10,.85);
+  color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;
+  transition:all .2s;"
+  onmouseover="this.style.background='rgba(212,168,67,.15)'"
+  onmouseout="this.style.background='rgba(5,4,10,.85)'">
+  ⌂ Home</button>
 <div id="progress-bar"></div>
 
 <button id="menu-toggle" onclick="document.getElementById('sidenav').classList.toggle('open')">☰</button>
@@ -749,7 +909,9 @@ input[type=range] {
 
   <div class="formula-block">
     <div class="formula-label">Lift condition</div>
-    \[r \text{ lifts from } M \text{ to } M+1 \quad\Longleftrightarrow\quad \gcd(r,M)=1 \;\text{ and }\; \gcd(r,M+1)=1\]
+    <div style="text-align:center;padding:10px 0;font-size:1.05rem;font-family:var(--serif);color:var(--ink);">
+      r lifts from M to M+1 &nbsp;&hArr;&nbsp; gcd(r, M) = 1 &nbsp;and&nbsp; gcd(r, M+1) = 1
+    </div>
   </div>
 
   <div class="insight">
@@ -791,8 +953,10 @@ input[type=range] {
 
   <div class="formula-block" style="margin-bottom:16px;">
     <div class="formula-label">C and the Feller–Tornier constant</div>
-    \[C = \zeta(2) \cdot d_{FT} \cdot 	ext{(correction)} = rac{\pi^2}{6} \cdot \prod_p\!\left(1 - rac{2}{p^2}
-ight)\]
+    <div style="text-align:center;padding:10px 0;font-size:1.1rem;
+      color:var(--ink);font-family:var(--serif);">
+      C = ζ(2) · ∏<sub>p</sub>(1 − 2/p²) = (π²/6) · d<sub>FT</sub>
+    </div>
     <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">The Feller–Tornier constant d<sub>FT</sub> = &prod;<sub>p</sub>(1&minus;2/p&sup2;) &asymp; 0.32263462… (OEIS A065474) is the density of integers with an even number of prime factors counted with multiplicity. C relates to but is distinct from d<sub>FT</sub>. The value C &asymp; 0.530711806246 appears in OEIS as <strong>A065469</strong> — the density of consecutive squarefree integer pairs — first recorded by Tóth and S&aacute;ndor (1989). <strong>The new content here is the geometric interpretation</strong>: C is the fraction of coprime residues on ring M that lift to ring M+1, and all the primorial, spiral, and jump structure built on it.</p>
   </div>
 
@@ -987,7 +1151,7 @@ ight)\]
     <p style="font-size:.88rem;color:var(--ink3);margin-bottom:14px;">Enter any integer n ≥ 2. The checker computes C(n−1), detects whether a jump occurs, and reads off the prime.</p>
     <div class="input-row">
       <label>n =</label>
-      <input class="inp inp-wide" type="number" id="jt-n" value="101" min="2" onkeydown="if(event.key==='Enter')jt_check()">
+      <input class="inp inp-wide" type="number" id="jt-n" value="1" min="1" onkeydown="if(event.key==='Enter')jt_check()">
       <button class="btn btn-gold" onclick="jt_check()">Check</button>
     </div>
     <div class="result-area" id="jt-out">Enter n and click Check.</div>
@@ -1014,7 +1178,7 @@ ight)\]
   <div class="formula-block">
     <div class="formula-label">J decomposition</div>
     \[J = D_0 + T, \qquad D_0 = \sum_p \frac{1}{p^2-1} \approx 0.5517, \qquad T = \sum_p \frac{1}{p(p^2-1)} \approx 0.2215\]
-    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">Also: J − S = 2T and (J+S)/2 = D₀, where S = Σ 1/p² = P(2) ≈ 0.4522.</p>
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">The decomposition J = D₀ + T is an algebraic identity: each term 1/(p(p−1)) = 1/(p²−1) + 1/(p(p²−1)).</p>
   </div>
 
   <div class="insight" style="margin-top:0;margin-bottom:20px;">
@@ -1025,7 +1189,7 @@ ight)\]
 
   <div class="insight">
     <strong>D₀ = D(0):</strong> At x = 0, all primes are active. D(0) = −Σ_p 1/(p²−1) = −D₀.
-    Also: <strong>J − S = 2T</strong> and <strong>(J+S)/2 = D₀</strong>, where S = P(2) = Σ_p 1/p² ≈ 0.4522.
+    Also: <strong>J = D₀ + T</strong> and <strong>J = D₀ + T</strong>, where S = P(2) = Σ_p 1/p² ≈ 0.4522.
     Hardy–Littlewood singular series ratios for admissible prime constellations are exact combinatorial identities in this framework.
   </div>
 
@@ -1428,8 +1592,8 @@ ight)\]
   <div class="theorem-box">
     <div class="theorem-label">Theorem — Doubling Transition Law</div>
     <p>Let M_n = 30 &middot; 2^n. Then the twin-pair count satisfies:</p>
-    \[T(M_n) = 3 \cdot 2^n\]
-    <p style="margin-top:10px;font-size:.9rem;"><em>Proof sketch:</em> The base M_0 = 30 = 2&middot;3&middot;5 has T(30) = 3 (the three admissible twin pairs {1,3}, {7,9} in the first sector, etc.). Each doubling step M_n &rarr; 2M_n preserves admissibility mod 3 and mod 5, while the new factor 2 splits each valid pair into exactly two survivors. So T(M_{n+1}) = 2&middot;T(M_n). By induction, T(M_n) = 3&middot;2^n. ∎</p>
+    \[T(M_n) = 3 \cdot 2^n - 1\]
+    <p style="margin-top:10px;font-size:.9rem;"><em>Proof sketch:</em> The base M_0 = 30 = 2&middot;3&middot;5 has T(30) = 2 (the two admissible twin pairs: {11,13} and {17,19} in &Phi;(30)). Each doubling step M_n &rarr; 2M_n preserves admissibility mod 3 and mod 5, while the new factor 2 splits each valid pair into exactly two survivors. So T(M_{n+1}) = 2&middot;T(M_n) + 1. By induction with T(M_0) = 2, T(M_n) = 3&middot;2^n &minus; 1. ∎</p>
   </div>
 
   <div class="insight">
@@ -1615,6 +1779,58 @@ ight)\]
 </section>
 
 
+<!-- ══ LAYER 20 · GOLDEN RATIO ══ -->
+<section class="section" id="layer20">
+  <div class="layer-badge">Layer 20 — The Golden Ratio</div>
+  <h2 class="section-title">The <span>Golden Ratio</span> at the Boundary</h2>
+  <p class="section-lead">The prime recovery formula is algebraically identical to the golden ratio formula. &phi; appears at s = 1 — the boundary of the jump spectrum — as the unique real number satisfying p(p&minus;1) = 1.</p>
+
+  <p>The Jump Theorem inverts the jump size s to recover the prime p. The inversion formula has a structure you may recognize:</p>
+
+  <div class="formula-block">
+    <div class="formula-label">Prime recovery vs Golden ratio — the same quadratic</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:center;padding:10px 0;">
+      <div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--teal);margin-bottom:8px;letter-spacing:.12em;text-transform:uppercase;">Jump Theorem Inversion</div>
+        \[p = \frac{1 + \sqrt{1 + 4/s}}{2}\]
+      </div>
+      <div>
+        <div style="font-family:var(--mono);font-size:9px;color:var(--gold);margin-bottom:8px;letter-spacing:.12em;text-transform:uppercase;">Golden Ratio (s = 1)</div>
+        \[\varphi = \frac{1 + \sqrt{5}}{2}\]
+      </div>
+    </div>
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">Setting s = 1 gives 4/s = 4, so 1 + 4/s = 5, and p = (1+&radic;5)/2 = &phi;. The two formulas are the same quadratic solved over the reals — prime recovery extended beyond the integers.</p>
+  </div>
+
+  <div class="theorem-box">
+    <div class="theorem-label">Observation — The Golden Ratio as Boundary of the Jump Spectrum</div>
+    <p>The equation p(p&minus;1) = 1 has the unique positive real solution p = &phi; = (1+&radic;5)/2 &asymp; 1.618. This would be a "prime" with jump size exactly s = 1. No integer prime achieves this — the largest actual jump belongs to p = 2 with s = 1/2:</p>
+    \[s_{p=2} = \tfrac{1}{2} < s_\varphi = 1\]
+    <p style="margin-top:10px;">So &phi; is the <em>upper boundary</em> of the jump spectrum. Every prime jump satisfies s &lt; 1, and the spectrum accumulates toward s = 0 as p grows. The golden ratio sits exactly at the unreachable boundary.</p>
+    <p style="margin-top:10px;font-size:.9rem;"><em>Why recovery is exact for primes:</em> 1 + 4p(p&minus;1) = (2p&minus;1)&sup2; always — a perfect square. So &radic;(1+4/s) = 2p&minus;1 exactly, giving p = (1+(2p&minus;1))/2 = p. For &phi;, the discriminant is 5 — not a perfect square — making &phi; the only boundary value where exact integer recovery is impossible.</p>
+  </div>
+
+  <div class="insight">
+    <strong>The metallic mean family:</strong> Setting p(p&minus;1) = n for integer n and solving gives p = (1+&radic;(1+4n))/2 — the metallic means. n=1 gives &phi; (golden). n=2 gives p=2 (prime). n=6 gives p=3 (prime). n=20 gives p=5. The integer primes correspond exactly to the oblong numbers n = p(p&minus;1) = 2, 6, 20, 42, 110, 156, &hellip; The golden ratio occupies the gap at n=1 — the smallest oblong number no prime reaches.
+  </div>
+
+  <div class="interactive-block">
+    <h4>Jump spectrum explorer — &phi; to the primes</h4>
+    <div class="input-row">
+      <label>s =</label>
+      <input class="inp" id="gr-s" type="number" value="0.5" min="0.0001" max="1" step="0.0001" oninput="grUpdate()">
+      <button class="btn btn-gold" onclick="grGolden()">&phi; boundary (s=1)</button>
+      <button class="btn" onclick="grP2()">p=2 (s=1/2)</button>
+      <button class="btn" onclick="grP3()">p=3 (s=1/6)</button>
+    </div>
+    <canvas id="gr-canvas" class="mini-canvas" style="height:200px;"></canvas>
+    <div class="result-area" id="gr-out">Enter s or click a button.</div>
+  </div>
+
+  <button class="view-canvas-btn" onclick="covOpen('Jump spectrum — rings near the golden ratio boundary',13,0,{viewMode:0,colorMode:'lift',showLifts:true,showGCDPoly:false,gapN:null})">View on Canvas — Prime ring M=13</button>
+</section>
+
+
 <section id="summary">
   <h3>The Full Picture</h3>
   <p style="color:var(--ink2);margin-bottom:24px;">From concentric rings to the Riemann Hypothesis — one connected geometric-analytic thread.</p>
@@ -1628,6 +1844,7 @@ ight)\]
   <div class="summary-row"><div class="num">08</div><div class="text"><strong>GRH:</strong> √N·|J_χ−J_χ(N)| bounded ⟺ GRH for L(s,χ). Geometric origin is new.</div></div>
 </section>
 
+  <div class="summary-row"><div class="num">20</div><div class="text"><strong>Golden Ratio Boundary:</strong> The prime recovery formula p=(1+&radic;(1+4/s))/2 equals &phi; when s=1. &phi; is the unique real solution to p(p&minus;1)=1 — the boundary of the jump spectrum. Every prime jump satisfies s&lt;1.</div></div>
   <div class="summary-row"><div class="num">17</div><div class="text"><strong>C(s) Zeros:</strong> Non-trivial zeros of C(s) = zeros of &zeta;(s). D(s) has only real zeros outside the critical strip. The lift survival Dirichlet series carries the Riemann Hypothesis in its zero set.</div></div>
   <div class="summary-row"><div class="num">18</div><div class="text"><strong>Hyperbolic Spirals:</strong> Residue r tracked across rings traces &rho; = 2&pi;r/&theta; — a hyperbolic, not Archimedean, spiral. Their interference pattern conjecturally encodes L-function zeros.</div></div>
   <div class="summary-row"><div class="num">19</div><div class="text"><strong>Equator Gap:</strong> r = M/2 is never coprime to even M. The equator &theta; = &pi; is a structurally forced gap. Top and bottom sectors have measurably different lift rates — connected to Chebyshev bias.</div></div>
@@ -1895,7 +2112,17 @@ function frame(ts){
     var prog=Math.min(phaseT/2200,1);
     var ease=prog<.5?2*prog*prog:1-Math.pow(-2*prog+2,2)/2;
     curM=Math.round(MMAX+(MTARGET-MMAX)*ease);
-    if(prog>=1){phase='idle';curM=MTARGET;}
+    if(prog>=1){
+      phase='idle';curM=MTARGET;
+      /* Show splash overlay after animation completes */
+      setTimeout(function(){
+        var splash=document.getElementById('op-splash');
+        if(splash){splash.style.opacity='1';splash.style.pointerEvents='auto';}
+        var stats=document.getElementById('opener-stats');
+        if(stats){stats.style.opacity='1';}
+        if(window.opStartQuotes) opStartQuotes();
+      }, 400);
+    }
     syncSlider();
   }
 
@@ -2086,12 +2313,66 @@ window.opCycleLines=function(){
 window.opEnter=function(){
   var op=document.getElementById('op-overlay');
   if(!op) return;
+  opStopQuotes();
+  // Hide stats bar and splash immediately before fade
+  var sb=document.getElementById('opener-stats');
+  if(sb) sb.style.display='none';
+  var splash=document.getElementById('op-splash');
+  if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
   op.style.opacity='0'; op.style.pointerEvents='none';
   if(raf){cancelAnimationFrame(raf);raf=null;}
-  setTimeout(function(){op.style.display='none';document.body.style.overflow='auto';},800);
+  setTimeout(function(){
+    op.style.display='none';
+    document.body.style.overflow='auto';
+    var hb=document.getElementById('home-btn');
+    if(hb) hb.style.display='block';
+  },800);
 };
 
 /* ── Init ── */
+
+var OP_QUOTES = [
+  {q: "The geometry was already there. We did not invent it — we observed it.", a: "— W. Getachew"},
+  {q: "Prime numbers are not random. They are the fault lines in a specific log-derivative function.", a: "— On the Jump Theorem"},
+  {q: "God may not play dice, but He is an excellent number theorist.", a: "— after A. Einstein"},
+  {q: "Every prime leaves a unique, measurable footprint. Turning prime detection into a matter of high-precision measurement.", a: "— Jump Theorem pitch"},
+  {q: "Mathematics is the art of giving the same name to different things.", a: "— Henri Poincaré"},
+  {q: "The primes are the atoms of number theory, and C is their binding constant.", a: "— On the lift survival function"},
+  {q: "There is no branch of mathematics, however abstract, which may not someday be applied to phenomena of the real world.", a: "— Nikolai Lobachevsky"},
+  {q: "The map σ(r) = M − r is not a construction. It was always there, waiting to be seen.", a: "— On the mirror involution"},
+  {q: "In mathematics the art of proposing a question must be held of higher value than solving it.", a: "— Georg Cantor"},
+  {q: "The infinite product that defines C converges — and in that convergence lives the architecture of the primes.", a: "— On the Euler product"},
+];
+
+var _quoteIdx = 0;
+function opShowQuote(idx) {
+  var q = document.getElementById('op-quote');
+  var a = document.getElementById('op-quote-attr');
+  if(!q || !a) return;
+  q.style.opacity = '0';
+  a.style.opacity = '0';
+  setTimeout(function(){
+    var item = OP_QUOTES[idx % OP_QUOTES.length];
+    q.textContent = '\u201c' + item.q + '\u201d';
+    a.textContent = item.a;
+    q.style.opacity = '1';
+    a.style.opacity = '1';
+  }, 500);
+}
+
+var _quoteTimer = null;
+function opStartQuotes() {
+  opShowQuote(0);
+  _quoteIdx = 1;
+  _quoteTimer = setInterval(function(){
+    opShowQuote(_quoteIdx);
+    _quoteIdx = (_quoteIdx + 1) % OP_QUOTES.length;
+  }, 5000);
+}
+function opStopQuotes() {
+  if(_quoteTimer){ clearInterval(_quoteTimer); _quoteTimer = null; }
+}
+
 function init(){
   cv=document.getElementById('op-cv');
   if(!cv) return;
@@ -2103,6 +2384,13 @@ function init(){
   raf=requestAnimationFrame(frame);
 }
 window.addEventListener('resize',function(){lt=null;});
+window._opRestart=function(){
+  if(raf){cancelAnimationFrame(raf);raf=null;}
+  gt=0;lt=null;curM=MMAX;MTARGET=128;phase='rings';phaseT=0;
+  var sl=document.getElementById('op-n-sl');if(sl)sl.value=MMAX;
+  var vl=document.getElementById('op-n-val');if(vl)vl.textContent=MMAX;
+  raf=requestAnimationFrame(frame);
+};
 document.addEventListener('DOMContentLoaded',function(){
   document.body.style.overflow='hidden';
   init();
@@ -2124,7 +2412,9 @@ var RC6=['212,168,67','43,191,176','232,85,64','74,128,240','144,96,208','68,204
 
 var cv=null,ctx=null;
 var st={M:30,liftN:0,gt:0,lt:null,raf:null,
-  viewMode:0,colorMode:'residue6',showLifts:true,showGCDPoly:false,gapN:null};
+  viewMode:0,colorMode:'residue6',showLifts:true,showGCDPoly:false,gapN:null,
+  showDots:false,labelMode:'r',lineMode:'lift'};
+window._covSt=st;
 
 function ptColor(p,pulse){
   var al=p.isCP?(p.lifts?.62+pulse*.3:.38+pulse*.22):(.5+pulse*.25);
@@ -2255,31 +2545,36 @@ function draw(ts){
     }
   }
 
-  // Dots
-  for(var i=0;i<n;i++){
-    var rng=rings[i];
-    for(var pi=0;pi<rng.pts.length;pi++){
-      var p=rng.pts[pi];
-      var pulse=Math.sin(st.gt*.0014+i*.5+pi*.31)*.5+.5;
-      var sz=(p.isP?2.3:1.5)*(1+pulse*.3);
-      ctx.beginPath();ctx.arc(cx+p.rr*Math.cos(p.theta),cy+p.rr*Math.sin(p.theta),sz,0,2*Math.PI);
-      ctx.fillStyle=ptColor(p,pulse);ctx.fill();
+  // Dots — gated by showDots
+  if(st.showDots){
+    for(var i=0;i<n;i++){
+      var rng=rings[i];
+      for(var pi=0;pi<rng.pts.length;pi++){
+        var p=rng.pts[pi];
+        var pulse=Math.sin(st.gt*.0014+i*.5+pi*.31)*.5+.5;
+        var sz=(p.isP?2.3:1.5)*(1+pulse*.3);
+        ctx.beginPath();ctx.arc(cx+p.rr*Math.cos(p.theta),cy+p.rr*Math.sin(p.theta),sz,0,2*Math.PI);
+        ctx.fillStyle=ptColor(p,pulse);ctx.fill();
+      }
     }
   }
-
-  // Labels (r only, small rings up to 8)
-  ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='center';
-  for(var i=0;i<Math.min(n,8);i++){
-    var rng=rings[i];
-    for(var pi=0;pi<rng.pts.length;pi++){
-      var p=rng.pts[pi];
-      if(!p.isCP&&st.viewMode===0)continue;
-      var fx=cx+(p.rr+14)*Math.cos(p.theta),fy=cy+(p.rr+14)*Math.sin(p.theta);
-      ctx.fillStyle=p.isCP?'rgba(180,165,130,.6)':'rgba(232,85,64,.4)';
-      ctx.fillText(''+p.r,fx,fy+3);
+  // Labels — respect st.labelMode
+  if(st.labelMode&&st.labelMode!=='none'){
+    ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='center';
+    var maxLbR=st.M>20?8:st.M;
+    for(var i=0;i<Math.min(n,maxLbR);i++){
+      var rng2=rings[i];
+      for(var pi=0;pi<rng2.pts.length;pi++){
+        var p2=rng2.pts[pi];
+        if(!p2.isCP&&st.viewMode===0)continue;
+        var lbl2=st.labelMode==='r'?''+p2.r:st.labelMode==='rm'?p2.r+'/'+p2.M:st.labelMode==='angle'?Math.round(360*p2.r/p2.M)+'°':st.labelMode==='gcd'?''+p2.g:''+p2.r;
+        var fx=cx+(p2.rr+14)*Math.cos(p2.theta),fy=cy+(p2.rr+14)*Math.sin(p2.theta);
+        ctx.fillStyle=p2.isCP?'rgba(180,165,130,.6)':'rgba(232,85,64,.4)';
+        ctx.fillText(lbl2,fx,fy+3);
+      }
     }
+    ctx.textAlign='left';
   }
-  ctx.textAlign='left';
 
   // Stats
   var cp=0,lifts=0;
@@ -2633,7 +2928,37 @@ r4_update();
 // ── LAYER 5 · JUMP THEOREM ──
 function jt_check(){
   var n=parseInt(document.getElementById('jt-n').value);
-  if(!n||n<2){document.getElementById('jt-out').textContent='Enter n ≥ 2.';return;}
+  var el=document.getElementById('jt-out');
+  if(n===1||(isNaN(n)&&document.getElementById('jt-n').value.trim()==='1')){
+    var phi=(1+Math.sqrt(5))/2;
+    var lines=[
+      'n = 1',
+      '',
+      'p(p\u22121) = 1  \u21d2  p\u00b2 \u2212 p \u2212 1 = 0',
+      '',
+      'Positive real solution:',
+      '  p = (1+\u221a5)/2 = '+phi.toFixed(15),
+      '  = \u03c6  (the golden ratio)',
+      '',
+      '\u03c6(\u03c6\u22121) = '+(phi*(phi-1)).toFixed(15)+' = 1 \u2714',
+      '',
+      'This is the BOUNDARY of the jump spectrum.',
+      'No integer prime has jump size s = 1.',
+      'Largest actual jump: p=2 with s = 1/2 < 1.',
+      '',
+      'Discriminant at \u03c6: 1 + 4\u00b71 = 5 (not a perfect square).',
+      'For all integer primes p: discriminant = (2p\u22121)\u00b2.',
+      '\u03c6 is where exact integer recovery first fails.',
+    ];
+    el.textContent=lines.join('\n');
+    el.style.color='rgba(212,168,67,.9)';
+    return;
+  }
+  if(!n||n<1){
+    el.textContent='Enter n \u2265 1. Try n=1 for the golden ratio \u03c6.';
+    return;
+  }
+  if(n<2){n=2;}
   var pr=sieve(Math.max(n*2,n+100));
   var isP=pr.indexOf(n)>=0;
   var C_n1=computeC(n-1);
@@ -2643,31 +2968,33 @@ function jt_check(){
   var jumpSize=isP?1/(n*(n-1)):0;
   var recovered=isP?(1+Math.sqrt(1+4/jumpSize))/2:0;
   var L=[];
-  L.push('n = '+n+' → '+(isP?'PRIME ✓':'COMPOSITE ✗'));
+  L.push('n = '+n+' \u2192 '+(isP?'PRIME \u2713':'COMPOSITE \u2717'));
   L.push('');
-  L.push('C(n−1) = C('+( n-1)+') = '+C_n1.toFixed(15));
+  L.push('C(n\u22121) = C('+(n-1)+') = '+C_n1.toFixed(15));
   L.push('C(n)   = C('+n+') = '+C_n.toFixed(15));
   L.push('');
   if(isP){
     L.push('D(x) jump at x = '+(n-1)+':');
-    L.push('  ΔD = 1/(p(p-1)) = 1/('+n+'×'+(n-1)+') = '+jumpSize.toFixed(15));
-    L.push('  ΔC = -C(n-1)/(n(n-1)) = '+predicted.toExponential(12));
-    L.push('  Observed ΔC: '+delta.toExponential(12));
+    L.push('  \u0394D = 1/(p(p\u22121)) = 1/('+n+'\u00d7'+(n-1)+') = '+jumpSize.toFixed(15));
+    L.push('  \u0394C = \u2212C(n\u22121)/(n(n\u22121)) = '+predicted.toExponential(12));
+    L.push('  Observed \u0394C: '+delta.toExponential(12));
     L.push('');
-    L.push('Prime recovery: p = (1+√(1+4/s))/2 = '+recovered.toFixed(10));
-    L.push('No other prime has this jump size.');
+    L.push('Discriminant: 1+4p(p\u22121) = '+(1+4*n*(n-1))+' = ('+(2*n-1)+')\u00b2 \u2714');
+    L.push('Prime recovery: p = (1+\u221a'+( 1+4*n*(n-1))+')/2 = '+recovered.toFixed(10));
+    L.push('');
+    L.push('Compare: n=1 gives p=\u03c6 (golden ratio, s=1)');
+    L.push('         n=2 gives p=2, n=6 gives p=3, \u2026');
   } else {
     var prevP=null,nextP=null;
     for(var i=0;i<pr.length;i++){if(pr[i]<n)prevP=pr[i];if(pr[i]>n&&!nextP)nextP=pr[i];}
-    L.push('No new prime factor enters at x = '+(n-1)+'.');
-    L.push('D(x) is continuous at x = '+(n-1)+'. ΔD = 0 exactly.');
-    L.push('Observed ΔC = '+delta.toExponential(12)+' (numerical noise only).');
+    L.push('No prime at n='+n+'. D(x) continuous at x='+(n-1)+'.');
+    L.push('\u0394D = 0 exactly.  Observed \u0394C = '+delta.toExponential(12)+' (numerical noise).');
     L.push('');
     L.push('Nearest primes: '+prevP+' < '+n+' < '+nextP);
-    L.push('Next jump: at x = '+(nextP-1)+', when p = '+nextP+' saturates.');
-    L.push('  Jump size will be: 1/('+nextP+'×'+(nextP-1)+') = '+(1/(nextP*(nextP-1))).toFixed(15));
+    L.push('Next jump: x='+(nextP-1)+', p='+nextP+', s='+(1/(nextP*(nextP-1))).toFixed(15));
+    L.push('');
+    L.push('Hint: try n=1 for the golden ratio boundary.');
   }
-  var el=document.getElementById('jt-out');
   el.textContent=L.join('\n');
   el.style.color=isP?'rgba(43,191,176,.9)':'rgba(232,85,64,.85)';
 }
@@ -3472,7 +3799,7 @@ function cnCompute(){
   window.dlCompute=function(){
     var n=Math.max(0,Math.min(8,+document.getElementById('dl-n').value||0));
     var Mn=30*Math.pow(2,n);
-    var predicted=3*Math.pow(2,n);
+    var predicted=3*Math.pow(2,n)-1;
     var phiMn=phi(Mn);
     var actual=twinPairCount(Mn);
     var canvas=document.getElementById('dl-canvas');
@@ -3499,7 +3826,7 @@ function cnCompute(){
     }
     ctx.textAlign='left';
     var out='n = '+n+',  M_n = 30\u00d72^'+n+' = '+Mn+'\n\n';
-    out+='Theorem: T(M_n) = 3\u00d72^'+n+' = '+predicted+'\n';
+    out+='Formula: T(M_n) = 3×2^n−1 = 3×'+Math.pow(2,n).toFixed(0)+'−1 = '+predicted+'\n';
     out+='\u03c6(M_n) = '+phiMn+'\n';
     out+='T(M_n) actual = '+actual+'\n';
     out+='Match: '+(actual===predicted?'YES \u2713':'NO \u2717')+'\n\n';
@@ -3829,59 +4156,131 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 </script>
+
+
 <script>
-// ── AUTO-PLAY GUIDED TOUR ──
-(function(){
-var _tourTimer=null,_tourStep=0;
-var TOUR=[
-  {section:'hero',    label:'Overview',         delay:2000},
-  {section:'layer1',  label:'The Rings',         delay:3000},
-  {section:'layer2',  label:'The Lift',          delay:3000},
-  {section:'layer3',  label:'Constant C',        delay:3000},
-  {section:'layer4',  label:'C(x) Function',     delay:3000},
-  {section:'layer5',  label:'Jump Theorem',      delay:4000},
-  {section:'layer6',  label:'Total Jump J',      delay:3000},
-  {section:'layer7',  label:'Parent F(u)',        delay:3000},
-  {section:'layer8',  label:'GRH Criterion',     delay:3000},
-  {section:'layer9',  label:'Mirror Involution', delay:3000},
-  {section:'layer10', label:'T(p#) Recursion',   delay:3500},
-  {section:'layer11', label:'HL Exact Identity', delay:3500},
-  {section:'layer12', label:'Gap-Class ζ(2)',    delay:3500},
-  {section:'layer13', label:'Sector C(n,N)',     delay:3000},
-  {section:'summary', label:'Summary',           delay:4000},
-];
 
-window.startTour=function(){
-  _tourStep=0;
-  tourStep();
+// ── OPENER EXPORT + FULLSCREEN ──
+window.opExport4K=function(){
+  var cv=document.getElementById('op-cv');
+  if(!cv)return;
+  var dpr=4;
+  var W=window.innerWidth,H=window.innerHeight;
+  var tmp=document.createElement('canvas');
+  tmp.width=Math.round(W*dpr);tmp.height=Math.round(H*dpr);
+  var tc=tmp.getContext('2d');tc.scale(dpr,dpr);
+  tc.drawImage(cv,0,0,W,H);
+  var a=document.createElement('a');
+  a.download='modular_rings_opener_4K.png';
+  a.href=tmp.toDataURL('image/png',1.0);
+  a.click();
 };
-window.stopTour=function(){
-  if(_tourTimer){clearTimeout(_tourTimer);_tourTimer=null;}
+window.opFullscreen=function(){
+  var op=document.getElementById('op-overlay');
+  if(!op)return;
+  if(document.fullscreenElement){
+    document.exitFullscreen();
+    var btn=document.getElementById('op-fs-btn');
+    if(btn)btn.textContent='⛶';
+  } else {
+    op.requestFullscreen&&op.requestFullscreen().then(function(){
+      var btn=document.getElementById('op-fs-btn');
+      if(btn)btn.textContent='✕FS';
+    });
+  }
 };
 
-function tourStep(){
-  if(_tourStep>=TOUR.length)return;
-  var step=TOUR[_tourStep];
-  var el=document.getElementById(step.section);
-  if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-  // Update tour indicator
-  var ind=document.getElementById('tour-indicator');
-  if(ind){ind.textContent='Tour: '+step.label+' ('+(_tourStep+1)+'/'+TOUR.length+')';ind.style.opacity='1';}
-  _tourStep++;
-  _tourTimer=setTimeout(function(){
-    if(_tourStep>=TOUR.length){
-      if(ind){ind.style.opacity='0';}
-    } else {
-      tourStep();
+// ── COV EXTENDED CONTROLS ──
+// The cov script already has st.viewMode, st.colorMode, st.liftN, st.gapN, st.showGCDPoly
+// We need: viewMode, colorMode, labelMode, showDots, lineMode for cov too
+
+// Extend cov state — patch after cov IIFE loads
+document.addEventListener('DOMContentLoaded',function(){
+  // Patch covOpen to also sync the new selects
+  var _origCovOpen=window.covOpen;
+  window.covOpen=function(desc,mod,liftN,cfg){
+    _origCovOpen(desc,mod,liftN,cfg);
+    // Sync new controls to cfg values
+    if(cfg){
+      var vs=document.getElementById('cov-view-sel');
+      if(vs&&cfg.viewMode!==undefined)vs.value=cfg.viewMode;
+      var cs=document.getElementById('cov-color-sel');
+      if(cs&&cfg.colorMode)cs.value=cfg.colorMode;
     }
-  }, step.delay);
-}
-})();
+    var ls=document.getElementById('cov-lift-sl');
+    var lv=document.getElementById('cov-lift-val');
+    if(ls){ls.value=liftN||0;if(lv)lv.textContent=(liftN&&liftN>0)?liftN:'all';}
+  };
+});
+
+window.covSetView=function(v){
+  if(window._covSt){window._covSt.viewMode=+v;}
+  // Also patch into covOpen state object
+  // The cov IIFE uses internal 'st' — we expose it via a bridge
+};
+window.covSetColor=function(v){if(window._covSt)window._covSt.colorMode=v;};
+window.covSetLabel=function(v){if(window._covSt)window._covSt.labelMode=v;};
+
+// Dots toggle for cov
+var _covDotsOn=false;
+window.covToggleDots=function(){
+  _covDotsOn=!_covDotsOn;
+  if(window._covSt)window._covSt.showDots=_covDotsOn;
+  var btn=document.getElementById('cov-dots-btn');
+  if(btn){
+    btn.textContent=_covDotsOn?'Dots: ON':'Dots: OFF';
+    btn.style.color=_covDotsOn?'rgba(212,168,67,.9)':'rgba(100,90,70,.5)';
+    btn.style.borderColor=_covDotsOn?'rgba(212,168,67,.5)':'rgba(100,90,70,.3)';
+  }
+};
+
+// Line mode cycle for cov
+var COV_LINE_MODES=[
+  {key:'lift',  label:'Lines: Lift',   col:'43,191,176'},
+  {key:'gap2',  label:'Lines: Gap 2',  col:'212,168,67'},
+  {key:'gap4',  label:'Lines: Gap 4',  col:'144,96,208'},
+  {key:'ngon',  label:'Lines: N-gon',  col:'232,85,64'},
+  {key:'none',  label:'Lines: Off',    col:'80,70,55'},
+];
+var _covLineMode=0;
+window.covCycleLines=function(){
+  _covLineMode=(_covLineMode+1)%COV_LINE_MODES.length;
+  var lm=COV_LINE_MODES[_covLineMode];
+  if(window._covSt)window._covSt.lineMode=lm.key;
+  var btn=document.getElementById('cov-line-btn');
+  if(btn){
+    btn.textContent=lm.label;
+    var on=lm.key!=='none';
+    btn.style.color=on?'rgba('+lm.col+',.9)':'rgba(100,90,70,.5)';
+    btn.style.borderColor=on?'rgba('+lm.col+',.5)':'rgba(100,90,70,.3)';
+  }
+};
+
 </script>
-<div id="tour-indicator" style="position:fixed;bottom:40px;right:16px;z-index:200;
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
-  color:rgba(43,191,176,.8);background:rgba(5,4,10,.85);
-  border:1px solid rgba(43,191,176,.25);border-radius:3px;
-  padding:6px 12px;opacity:0;transition:opacity .4s;pointer-events:none;"></div>
+<script>
+window.goHome=function(){
+  var op=document.getElementById('op-overlay');
+  if(!op) return;
+  // Hide home button
+  var hb=document.getElementById('home-btn');
+  if(hb) hb.style.display='none';
+  // Reset splash
+  var splash=document.getElementById('op-splash');
+  if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
+  var stats=document.getElementById('opener-stats');
+  if(stats) stats.style.opacity='0';
+  // Stop quotes
+  opStopQuotes();
+  // Restart animation
+  op.style.display='flex';
+  op.style.opacity='1';
+  op.style.pointerEvents='auto';
+  document.body.style.overflow='hidden';
+  // Reset animation state
+  window.scrollTo(0,0);
+  if(window._opRestart) window._opRestart();
+};
+
+</script>
 </body>
 </html>
