@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -490,7 +490,21 @@ input[type=range] {
   <canvas id="op-cv" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
 
   <!-- Top controls bar -->
-  <div style="position:relative;z-index:2;display:flex;gap:6px;align-items:center;
+  <div id="op-ui-wrap" style="position:absolute;inset:0;z-index:6;pointer-events:none;">
+  <!-- Hide UI toggle — always visible -->
+  <button id="op-hide-btn" onclick="opToggleUI()"
+    style="position:absolute;bottom:44px;right:14px;z-index:7;pointer-events:auto;
+    font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;
+    padding:4px 12px;background:rgba(5,4,10,.8);
+    border:1px solid rgba(212,168,67,.35);color:rgba(212,168,67,.6);
+    cursor:pointer;border-radius:2px;transition:all .2s;"
+    onmouseover="this.style.borderColor='rgba(212,168,67,.7)';this.style.color='rgba(212,168,67,.9)'"
+    onmouseout="this.style.borderColor='rgba(212,168,67,.35)';this.style.color='rgba(212,168,67,.6)'">
+    Hide text</button>
+  </div>
+
+  <!-- Top controls bar -->
+  <div id="op-ctrl-bar" style="position:relative;z-index:2;display:flex;gap:6px;align-items:center;
     flex-wrap:wrap;padding:8px 12px;background:rgba(5,4,10,.78);
     border-bottom:1px solid rgba(212,168,67,.12);flex-shrink:0;">
 
@@ -789,7 +803,8 @@ input[type=range] {
 <button id="menu-toggle" onclick="document.getElementById('sidenav').classList.toggle('open')">☰</button>
 
 <nav id="sidenav">
-  <div class="nav-title">Prime Sieve · C(x)</div>
+  <div class="nav-title" onclick="goHome()" title="Return to opener" style="cursor:pointer;border-bottom:1px solid rgba(212,168,67,.2);padding-bottom:10px;margin-bottom:6px;">Prime Sieve · C(x)<span style="float:right;font-size:10px;color:rgba(212,168,67,.5);">⌂</span></div>
+  <a href="#" onclick="goHome();return false;" style="color:rgba(212,168,67,.65);font-size:9px;border-left-color:rgba(212,168,67,.25);padding:4px 8px 4px 16px;margin-bottom:4px;"><span class="layer-num" style="color:rgba(212,168,67,.5);">⌂</span>Opener</a>
   <a href="#hero"><span class="layer-num">00</span>Overview</a>
   <a href="#layer1"><span class="layer-num">01</span>The Rings</a>
   <a href="#layer2"><span class="layer-num">02</span>The Lift</a>
@@ -2115,11 +2130,12 @@ function frame(ts){
     if(prog>=1){
       phase='idle';curM=MTARGET;
       /* Show splash overlay after animation completes */
+      window._animDone = true;
       setTimeout(function(){
         var splash=document.getElementById('op-splash');
-        if(splash){splash.style.opacity='1';splash.style.pointerEvents='auto';}
+        if(splash&&window._opUIVisible!==false){splash.style.opacity='1';splash.style.pointerEvents='auto';}
         var stats=document.getElementById('opener-stats');
-        if(stats){stats.style.opacity='1';}
+        if(stats&&window._opUIVisible!==false){stats.style.opacity='1';}
         if(window.opStartQuotes) opStartQuotes();
       }, 400);
     }
@@ -2332,13 +2348,13 @@ window.opEnter=function(){
 /* ── Init ── */
 
 var OP_QUOTES = [
-  {q: "The geometry was already there. We did not invent it — we observed it.", a: "— W. Getachew"},
-  {q: "Prime numbers are not random. They are the fault lines in a specific log-derivative function.", a: "— On the Jump Theorem"},
-  {q: "God may not play dice, but He is an excellent number theorist.", a: "— after A. Einstein"},
-  {q: "Every prime leaves a unique, measurable footprint. Turning prime detection into a matter of high-precision measurement.", a: "— Jump Theorem pitch"},
+  {q: "The geometry was already there. We did not invent it — we observed it.", a: "— Wessen Getachew"},
+  {q: "Prime numbers are not random. They are the fault lines of a specific log-derivative function.", a: "— On the Jump Theorem"},
+  {q: "God may not play dice, but He is an excellent number theorist.", a: "— after Albert Einstein"},
   {q: "Mathematics is the art of giving the same name to different things.", a: "— Henri Poincaré"},
-  {q: "The primes are the atoms of number theory, and C is their binding constant.", a: "— On the lift survival function"},
   {q: "There is no branch of mathematics, however abstract, which may not someday be applied to phenomena of the real world.", a: "— Nikolai Lobachevsky"},
+  {q: "The primes are the atoms of number theory, and C is their binding constant.", a: "— On the lift survival function"},
+  {q: "The golden ratio φ sits at the boundary of the prime jump spectrum — the smallest 'prime' no integer can reach.", a: "— On the golden ratio boundary"},
   {q: "The map σ(r) = M − r is not a construction. It was always there, waiting to be seen.", a: "— On the mirror involution"},
   {q: "In mathematics the art of proposing a question must be held of higher value than solving it.", a: "— Georg Cantor"},
   {q: "The infinite product that defines C converges — and in that convergence lives the architecture of the primes.", a: "— On the Euler product"},
@@ -2385,6 +2401,7 @@ function init(){
 }
 window.addEventListener('resize',function(){lt=null;});
 window._opRestart=function(){
+  window._animDone=false;
   if(raf){cancelAnimationFrame(raf);raf=null;}
   gt=0;lt=null;curM=MMAX;MTARGET=128;phase='rings';phaseT=0;
   var sl=document.getElementById('op-n-sl');if(sl)sl.value=MMAX;
@@ -2632,16 +2649,17 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')window.covCl
 window.covExport4K=function(){
   var cv=document.getElementById('cov-cv');
   if(!cv)return;
-  var dpr=4; // 4K
-  var W=window.innerWidth,H=window.innerHeight-52;
-  var tmpCV=document.createElement('canvas');
-  tmpCV.width=Math.round(W*dpr);tmpCV.height=Math.round(H*dpr);
-  var tmpCtx=tmpCV.getContext('2d');tmpCtx.scale(dpr,dpr);
-  // Force redraw at 4K into temp canvas - copy current frame
-  tmpCtx.drawImage(cv,0,0,W,H);
+  var SCALE=4;
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var tmp=document.createElement('canvas');
+  tmp.width=Math.round(cv.width*SCALE/dpr);
+  tmp.height=Math.round(cv.height*SCALE/dpr);
+  var tc=tmp.getContext('2d');
+  tc.setTransform(SCALE/dpr,0,0,SCALE/dpr,0,0);
+  tc.drawImage(cv,0,0);
   var a=document.createElement('a');
-  a.download='modular_rings_4K.png';
-  a.href=tmpCV.toDataURL('image/png',1.0);
+  a.download='modular_rings_canvas_4K.png';
+  a.href=tmp.toDataURL('image/png',1.0);
   a.click();
 };
 window.covFullscreen=function(){
@@ -4164,14 +4182,27 @@ document.addEventListener('DOMContentLoaded',function(){
 window.opExport4K=function(){
   var cv=document.getElementById('op-cv');
   if(!cv)return;
-  var dpr=4;
-  var W=window.innerWidth,H=window.innerHeight;
+
+  // Step 1: Force a fresh render at 4K into a new offscreen canvas
+  var SCALE=4;
+  var W=window.innerWidth, H=window.innerHeight;
   var tmp=document.createElement('canvas');
-  tmp.width=Math.round(W*dpr);tmp.height=Math.round(H*dpr);
-  var tc=tmp.getContext('2d');tc.scale(dpr,dpr);
-  tc.drawImage(cv,0,0,W,H);
+  tmp.width=Math.round(W*SCALE);
+  tmp.height=Math.round(H*SCALE);
+  var tc=tmp.getContext('2d');
+  tc.scale(SCALE,SCALE);
+
+  // Step 2: Copy the current canvas content at its native resolution
+  // cv.width/cv.height are the actual pixel dimensions (W*dpr, H*dpr)
+  // We draw the full source canvas into the full dest canvas
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  // Draw cv (W*dpr x H*dpr pixels) into tmp (W*4 x H*4 pixels)
+  // Source: full canvas | Dest: centered if needed, or just full fill
+  tc.setTransform(SCALE/dpr,0,0,SCALE/dpr,0,0);
+  tc.drawImage(cv,0,0);
+
   var a=document.createElement('a');
-  a.download='modular_rings_opener_4K.png';
+  a.download='modular_rings_4K.png';
   a.href=tmp.toDataURL('image/png',1.0);
   a.click();
 };
@@ -4264,23 +4295,58 @@ window.goHome=function(){
   // Hide home button
   var hb=document.getElementById('home-btn');
   if(hb) hb.style.display='none';
-  // Reset splash
+  // Reset splash — hidden until animation completes again
   var splash=document.getElementById('op-splash');
   if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
+  // Reset stats bar — restore display then hide opacity
   var stats=document.getElementById('opener-stats');
-  if(stats) stats.style.opacity='0';
+  if(stats){stats.style.display='';stats.style.opacity='0';}
   // Stop quotes
   opStopQuotes();
-  // Restart animation
+  // Show overlay
   op.style.display='flex';
   op.style.opacity='1';
   op.style.pointerEvents='auto';
   document.body.style.overflow='hidden';
-  // Reset animation state
-  window.scrollTo(0,0);
+  // Scroll to top then restart animation
+  window.scrollTo({top:0,behavior:'instant'});
   if(window._opRestart) window._opRestart();
 };
 
 </script>
+<script>
+
+var _opUIVisible = true;
+window._opUIVisible = true;
+window.opToggleUI = function(){
+  _opUIVisible = !_opUIVisible;
+  // Controls bar stays ALWAYS visible — never hidden
+  // Only hide: splash text overlay and stats bar
+  var stats = document.getElementById('opener-stats');
+  var splash = document.getElementById('op-splash');
+  var btn = document.getElementById('op-hide-btn');
+  if(_opUIVisible){
+    if(stats) stats.style.opacity='1';
+    if(splash&&window._animDone){splash.style.opacity='1';splash.style.pointerEvents='auto';}
+    if(btn){
+      btn.textContent='Hide text';
+      btn.style.background='rgba(5,4,10,.8)';
+      btn.style.borderColor='rgba(212,168,67,.35)';
+      btn.style.color='rgba(212,168,67,.6)';
+    }
+  } else {
+    if(stats) stats.style.opacity='0';
+    if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
+    if(btn){
+      btn.textContent='Show text';
+      btn.style.background='rgba(212,168,67,.15)';
+      btn.style.borderColor='rgba(212,168,67,.7)';
+      btn.style.color='rgba(212,168,67,.95)';
+    }
+  }
+};
+
+</script>
 </body>
-</html>
+</html>  <a href="#" onclick="goHome();return false;" style="color:rgba(212,168,67,.7);border-left-color:rgba(212,168,67,.3);"><span class="layer-num">⌂</span>Opener</a>
+
