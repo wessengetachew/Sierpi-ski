@@ -578,7 +578,7 @@ input[type=range] {
       background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
       border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.5);">/</span>
-    <input id="op-rot-b" type="number" value="12" min="1" step="1"
+    <input id="op-rot-b" type="number" value="4" min="1" step="1"
       oninput="opSetRotFrac()"
       style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
       background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
@@ -2377,9 +2377,17 @@ var gt=0,lt=null,raf=null;
 var MMAX=2,MTARGET=128,curM=2;
 var phase='rings',phaseT=0;
 var liftN=0;
-var rotFracA=1, rotFracB=12; // rotation = a/b * 360°
+var rotFracA=1, rotFracB=4; // rotation = a/b * 360° — default 1/4
 var rotCumulative=false;      // cumulative per ring or fixed
 var rotOuterIn=false;         // false=inner→outer, true=outer→inner
+
+/* Helper: compute rotation offset (radians) for a given ring M */
+function ringRotOff(M, mmax){
+  var rotBase = (rotFracB > 0) ? (rotFracA / rotFracB) * 2 * Math.PI : 0;
+  if(!rotCumulative) return rotBase;
+  var idx = rotOuterIn ? (mmax - M) : (M - 2);
+  return rotBase * idx;
+}
 var viewMode=0;     // 0=gcd1 only  1=non-gcd1 only  2=combined  3=no points
 var showDots=true;
 var zoomLevel=2.0;
@@ -2419,17 +2427,7 @@ function buildRings(mmax){
     var spreadRr=(M-1)/(mmax-1)*maxR*.92+maxR*.06;
     var rr=spreadRr*(1-ringSpacing)+outerR*ringSpacing;
     var pts=[];
-    // Per-ring rotation offset from a/b*360 setting
-    var rotBase = (rotFracB > 0) ? (rotFracA / rotFracB) * 2 * Math.PI : 0;
-    var ringIdx = M - 2; // 0-based index (M=2 → idx=0)
-    var rotOff;
-    if(!rotCumulative) {
-      rotOff = rotBase; // same fixed offset per ring
-    } else {
-      // cumulative: each ring adds one more increment
-      var idx = rotOuterIn ? (mmax - M) : ringIdx;
-      rotOff = rotBase * idx;
-    }
+    var rotOff = ringRotOff(M, mmax);
     for(var r=0;r<M;r++){
       var g=r===0?M:gcd(r,M);
       var isCP=g===1;
@@ -2579,12 +2577,7 @@ function frame(ts){
         // — Mirror lift: r → (M+1-r) on M+1 (gold), only if that residue is coprime to M+1
         var mirrorR = Mnext - pa.r;
         if(mirrorR > 0 && mirrorR < Mnext && gcd(mirrorR, Mnext) === 1 && pa.lifts) {
-          // Find mirror point on rB
-          var mirTh = 2*Math.PI*mirrorR/Mnext - Math.PI/2;
-          // Apply same rotation offset as rB
-          var rotBase2 = (rotFracB > 0) ? (rotFracA / rotFracB) * 2 * Math.PI : 0;
-          var rotOff2 = !rotCumulative ? rotBase2 : rotBase2 * (rotOuterIn ? (curM - rB.M) : (rB.M - 2));
-          mirTh += rotOff2;
+          var mirTh = 2*Math.PI*mirrorR/Mnext - Math.PI/2 + ringRotOff(rB.M, curM);
           var mx2 = cx + rB.rr * Math.cos(mirTh);
           var my2 = cy + rB.rr * Math.sin(mirTh);
           ctx.beginPath();
@@ -2620,7 +2613,7 @@ function frame(ts){
         var ring2M=null;
         for(var ri=0;ri<n;ri++){if(rings[ri].M===M2){ring2M=rings[ri];break;}}
         if(ring2M&&rPlusM<M2&&gcd(rPlusM,M2)===1){
-          var th2=2*Math.PI*rPlusM/M2-Math.PI/2;
+          var th2=2*Math.PI*rPlusM/M2-Math.PI/2+ringRotOff(M2, curM);
           var w2=Math.sin(gt*.0012+i*.3)*.5+.5;
           ctx.beginPath();
           ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
@@ -2639,6 +2632,7 @@ function frame(ts){
     var lw=gapLine_thick===1?.8:gapLine_thick===2?1.4:2.2;
     for(var i=0;i<n;i++){
       var rng=rings[i];
+      var rOff=ringRotOff(rng.M, curM);
       for(var r=1;r<rng.M;r++){   /* r=1..M-1: skip r=0 */
         var r2=r+gapVal;
         if(r2>=rng.M) continue;
@@ -2647,8 +2641,8 @@ function frame(ts){
         var isCP1=g1===1, isCP2=g2===1;
         /* Only draw if at least one endpoint is coprime (filter noise) */
         if(!isCP1&&!isCP2) continue;
-        var th1=2*Math.PI*r/rng.M-Math.PI/2;
-        var th2=2*Math.PI*r2/rng.M-Math.PI/2;
+        var th1=2*Math.PI*r/rng.M-Math.PI/2+rOff;
+        var th2=2*Math.PI*r2/rng.M-Math.PI/2+rOff;
         var w=Math.sin(gt*.0014+i*.4+r*.25)*.5+.5;
         var col,alpha;
         if(isCP1&&isCP2){col=gapBaseCol;alpha=0.32+w*.38;}   /* admissible pair */
@@ -2668,13 +2662,14 @@ function frame(ts){
       var rng=rings[i];
       var M2=rng.M;
       var wv=Math.sin(gt*.001+i*.45)*.5+.5;
+      var rOff=ringRotOff(M2, curM);
       for(var r=0;r<M2;r++){
         var r2=(r+1)%M2;
         var g1=r===0?M2:gcd(r,M2);
         var g2=r2===0?M2:gcd(r2,M2);
         var cp1=g1===1, cp2=g2===1;
-        var th1=2*Math.PI*r/M2-Math.PI/2;
-        var th2=2*Math.PI*r2/M2-Math.PI/2;
+        var th1=2*Math.PI*r/M2-Math.PI/2+rOff;
+        var th2=2*Math.PI*r2/M2-Math.PI/2+rOff;
         /* Color: gcd1-gcd1=teal, gcd1-nongcd=gold, nongcd-nongcd=coral */
         var col,alpha;
         if(cp1&&cp2){col='43,191,176';alpha=0.32+wv*.35;}
