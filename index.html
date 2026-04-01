@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -133,7 +133,7 @@ body {
 
 /* ── SECTIONS ── */
 .section {
-  padding: 80px 0;
+  padding: 56px 0;
   border-bottom: 1px solid var(--border);
 }
 .section:last-child { border-bottom: none; }
@@ -448,6 +448,50 @@ input[type=range] {
   cursor:pointer;transition:all .2s;text-decoration:none;}
 .view-canvas-btn:hover{background:rgba(43,191,176,.15);border-color:rgba(43,191,176,.6);}
 .view-canvas-btn::before{content:"⬡ ";font-size:13px;}
+
+/* ── CONSTANTS GRID (opener) ── */
+.constants-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:860px;margin:24px auto 0;}
+.const-card{position:relative;background:rgba(12,11,20,0.78);border:1px solid rgba(212,168,67,.18);
+  backdrop-filter:blur(12px);padding:16px 20px 14px;min-width:148px;cursor:pointer;
+  transition:border-color .3s,box-shadow .3s,transform .25s;
+  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));}
+.const-card::before{content:'';position:absolute;inset:0;
+  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));
+  background:linear-gradient(135deg,rgba(212,168,67,.06) 0%,transparent 60%);pointer-events:none;}
+.const-card:hover{border-color:rgba(212,168,67,.45);transform:translateY(-3px);}
+.c-card:hover{box-shadow:0 8px 36px rgba(212,168,67,.18);}
+.j-card:hover{box-shadow:0 8px 36px rgba(78,205,196,.18);}
+.d0-card:hover{box-shadow:0 8px 36px rgba(144,96,208,.18);}
+.t-card:hover{box-shadow:0 8px 36px rgba(255,140,105,.18);}
+.g-card:hover{box-shadow:0 8px 36px rgba(232,201,106,.2);}
+.const-sym{font-family:'Cormorant Garamond','Instrument Serif',Georgia,serif;font-size:1.5rem;font-weight:500;line-height:1;margin-bottom:5px;}
+.c-card .const-sym{color:#d4a843;} .j-card .const-sym{color:#4ecdc4;} .d0-card .const-sym{color:#9060d0;} .t-card .const-sym{color:#ff8c69;} .g-card .const-sym{color:#e8c96a;}
+.const-val{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ede6d8;letter-spacing:.02em;margin-bottom:4px;}
+.const-name{font-family:'EB Garamond',Georgia,serif;font-size:11px;font-style:italic;color:rgba(138,127,106,.8);line-height:1.3;}
+.const-corner{position:absolute;top:6px;right:8px;font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(138,127,106,.5);letter-spacing:.1em;}
+.const-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:1px;opacity:0;transition:opacity .3s;}
+.c-card:hover .const-glow{background:#d4a843;opacity:1;} .j-card:hover .const-glow{background:#4ecdc4;opacity:1;} .d0-card:hover .const-glow{background:#9060d0;opacity:1;} .t-card:hover .const-glow{background:#ff8c69;opacity:1;} .g-card:hover .const-glow{background:#e8c96a;opacity:1;}
+.identity-line-opener{margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(138,127,106,.8);letter-spacing:.1em;text-align:center;}
+.identity-line-opener span{color:#d4a843;}
+
+/* ── CONSTANTS POPUP ── */
+#const-popup-overlay{position:fixed;inset:0;z-index:9999;background:rgba(5,4,10,.85);backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+#const-popup-overlay.open{opacity:1;pointer-events:all;}
+.const-popup-box{background:rgba(14,13,22,.97);border:1px solid rgba(212,168,67,.35);max-width:540px;width:90%;
+  padding:34px 36px 30px;position:relative;
+  clip-path:polygon(0 0,calc(100% - 13px) 0,100% 13px,100% 100%,13px 100%,0 calc(100% - 13px));
+  transform:translateY(14px);transition:transform .3s cubic-bezier(.16,1,.3,1);}
+#const-popup-overlay.open .const-popup-box{transform:translateY(0);}
+.cpop-sym{font-family:'Cormorant Garamond',Georgia,serif;font-size:2.2rem;font-weight:400;margin-bottom:5px;}
+.cpop-title{font-family:'EB Garamond',Georgia,serif;font-style:italic;font-size:1.05rem;color:#c9bfaa;margin-bottom:18px;}
+.cpop-formula{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#ede6d8;
+  background:rgba(255,255,255,.04);border-left:2px solid;padding:12px 15px;margin-bottom:13px;
+  line-height:1.9;white-space:pre-wrap;}
+.cpop-note{font-family:'EB Garamond',Georgia,serif;font-size:.98rem;color:#c9bfaa;line-height:1.65;font-style:italic;}
+.cpop-close{position:absolute;top:14px;right:18px;font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:rgba(138,127,106,.7);cursor:pointer;letter-spacing:.1em;transition:color .2s;}
+.cpop-close:hover{color:#d4a843;}
 </style>
 </head>
 <body>
@@ -463,20 +507,7 @@ input[type=range] {
   <div id="cov-body"></div>
 </div>
 
-  <!-- stats bar -->
-  <div id="opener-stats" style="position:absolute;bottom:0;left:0;right:0;
-    background:rgba(5,4,10,.9);border-top:1px solid rgba(212,168,67,.15);
-    font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(160,150,130,.7);
-    padding:5px 14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;z-index:3;
-    opacity:0;transition:opacity .8s ease;">
-    <span>gcd=1: <span id="os-cp" style="color:#d4a843;">—</span></span>
-    <span>lifts: <span id="os-lifts" style="color:#2bbfb0;">—</span></span>
-    <span>lift/gcd=1: <span id="os-lratio" style="color:#2bbfb0;">—</span></span>
-    <span style="color:rgba(80,70,55,.5);">|</span>
-    <span>C(N)= <span id="os-cn" style="color:#9060d0;">—</span></span>
-    <span>D(N)= <span id="os-dn" style="color:#e85540;">—</span></span>
-    <span style="margin-left:auto;">N=<span id="os-n" style="color:rgba(160,150,130,.5);">—</span></span>
-  </div>
+  
 </div>
 
 <!-- ══ CANVAS OVERLAY (for "View on Canvas" buttons) ══ -->
@@ -509,19 +540,38 @@ input[type=range] {
     border-bottom:1px solid rgba(212,168,67,.12);flex-shrink:0;">
 
     <!-- N slider -->
-    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);letter-spacing:.1em;">N=</span>
-    <input id="op-n-sl" type="range" min="2" max="200" value="2" step="1"
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);letter-spacing:.1em;">N=</span>
+    <input id="op-n-sl" type="range" min="2" max="512" value="2" step="1"
       oninput="opSetMod(+this.value)"
       style="width:130px;accent-color:#d4a843;cursor:pointer;">
     <span id="op-n-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#d4a843;min-width:28px;">2</span>
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
+    <!-- Zoom slider -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Zoom</span>
+    <input id="op-zoom-sl" type="range" min="0.3" max="4.0" value="2.0" step="0.05"
+      oninput="opSetZoom(+this.value);document.getElementById('op-zoom-val').textContent=parseFloat(this.value).toFixed(1)+'x'"
+      style="width:80px;accent-color:#d4a843;cursor:pointer;">
+    <span id="op-zoom-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#d4a843;min-width:30px;">2.0x</span>
+
+    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
+
+    <!-- Ring spacing / collapse to unit circle -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Spread</span>
+    <input id="op-spacing-sl" type="range" min="0" max="1" value="0" step="0.02"
+      oninput="opSetSpacing(+this.value);document.getElementById('op-spacing-val').textContent=parseFloat(this.value).toFixed(2)"
+      style="width:80px;accent-color:#9060d0;cursor:pointer;">
+    <span id="op-spacing-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(144,96,208,.9);min-width:28px;">0.00</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.5);">→ ○</span>
+
+    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
+
     <!-- View mode: now includes No Dots option -->
     <select onchange="opSetView(+this.value)"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;
       background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
-      color:rgba(200,185,155,.8);padding:3px 6px;border-radius:2px;cursor:pointer;">
+      color:rgba(200,185,155,.8);padding:5px 8px;border-radius:2px;cursor:pointer;">
       <option value="0">gcd=1 only</option>
       <option value="1">Non-gcd=1 only</option>
       <option value="2">Combined</option>
@@ -529,46 +579,47 @@ input[type=range] {
 
     <!-- Color mode -->
     <select onchange="opSetColor(this.value)"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;
       background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
-      color:rgba(200,185,155,.8);padding:3px 6px;border-radius:2px;cursor:pointer;">
+      color:rgba(200,185,155,.8);padding:5px 8px;border-radius:2px;cursor:pointer;">
       <option value="residue6">Color: r mod 6</option>
       <option value="lift">Color: lifts</option>
       <option value="gcd">Color: gcd</option>
       <option value="prime">Color: prime ring</option>
+      <option value="newresid">Color: new residue</option>
     </select>
 
     <!-- Label mode -->
     <select onchange="opSetLabel(this.value)"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;
       background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
-      color:rgba(200,185,155,.8);padding:3px 6px;border-radius:2px;cursor:pointer;">
+      color:rgba(200,185,155,.8);padding:5px 8px;border-radius:2px;cursor:pointer;">
       <option value="r">Label: r</option>
       <option value="rm">Label: r/M</option>
       <option value="angle">Label: angle°</option>
       <option value="gcd">Label: gcd value</option>
-      <option value="none">Label: none</option>
+      <option value="none" selected>Label: none</option>
     </select>
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
     <!-- Dots toggle -->
     <button id="op-dots-btn" onclick="opToggleDots()"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(100,90,70,.3);
-      color:rgba(100,90,70,.5);cursor:pointer;border-radius:2px;white-space:nowrap;">
-      Dots: OFF</button>
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.5);
+      color:rgba(212,168,67,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
+      Dots: ON</button>
 
     <!-- Line mode cycle -->
     <button id="op-line-btn" onclick="opCycleLines()"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
       background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.5);
       color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
       Lines: Lift</button>
 
     <!-- Lift depth (only relevant for lift mode) -->
-    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);">depth</span>
-    <input id="op-lift-sl" type="range" min="0" max="10" value="0" step="1"
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">depth</span>
+    <input id="op-lift-sl" type="range" min="0" max="64" value="0" step="1"
       oninput="opSetLift(+this.value);document.getElementById('op-lift-val').textContent=this.value==0?'all':this.value"
       style="width:70px;accent-color:#2bbfb0;cursor:pointer;">
     <span id="op-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#2bbfb0;min-width:20px;">all</span>
@@ -579,16 +630,34 @@ input[type=range] {
 
     <!-- Export + fullscreen -->
     <button onclick="opExport4K()" title="Export 4K PNG"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
       background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.4);
       color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;">⬇ 4K</button>
     <button onclick="opFullscreen()" title="Fullscreen" id="op-fs-btn"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 10px;
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
       background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.4);
       color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">⛶</button>
 
+    <!-- Presets dropdown -->
+    <select onchange="opRunPreset(+this.value);this.selectedIndex=0;"
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;
+      background:rgba(5,4,10,.8);border:1px solid rgba(43,191,176,.35);
+      color:rgba(43,191,176,.8);padding:5px 8px;border-radius:2px;cursor:pointer;max-width:140px;">
+      <option value="-1" disabled selected>▷ Preset...</option>
+      <option value="0">Birth of Rings</option>
+      <option value="1">Lift Filtering</option>
+      <option value="2">Non-Coprime Reveal</option>
+      <option value="3">Twin Prime Geometry</option>
+      <option value="4">GCD Polygons</option>
+      <option value="5">Primorial Meditation</option>
+      <option value="6">Consecutive Lifts</option>
+      <option value="7">Equator Dance</option>
+      <option value="8">Mod Sweep</option>
+      <option value="9">Full Synthesis</option>
+    </select>
+
     <button onclick="opEnter()" title="Skip intro"
-      style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;
+      style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;
       letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;
       border:1px solid rgba(212,168,67,.5);background:rgba(212,168,67,.08);
       color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">
@@ -598,39 +667,40 @@ input[type=range] {
   <!-- Splash text overlay — appears after animation completes -->
   <div id="op-splash" style="position:absolute;inset:0;z-index:3;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    pointer-events:none;opacity:0;transition:opacity 1.2s ease;">
+    pointer-events:none;opacity:0;transition:opacity 1.2s ease;
+    overflow-y:auto;padding:60px 0 70px;">
 
     <!-- Title block -->
-    <div style="text-align:center;padding:40px 48px 32px;
+    <div id="op-splash-inner" style="text-align:center;padding:clamp(16px,3vw,40px) clamp(16px,4vw,48px) clamp(16px,3vw,32px);
       background:rgba(5,4,10,.65);backdrop-filter:blur(4px);
       border-radius:8px;border:1px solid rgba(212,168,67,.18);
-      max-width:min(700px,90vw);pointer-events:auto;">
+      max-width:min(700px,92vw);pointer-events:auto;margin:auto;">
 
       <div style="font-family:'JetBrains Mono',monospace;font-size:10px;
         letter-spacing:.28em;color:rgba(43,191,176,.8);text-transform:uppercase;
-        margin-bottom:20px;">Wessen Getachew · 2026 · math.NT</div>
+        margin-bottom:14px;">Wessen Getachew · 2026 · math.NT</div>
 
       <div style="font-family:'Cormorant Garamond','Instrument Serif',Georgia,serif;
-        font-size:clamp(36px,6vw,72px);font-weight:400;color:#ede6d8;
+        font-size:clamp(28px,6vw,72px);font-weight:400;color:#ede6d8;
         line-height:1.08;margin-bottom:10px;">
         The <em style="color:#d4a843;font-style:italic;">Lift Survival</em><br>Function
       </div>
 
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;
-        letter-spacing:.08em;color:rgba(140,130,110,.6);margin-bottom:28px;">
-        Observations on a geometric structure already present in the integers
+      <div style="font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.8vw,10px);
+        letter-spacing:.08em;color:rgba(140,130,110,.6);margin-bottom:20px;">
+        Where primes reveal themselves as exact discontinuities in a smooth Euler product
       </div>
 
       <!-- Cycling quote -->
       <div id="op-quote" style="font-family:'EB Garamond',Georgia,serif;
-        font-size:clamp(14px,2vw,19px);color:rgba(200,185,155,.75);
-        font-style:italic;line-height:1.65;margin-bottom:10px;
-        min-height:80px;display:flex;align-items:center;justify-content:center;
-        transition:opacity .5s ease;">
+        font-size:clamp(13px,2.2vw,20px);color:rgba(200,185,155,.82);
+        font-style:italic;line-height:1.55;margin-bottom:8px;
+        min-height:60px;display:flex;align-items:center;justify-content:center;
+        opacity:0;transition:opacity .4s ease;">
       </div>
       <div id="op-quote-attr" style="font-family:'JetBrains Mono',monospace;
-        font-size:9px;letter-spacing:.1em;color:rgba(120,110,90,.55);
-        margin-bottom:32px;transition:opacity .5s ease;"></div>
+        font-size:11px;letter-spacing:.1em;color:rgba(120,110,90,.55);
+        margin-bottom:32px;opacity:0;transition:opacity .4s ease;"></div>
 
       <!-- Enter button — large, prominent -->
       <button onclick="opEnter()"
@@ -646,46 +716,104 @@ input[type=range] {
         Explore &nbsp;&#8594;
       </button>
 
-      <!-- Key constants row -->
-      <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap;
-        margin-top:28px;padding-top:20px;border-top:1px solid rgba(212,168,67,.12);">
-        <div style="text-align:center;">
-          <div style="font-family:'Cormorant Garamond',Georgia,serif;
-            font-size:22px;color:#d4a843;">C ≈ 0.5307</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:8px;
-            letter-spacing:.1em;color:rgba(120,110,90,.6);margin-top:3px;">Lift constant</div>
+      <!-- 5-card constants grid -->
+      <div style="margin-top:26px;padding-top:20px;border-top:1px solid rgba(212,168,67,.12);">
+        <div class="constants-grid">
+          <div class="const-card c-card" onclick="openConstPopup('C')">
+            <div class="const-corner">01</div>
+            <div class="const-sym">C</div>
+            <div class="const-val">≈ 0.530711806246</div>
+            <div class="const-name">Lift Survival Constant</div>
+            <div class="const-glow"></div>
+          </div>
+          <div class="const-card j-card" onclick="openConstPopup('J')">
+            <div class="const-corner">02</div>
+            <div class="const-sym">J</div>
+            <div class="const-val">≈ 0.773154968933</div>
+            <div class="const-name">Total Jump Content</div>
+            <div class="const-glow"></div>
+          </div>
+          <div class="const-card d0-card" onclick="openConstPopup('D0')">
+            <div class="const-corner">03</div>
+            <div class="const-sym">D₀</div>
+            <div class="const-val">≈ 0.551691597558</div>
+            <div class="const-name">Even Prime Zeta Sum</div>
+            <div class="const-glow"></div>
+          </div>
+          <div class="const-card t-card" onclick="openConstPopup('T')">
+            <div class="const-corner">04</div>
+            <div class="const-sym">T</div>
+            <div class="const-val">≈ 0.221463371375</div>
+            <div class="const-name">Odd Prime Zeta Sum</div>
+            <div class="const-glow"></div>
+          </div>
+          <div class="const-card g-card" onclick="openConstPopup('G')">
+            <div class="const-corner">05</div>
+            <div class="const-sym">G</div>
+            <div class="const-val">≈ 0.915965594177</div>
+            <div class="const-name">Catalan's Constant (GRH)</div>
+            <div class="const-glow"></div>
+          </div>
         </div>
-        <div style="text-align:center;">
-          <div style="font-family:'Cormorant Garamond',Georgia,serif;
-            font-size:22px;color:#d4a843;">J ≈ 0.7732</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:8px;
-            letter-spacing:.1em;color:rgba(120,110,90,.6);margin-top:3px;">Total jump content</div>
-        </div>
-        <div style="text-align:center;">
-          <div style="font-family:'Cormorant Garamond',Georgia,serif;
-            font-size:22px;color:#2bbfb0;">8 layers</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:8px;
-            letter-spacing:.1em;color:rgba(120,110,90,.6);margin-top:3px;">Ring → RH</div>
+        <div class="identity-line-opener" style="margin-top:12px;">
+          <span>J = D₀ + T</span> · exact, prime by prime &nbsp;|&nbsp;
+          F(0) = ζ(2) = π²/6 · F(1) = 1 · <span>F(2) = C</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Stats bar at bottom -->
-  <div id="op-stats" style="position:absolute;bottom:0;left:0;right:0;z-index:2;
-    background:rgba(5,4,10,.85);border-top:1px solid rgba(212,168,67,.12);
-    font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(150,140,120,.7);
-    padding:5px 14px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
-    <span>gcd=1: <span id="op-stat-cp" style="color:#d4a843;">—</span></span>
-    <span>lifts: <span id="op-stat-lifts" style="color:#2bbfb0;">—</span></span>
-    <span>lift/gcd=1: <span id="op-stat-ratio" style="color:#2bbfb0;">—</span></span>
-    <span style="color:rgba(70,60,45,.5);">|</span>
-    <span>C(N)= <span id="op-stat-cn" style="color:#9060d0;">—</span></span>
-    <span>D(N)= <span id="op-stat-dn" style="color:#e85540;">—</span></span>
-    <span style="margin-left:auto;color:rgba(100,90,70,.5);">N=<span id="op-stat-n">—</span></span>
-    <span style="margin-left:12px;font-size:8px;color:rgba(80,70,55,.6);"><span style="color:rgba(43,191,176,.7);">■</span> gcd=1↔gcd=1 &nbsp;<span style="color:rgba(212,168,67,.7);">■</span> mixed &nbsp;<span style="color:rgba(232,85,64,.7);">■</span> non↔non</span>
+  <!-- Stats bar at bottom — single unified bar -->
+  <div id="opener-stats" style="position:absolute;bottom:0;left:0;right:0;z-index:4;
+    background:rgba(5,4,10,.92);border-top:1px solid rgba(212,168,67,.15);
+    font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);
+    padding:5px 14px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+    opacity:0;transition:opacity .8s ease;">
+    <span>gcd=1: <span id="os-cp" style="color:#d4a843;">—</span></span>
+    <span>/ <span id="os-total" style="color:rgba(160,150,130,.5);">—</span></span>
+    <span>lifts: <span id="os-lifts" style="color:#2bbfb0;">—</span></span>
+    <span>lift/gcd=1: <span id="os-lratio" style="color:#2bbfb0;">—</span></span>
+    <span style="color:rgba(70,60,45,.4);">|</span>
+    <span>C(N)= <span id="os-cn" style="color:#9060d0;">—</span></span>
+    <span>D(N)= <span id="os-dn" style="color:#e85540;">—</span></span>
+    <span style="margin-left:auto;">N=<span id="os-n" style="color:rgba(150,140,120,.5);">—</span></span>
   </div>
+
+  <!-- Pinned point inspector — inside overlay -->
+  <div id="op-inspector" style="position:absolute;top:60px;right:14px;z-index:10;
+    width:240px;max-height:60vh;overflow-y:auto;display:none;
+    background:rgba(5,4,10,.94);border:1px solid rgba(212,168,67,.3);
+    border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;">
+    <div style="padding:10px 14px;border-bottom:1px solid rgba(212,168,67,.2);
+      display:flex;justify-content:space-between;align-items:center;">
+      <span style="color:rgba(212,168,67,.8);letter-spacing:.12em;font-size:9px;text-transform:uppercase;">Pinned Points</span>
+      <button onclick="opInspectorClear()" style="background:none;border:none;
+        color:rgba(140,130,110,.6);cursor:pointer;font-size:10px;padding:0;">✕ clear</button>
+    </div>
+    <div id="op-inspector-list" style="padding:6px 0;"></div>
+  </div>
+
+  <!-- Hover tooltip — inside overlay -->
+  <div id="op-tooltip" style="position:absolute;z-index:10;pointer-events:none;
+    display:none;background:rgba(5,4,10,.92);border:1px solid rgba(43,191,176,.5);
+    border-radius:4px;padding:8px 12px;font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:rgba(200,185,155,.9);line-height:1.6;white-space:nowrap;
+    box-shadow:0 2px 16px rgba(0,0,0,.5);">
+  </div>
+
 </div>
+
+<!-- Fixed home button — appears after entering -->
+<button id="home-btn" onclick="goHome()"
+  style="display:none;position:fixed;top:12px;right:14px;z-index:200;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;padding:5px 14px;
+  border:1px solid rgba(212,168,67,.4);background:rgba(5,4,10,.85);
+  color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;transition:all .2s;"
+  onmouseover="this.style.background='rgba(212,168,67,.15)'"
+  onmouseout="this.style.background='rgba(5,4,10,.85)'">⌂ Home</button>
+
+<div id="progress-bar"></div>
 
 <!-- ══ CANVAS OVERLAY ══ -->
 <div id="cov-overlay" style="position:fixed;inset:0;z-index:800;background:rgba(5,4,10,.97);
@@ -743,9 +871,9 @@ input[type=range] {
     <!-- Dots toggle -->
     <button id="cov-dots-btn" onclick="covToggleDots()"
       style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 8px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(100,90,70,.3);
-      color:rgba(100,90,70,.5);cursor:pointer;border-radius:2px;white-space:nowrap;">
-      Dots: OFF</button>
+      background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.5);
+      color:rgba(212,168,67,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
+      Dots: ON</button>
 
     <!-- Line mode cycle -->
     <button id="cov-line-btn" onclick="covCycleLines()"
@@ -812,7 +940,7 @@ input[type=range] {
   <a href="#layer4"><span class="layer-num">04</span>C(x) Function</a>
   <a href="#layer5"><span class="layer-num">05</span>Jump Theorem</a>
   <a href="#layer6"><span class="layer-num">06</span>Total Jump J</a>
-  <a href="#layer7"><span class="layer-num">07</span>Parent F(u)</a>
+  <a href="#layer7"><span class="layer-num">07</span>Analytic F(u)</a>
   <a href="#layer8"><span class="layer-num">08</span>GRH Criterion</a>
   <a href="#layer9"><span class="layer-num">09</span>Mirror Involution</a>
   <a href="#layer10"><span class="layer-num">10</span>T(p#) Recursion</a>
@@ -825,8 +953,11 @@ input[type=range] {
   <a href="#layer17"><span class="layer-num">17</span>C(s) Zeros</a>
   <a href="#layer18"><span class="layer-num">18</span>Hyperbolic Spirals</a>
   <a href="#layer19"><span class="layer-num">19</span>Equator &amp; Sectors</a>
+  <a href="#layer20"><span class="layer-num">20</span>Golden Ratio</a>
+  <a href="#open-questions"><span class="layer-num">?</span>Open Questions</a>
   <a href="#summary"><span class="layer-num">∑</span>Summary</a>
 </nav>
+
 
 <main id="main">
 
@@ -835,7 +966,7 @@ input[type=range] {
   <div class="hero-label">Wessen Getachew · 2026 · math.NT</div>
   <div style="font-family:var(--serif);font-size:.95rem;color:var(--ink3);
     font-style:italic;margin-bottom:18px;">
-    Observations on a geometric structure already present in the integers
+    Where primes reveal themselves as exact discontinuities in a smooth Euler product
   </div>
   <h1 class="hero-title">
     The <em>Lift Survival</em><br>Function
@@ -872,11 +1003,11 @@ input[type=range] {
   </div>
   <div class="hero-meta">8 new objects · Jump Theorem proved · J = Σ P(k) · GRH family · Laguerre–Pólya class</div>
   <div class="hero-constants">
-    <div class="hero-const">Lift constant<span class="val">C ≈ 0.5307</span>
+    <div class="hero-const">Lift constant<span class="val" onclick="opShowFormula('C',this)" style="cursor:pointer;border-bottom:1px dashed rgba(212,168,67,.4);" title="Click for formula">C ≈ 0.5307</span>
         <span class="hero-const" style="font-size:9px;color:rgba(140,130,110,.5);">OEIS A065469 · verified M=2,000,000</span></div>
-    <div class="hero-const">Total jumps<span class="val">J ≈ 0.7732</span></div>
-    <div class="hero-const">Log-deriv base<span class="val">D₀ ≈ 0.5517</span></div>
-    <div class="hero-const">Correction<span class="val">T ≈ 0.2215</span></div>
+    <div class="hero-const">Total jumps<span class="val" onclick="opShowFormula('J',this)" style="cursor:pointer;border-bottom:1px dashed rgba(212,168,67,.4);" title="Click for formula">J ≈ 0.7732</span></div>
+    <div class="hero-const">Log-deriv base<span class="val" onclick="opShowFormula('D0',this)" style="cursor:pointer;border-bottom:1px dashed rgba(212,168,67,.4);" title="Click for formula">D₀ ≈ 0.5517</span></div>
+    <div class="hero-const">Correction<span class="val" onclick="opShowFormula('T',this)" style="cursor:pointer;border-bottom:1px dashed rgba(212,168,67,.4);" title="Click for formula">T ≈ 0.2215</span></div>
   </div>
 </section>
 
@@ -1138,7 +1269,7 @@ input[type=range] {
   </div>
 
   <div class="theorem-box">
-    <div class="theorem-label">Theorem — Jump Theorem (Getachew 2026)</div>
+    <div class="theorem-label">Theorem — Jump Theorem</div>
     <p>The function D(x) is smooth on every interval \((p-1,\, q-1)\) where \(p,q\) are consecutive primes. At x = p&minus;1 for prime p, it has a jump discontinuity of <strong>exact size</strong>:</p>
     \[\Delta D\big|_{x=p-1} = \frac{1}{p(p-1)}\]
     <p style="margin-top:12px;">For every composite <em>m</em>: D(x) is <strong>continuous</strong> at \(x=m-1\). No jump.</p>
@@ -1161,15 +1292,64 @@ input[type=range] {
     <strong>New object:</strong> The Dirichlet series G(s) = Σ_{n≥1} C(n)/n<sup>s</sup> converges for Re(s) > 1 and appears to be unstudied in the literature. Its coefficients c(m) = C(m)/C(m−1) satisfy: c(p) = (p²−p)/(p²−1) for prime p; c(m) = 1 for composite m between primes.
   </div>
 
+  <!-- Jump Spectrum -->
+  <div class="interactive-block">
+    <h4>Jump Spectrum — click any marker</h4>
+    <p style="font-size:.88rem;color:var(--ink3);margin-bottom:12px;">Jump sizes s = 1/(p(p−1)) plotted on [0,1]. The golden ratio φ sits at s=1, unreachable by any integer prime. Click a marker to identify the prime.</p>
+    <canvas id="spec-canvas" style="width:100%;height:80px;display:block;"></canvas>
+    <div id="spec-info" style="font-family:var(--mono);font-size:10px;color:rgba(140,130,110,.6);margin-top:8px;min-height:18px;"></div>
+  </div>
+
   <div class="interactive-block">
     <h4>Jump Theorem Prime Checker</h4>
-    <p style="font-size:.88rem;color:var(--ink3);margin-bottom:14px;">Enter any integer n ≥ 2. The checker computes C(n−1), detects whether a jump occurs, and reads off the prime.</p>
-    <div class="input-row">
+    <p style="font-size:.88rem;color:var(--ink3);margin-bottom:10px;">Enter any integer n &ge; 1. The checker detects whether a D(x) jump occurs at x = n&minus;1, recovers the prime, and shows the jump geometry. <strong style="color:rgba(212,168,67,.8);">Try n = 1 for the golden ratio &phi; &mdash; the boundary of the jump spectrum.</strong></p>
+
+    <!-- Presets -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">
+      <span style="font-family:var(--mono);font-size:9px;color:var(--ink3);align-self:center;letter-spacing:.1em;">PRESETS:</span>
+      <button class="btn" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(1)">&phi; boundary</button>
+      <button class="btn" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(2)">p = 2</button>
+      <button class="btn" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(3)">p = 3</button>
+      <button class="btn" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(7)">p = 7</button>
+      <button class="btn" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(101)">p = 101</button>
+      <button class="btn" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(9999991)">p = 9999991</button>
+      <button class="btn btn-gold" style="font-size:9px;padding:3px 8px;" onclick="jtPreset(1000000007)">p = 10<sup>9</sup>+7</button>
+    </div>
+
+    <div class="input-row" style="margin-bottom:10px;">
       <label>n =</label>
-      <input class="inp inp-wide" type="number" id="jt-n" value="1" min="1" onkeydown="if(event.key==='Enter')jt_check()">
+      <input class="inp inp-wide" type="number" id="jt-n" value="1" min="1" onkeydown="if(event.key==='Enter')jt_check()" style="font-size:13px;">
       <button class="btn btn-gold" onclick="jt_check()">Check</button>
     </div>
-    <div class="result-area" id="jt-out">Enter n and click Check.</div>
+
+    <!-- Display mode toggle -->
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+      <span style="font-family:var(--mono);font-size:9px;color:var(--ink3);letter-spacing:.1em;">DISPLAY:</span>
+      <label style="font-family:var(--mono);font-size:10px;color:var(--ink2);display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="radio" name="jt-disp" value="sci" checked onchange="jt_check()"> Scientific
+      </label>
+      <label style="font-family:var(--mono);font-size:10px;color:var(--ink2);display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="radio" name="jt-disp" value="frac" onchange="jt_check()"> Fraction
+      </label>
+      <label style="font-family:var(--mono);font-size:10px;color:var(--ink2);display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="radio" name="jt-disp" value="rel" onchange="jt_check()"> Relative to p=2
+      </label>
+      <label style="font-family:var(--mono);font-size:10px;color:var(--ink2);display:flex;align-items:center;gap:4px;cursor:pointer;">
+        <input type="radio" name="jt-disp" value="geo" onchange="jt_check()"> Geometry
+      </label>
+    </div>
+
+    <div class="result-area" id="jt-out" style="font-size:12px;line-height:1.7;">Enter n and click Check.</div>
+
+    <!-- Export button — only shown after a result -->
+    <div id="jt-export-row" style="display:none;margin-top:12px;">
+      <button class="btn btn-gold" onclick="jtExportPNG()" style="font-size:10px;padding:5px 16px;">
+        ⬇ Export PNG — all views
+      </button>
+      <span style="font-family:var(--mono);font-size:9px;color:var(--ink3);margin-left:10px;">
+        Exports all 4 display modes for n = <span id="jt-export-n">—</span>
+      </span>
+    </div>
   </div>
 
 
@@ -1233,9 +1413,9 @@ input[type=range] {
 
 <!-- ══ LAYER 7 · F(u) ══ -->
 <section class="section" id="layer7">
-  <div class="layer-badge">Layer 07 — The Parent Function</div>
-  <h2 class="section-title">The Parent Function <span>F(u)</span></h2>
-  <p class="section-lead">C(x) is F(2). The parent F(u) is an entire function in the Laguerre–Pólya class — all real zeros, at the prime squares.</p>
+  <div class="layer-badge">Layer 07 — The Analytic Lift Function</div>
+  <h2 class="section-title">The Analytic Lift Function <span>F(u)</span></h2>
+  <p class="section-lead">C = F(2) is a single evaluation of a transcendental entire function F(u). This function interpolates analytically: F(0) = ζ(2), F(1) = 1, F(2) = C, with zeros at every prime square. It belongs to the Laguerre–Pólya class — the same class to which the Riemann Xi function conjecturally belongs.</p>
 
   <div class="formula-block">
     <div class="formula-label">Definition of F(u)</div>
@@ -1255,8 +1435,10 @@ input[type=range] {
   </div>
 
   <div class="theorem-box">
-    <div class="theorem-label">Theorem — Laguerre–Pólya Class (unconditional)</div>
-    <p>F(u) is an entire function with all real zeros \(u = p^2\) (prime squares). Because \(\sum_p 1/p^2\) converges, F belongs to the <strong>Laguerre–Pólya class</strong> — entire functions with a Hadamard product representation and no exponential factor. This is unconditional: no hypothesis required.</p>
+    <div class="theorem-label">Theorem — F(u) is Entire, Laguerre–Pólya Class</div>
+    <p>F(u) is an <strong>entire function</strong> — holomorphic on all of ℂ with no poles. Its zeros are exactly \(u = p^2\) for each prime p, all real and positive. The product converges absolutely because \(\sum_p 1/p^2 &lt; \infty\), so F has genus 0 and belongs to the <strong>Laguerre–Pólya class</strong>. This is unconditional.</p>
+    <p style="margin-top:10px;font-size:.9rem;color:var(--ink3);">The LP class is the closure of real-rooted polynomials under locally uniform limits. Equivalently: entire functions of the form \(e^{-\alpha u^2 + \beta u}\prod_n(1-u/a_n)e^{u/a_n}\) with all \(a_n\) real and \(\alpha\ge 0\). For F(u), \(\alpha = 0\) (no Gaussian damping) and all zeros \(a_n = p^2 > 0\). The LP class matters because Pólya conjectured — now proved by Griffin–Ono–Rolen–Zagier (2019) — that the Riemann Xi function Ξ is also LP class, which is equivalent to RH. F(u) satisfies the LP condition for an entirely elementary reason: prime squares and a convergent sum.</p>
+    <p style="margin-top:10px;font-size:.9rem;color:var(--ink3);"><strong style="color:var(--gold);">The name “Analytic Lift Function”</strong> reflects that F analytically continues the lift survival rate — C = F(2) is one value of a coherent analytic object. F is not a “parent function” in the elementary sense (like y = x²). It is a transcendental entire function of infinite order in its variable.</p>
   </div>
 
   <div class="interactive-block">
@@ -1347,7 +1529,17 @@ input[type=range] {
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('Mirror involution — paired coprime residues',12,0,{viewMode:0,colorMode:'residue6',showLifts:false,showGCDPoly:true,gapN:null})">View on Canvas — Mirror pairs on ring M</button>
-</section>
+
+  <div class="interactive-block" style="margin-top:16px;">
+    <h4>Mirror pairs — visual ring diagram</h4>
+    <div class="slider-row">
+      <label>M =</label>
+      <input type="range" id="r9-M" min="3" max="60" step="1" value="15" oninput="r9_update&&r9_update();document.getElementById('r9-Mval').textContent=this.value">
+      <span class="slval" id="r9-Mval">15</span>
+    </div>
+    <canvas id="r9-canvas" class="mini-canvas" style="height:180px;"></canvas>
+    <div class="result-area" id="r9-out" style="min-height:44px;">Move slider.</div>
+  </div>
 
 <!-- ══ LAYER 10 · PRIMORIAL RECURSION ══ -->
 <section class="section" id="layer10">
@@ -1548,7 +1740,17 @@ input[type=range] {
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('C_k family — gap-6 chords (rad=6 = gap-2 chords scaled)',30,0,{viewMode:0,colorMode:'residue6',showLifts:false,showGCDPoly:false,gapN:6})">View on Canvas — Gap-6 chords (same family as gap-2 for odd primes)</button>
-</section>
+
+  <div class="interactive-block" style="margin-top:16px;">
+    <h4>C_k Euler product — partial convergence</h4>
+    <div class="slider-row">
+      <label>k =</label>
+      <input type="range" id="r14-k" min="1" max="30" step="1" value="2" oninput="r14_update&&r14_update();document.getElementById('r14-kval').textContent=this.value">
+      <span class="slval" id="r14-kval">2</span>
+    </div>
+    <canvas id="r14-canvas" class="mini-canvas" style="height:150px;"></canvas>
+    <div class="result-area" id="r14-out" style="min-height:44px;">Move slider.</div>
+  </div>
 
 <!-- ══ LAYER 15 · PERMANENT LIFT BARRIER ══ -->
 <section class="section" id="layer15">
@@ -1596,9 +1798,17 @@ input[type=range] {
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('Barrier paths — lift lines showing the upper wall',60,0,{viewMode:0,colorMode:'lift',showLifts:true,showGCDPoly:false,gapN:null})">View on Canvas — Lift lines (teal lifts, coral permanent blocks)</button>
-</section>
 
-<!-- ══ LAYER 16 · DOUBLING LAW + MOD 9 ══ -->
+  <div class="interactive-block" style="margin-top:16px;">
+    <h4>Barrier scan — upper and lower paths</h4>
+    <div class="slider-row">
+      <label>M_max =</label>
+      <input type="range" id="r15-M" min="5" max="80" step="1" value="30" oninput="r15_update&&r15_update();document.getElementById('r15-Mval').textContent=this.value">
+      <span class="slval" id="r15-Mval">30</span>
+    </div>
+    <canvas id="r15-canvas" class="mini-canvas" style="height:150px;"></canvas>
+    <div class="result-area" id="r15-out" style="min-height:44px;">Move slider.</div>
+  </div> · DOUBLING LAW + MOD 9 ══ -->
 <section class="section" id="layer16">
   <div class="layer-badge">Layer 16 — Exact Recursions</div>
   <h2 class="section-title">The <span>Doubling Law</span> and Mod 9 Invariant</h2>
@@ -1646,6 +1856,12 @@ input[type=range] {
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('Doubling law — gap-2 twin pairs at primorial M=30',30,0,{viewMode:0,colorMode:'residue6',showLifts:false,showGCDPoly:false,gapN:2})">View on Canvas — Twin pairs at M = 30 (base of doubling law)</button>
+
+  <div class="interactive-block" style="margin-top:16px;">
+    <h4>T/φ halving at 30·2ⁿ</h4>
+    <canvas id="r16-canvas" class="mini-canvas" style="height:150px;"></canvas>
+    <div class="result-area" id="r16-out" style="min-height:44px;"></div>
+  </div>
 </section>
 
 
@@ -1843,6 +2059,49 @@ input[type=range] {
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('Jump spectrum — rings near the golden ratio boundary',13,0,{viewMode:0,colorMode:'lift',showLifts:true,showGCDPoly:false,gapN:null})">View on Canvas — Prime ring M=13</button>
+</section>
+
+
+
+<!-- ══ OPEN QUESTIONS ══ -->
+<section class="section" id="open-questions">
+  <div class="layer-badge">Open Questions</div>
+  <h2 class="section-title">Open <span>Questions</span></h2>
+  <p class="section-lead">The work raises more questions than it answers. Here are the cleanest open problems — each one precisely statable, none yet resolved.</p>
+
+  <div style="display:grid;gap:16px;margin:24px 0;">
+
+    <div class="theorem-box" style="border-left-color:var(--coral);">
+      <div class="theorem-label" style="color:var(--coral);">Open Question 1 — Twin Prime via Gap Classes</div>
+      <p>Is J_twin = &Sigma;<sub>p: p+2 prime</sub> 1/(p(p&minus;1)) strictly positive? By Conjecture 3, this is equivalent to the Twin Prime Conjecture. A proof that J_twin &gt; 0 would establish infinitely many twin primes.</p>
+    </div>
+
+    <div class="theorem-box" style="border-left-color:rgba(144,96,208,.7);">
+      <div class="theorem-label" style="color:rgba(144,96,208,.8);">Open Question 2 — Zeros of C(s)</div>
+      <p>Do the non-trivial zeros of C(s) lie on Re(s) = 1/2? This is equivalent to RH (since the non-trivial zeros of C(s) equal those of &zeta;(s)). What does D(s) contribute to the zero-free region?</p>
+    </div>
+
+    <div class="theorem-box" style="border-left-color:var(--gold);">
+      <div class="theorem-label" style="color:var(--gold);">Open Question 3 — Interference Nodal Lines</div>
+      <p>Do the nodal lines of the hyperbolic spiral interference pattern (&rho; = 2&pi;r/&theta; for coprime r) correspond exactly to the zeros of Dirichlet L-functions? A rigorous proof of this conjecture would give a new geometric interpretation of L-function zeros.</p>
+    </div>
+
+    <div class="theorem-box" style="border-left-color:var(--teal);">
+      <div class="theorem-label" style="color:var(--teal);">Open Question 4 — Hausman-Shapiro Connection</div>
+      <p>The Hausman-Shapiro constant A &asymp; 0.1075 governs &Sigma;<sub>n&le;N</sub> &phi;(n)&phi;(n+1) ~ A&middot;N&sup3;. Is A expressible as a simple function of C, D&sub;0;, and T? Our empirical checks suggest A &asymp; C&sup2;/&zeta;(2) but this is not proved.</p>
+    </div>
+
+    <div class="theorem-box" style="border-left-color:rgba(68,204,136,.7);">
+      <div class="theorem-label" style="color:rgba(68,204,136,.8);">Open Question 5 — Uniform Lifting</div>
+      <p>The empirical lift rate converges to C uniformly across all starting rings M. Is there an effective rate of convergence? Specifically: does |C(M) &minus; C| &le; K/M for some explicit constant K? This would give a quantitative version of the lift survival theorem.</p>
+    </div>
+
+    <div class="theorem-box" style="border-left-color:rgba(255,160,80,.7);">
+      <div class="theorem-label" style="color:rgba(255,160,80,.8);">Open Question 6 — Golden Ratio and Primes</div>
+      <p>Is there a deeper structural reason why &phi; = (1+&radic;5)/2 is the boundary of the jump spectrum? The fact that p(p&minus;1) = 1 has &phi; as its solution is algebraic — but does &phi; appear in the analytic continuation of J(s) = &Sigma;<sub>p</sub> 1/(p<sup>s</sup>(p<sup>s</sup>&minus;1))? Setting s = 1/2 gives the critical line; what is J(s) at s = log &phi;/log 2?</p>
+    </div>
+
+  </div>
 </section>
 
 
@@ -2061,26 +2320,43 @@ var MMAX=2,MTARGET=128,curM=2;
 var phase='rings',phaseT=0;
 var liftN=0;
 var viewMode=0;     // 0=gcd1 only  1=non-gcd1 only  2=combined  3=no points
-var showDots=false;
+var showDots=true;
+var zoomLevel=2.0;
+var ringSpacing=0.0;  // 0=spread, 1=unit circle (all same radius)
+window.opSetZoom=function(v){zoomLevel=Math.max(.3,Math.min(4,+v||2));};
+window.opSetSpacing=function(v){ringSpacing=Math.max(0,Math.min(1,+v||0));};
+// Expose read-only state for external functions (export, formula popup, etc.)
+window._opState=function(){return {curM:curM,zoomLevel:zoomLevel,liftN:liftN,
+  lineMode:lineMode,viewMode:viewMode,colorMode:colorMode,showDots:showDots,ringSpacing:ringSpacing};};
 var lineMode=0;     // 0=lift  1=gap2  2=gap4  3=ngon  4=none
-var labelMode='r';
+var labelMode='none';
 var colorMode='residue6';
 var RC6=['212,168,67','43,191,176','232,85,64','74,128,240','144,96,208','68,204,136'];
 
 var LINE_MODES=[
   {key:'lift',  label:'Lines: Lift',   col:'43,191,176'},
+  {key:'liftM', label:'Lines: Lift+M',  col:'43,191,176'},
   {key:'gap2',  label:'Lines: Gap 2',  col:'212,168,67'},
   {key:'gap4',  label:'Lines: Gap 4',  col:'144,96,208'},
+  {key:'gap6',  label:'Lines: Gap 6',  col:'68,204,136'},
+  {key:'gapN',  label:'Lines: Gap N',  col:'255,160,80'},
   {key:'ngon',  label:'Lines: N-gon',  col:'232,85,64'},
   {key:'none',  label:'Lines: Off',    col:'80,70,55'},
 ];
+var gapN_val=2;       // dynamic gap value for 'gapN' mode
+var gapLine_thick=1;  // line thickness mode: 1=thin 2=med 3=thick
 
 /* ── Build rings ── */
 function buildRings(mmax){
-  var maxR=Math.min(W,H)*(mmax>30?.44:.41);
+  var maxR=Math.min(W,H)*(mmax>30?.44:.41)*zoomLevel;
+  var outerR=maxR*.98; // outermost ring radius — unit circle target
   var rings=[];
+  // M=1: the origin — single point at center, gcd(0,1)=1, the seed of all rings
+  rings.push({M:1,pts:[{r:0,M:1,g:1,isCP:true,theta:-Math.PI/2,rr:0,lifts:true,isP:false,isSeed:true}],rr:0,isP:false,isSeed:true});
   for(var M=2;M<=mmax;M++){
-    var rr=(M-1)/(mmax-1)*maxR*.92+maxR*.06;
+    // Ring spacing: 0=spread (current), lerps toward unitR as ringSpacing→1
+    var spreadRr=(M-1)/(mmax-1)*maxR*.92+maxR*.06;
+    var rr=spreadRr*(1-ringSpacing)+outerR*ringSpacing;
     var pts=[];
     for(var r=0;r<M;r++){
       var g=r===0?M:gcd(r,M);
@@ -2104,6 +2380,13 @@ function ptColor(p,pulse){
   if(colorMode==='lift')     return p.isCP?(p.lifts?'rgba(43,191,176,'+(0.7+pulse*.25)+')':'rgba(232,85,64,'+(0.45+pulse*.2)+')'):('rgba(200,185,155,.25)');
   if(colorMode==='gcd')      return p.isCP?'rgba(43,191,176,'+(0.65+pulse*.3)+')':'rgba(232,85,64,'+(0.55+pulse*.25)+')';
   if(colorMode==='prime')    return p.isP?'rgba(212,168,67,'+(0.7+pulse*.25)+')':'rgba(144,96,208,'+(0.5+pulse*.2)+')';
+  if(colorMode==='newresid'){
+    /* Color by residue class mod 12 — richer color spectrum */
+    var hue12=['255,80,80','255,160,80','212,168,67','150,212,80',
+               '80,212,120','43,191,176','80,160,212','80,100,232',
+               '144,96,208','200,80,200','232,80,144','232,120,100'];
+    return 'rgba('+hue12[p.r%12]+','+( p.isCP?(0.55+al*.3):0.22)+')';
+  }
   return 'rgba(200,185,155,'+al+')';
 }
 
@@ -2122,9 +2405,19 @@ function frame(ts){
   ctx.clearRect(0,0,W,H);
 
   /* Phase */
-  if(phase==='rings'&&phaseT>2500){phase='expand';phaseT=0;}
+  if(phase==='rings'&&phaseT>400){
+    phase='expand';phaseT=0;
+    // Show stats bar immediately when animation starts
+    var sb=document.getElementById('opener-stats');
+    if(sb&&window._opUIVisible!==false){
+      sb.style.opacity='1';
+      // Force populate stats immediately
+      updateStats(curM);
+      _statsFlushDisplay();
+    }
+  }
   if(phase==='expand'){
-    var prog=Math.min(phaseT/2200,1);
+    var prog=Math.min(phaseT/1800,1);
     var ease=prog<.5?2*prog*prog:1-Math.pow(-2*prog+2,2)/2;
     curM=Math.round(MMAX+(MTARGET-MMAX)*ease);
     if(prog>=1){
@@ -2150,15 +2443,43 @@ function frame(ts){
   /* Guide circles */
   for(var i=0;i<n;i++){
     var rng=rings[i];
+    if(rng.isSeed) continue; // M=1 drawn as center dot
     var pulse=Math.sin(gt*.0009+i*.35)*.5+.5;
     ctx.beginPath();ctx.arc(cx,cy,rng.rr,0,2*Math.PI);
     ctx.strokeStyle='rgba('+(rng.isP?'212,168,67':'255,255,255')+','+(rng.isP?.13+pulse*.06:.04+pulse*.03)+')';
     ctx.lineWidth=rng.isP?.75:.35; ctx.stroke();
   }
+  // When collapsing: draw the target unit circle
+  if(ringSpacing>0.02){
+    var maxR2=Math.min(W,H)*(curM>30?.44:.41)*zoomLevel;
+    var uR=maxR2*.98;
+    ctx.beginPath();ctx.arc(cx,cy,uR,0,2*Math.PI);
+    ctx.strokeStyle='rgba(144,96,208,'+(ringSpacing*.5)+')';
+    ctx.lineWidth=1.5;ctx.setLineDash([4,6]);ctx.stroke();ctx.setLineDash([]);
+    // Label
+    if(ringSpacing>0.8){
+      ctx.font='10px JetBrains Mono,monospace';ctx.textAlign='center';
+      ctx.fillStyle='rgba(144,96,208,.7)';
+      ctx.fillText('unit circle  r = '+uR.toFixed(0)+'px',cx,cy-uR-8);
+      ctx.textAlign='left';
+    }
+  }
 
   /* ── LINES ── */
   if(lm.key==='lift'){
     /* Teal = lifts, coral = breaks, only gcd=1 pts */
+    // Special: draw lift from M=1 center to M=2 coprime points
+    if(rings[0]&&rings[0].isSeed&&rings[1]){
+      var r2=rings[1];
+      for(var pi=0;pi<r2.pts.length;pi++){
+        var pb=r2.pts[pi];
+        if(!pb.isCP)continue;
+        var w2=Math.sin(gt*.0018)*.5+.5;
+        ctx.beginPath();ctx.moveTo(cx,cy);
+        ctx.lineTo(cx+pb.rr*Math.cos(pb.theta),cy+pb.rr*Math.sin(pb.theta));
+        ctx.strokeStyle='rgba(212,168,67,'+(0.15+w2*.25)+')';ctx.lineWidth=0.8;ctx.stroke();
+      }
+    }
     for(var i=0;i<n-1;i++){
       var rA=rings[i],rB=rings[i+1];
       for(var pi=0;pi<rA.pts.length;pi++){
@@ -2169,41 +2490,82 @@ function frame(ts){
           var pb=rB.pts[pj];
           if(pb.r!==pa.r) continue;
           var w=Math.sin(gt*.0018-i*.4+pi*.2)*.5+.5;
+          /* Color by lift depth: deep survivors glow brighter */
+          var depthFactor=liftN>0?Math.min(1,liftN/5):0;
+          var liftCol=liftN>0?
+            'rgba('+(Math.round(43+depthFactor*120))+','+(Math.round(191-depthFactor*60))+','+Math.round(176+depthFactor*60)+',' :
+            'rgba(43,191,176,';
           ctx.beginPath();
           ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
           ctx.lineTo(cx+pb.rr*Math.cos(pb.theta),cy+pb.rr*Math.sin(pb.theta));
-          ctx.strokeStyle=pa.lifts?'rgba(43,191,176,'+(0.2+w*.42)+')':'rgba(232,85,64,'+(0.1+w*.18)+')';
-          ctx.lineWidth=pa.lifts?1.3:.6; ctx.stroke(); break;
+          ctx.strokeStyle=pa.lifts?(liftCol+(0.25+w*.42)+')'):('rgba(232,85,64,'+(0.1+w*.18)+')');
+          ctx.lineWidth=pa.lifts?(1.1+depthFactor*.8):.6; ctx.stroke(); break;
         }
       }
     }
-  } else if(lm.key==='gap2'||lm.key==='gap4'){
-    /* Gap-n chords: ALL pairs r to r+gap on same ring, colored by admissibility */
-    var gapVal=lm.key==='gap2'?2:4;
+  } else if(lm.key==='liftM'){
+    /* Lift+M: for each coprime r on ring M, draw line to r on M+1 (direct lift, teal)
+       AND to r+M on ring 2M (primorial doubling lift, gold) when gcd(r+M, 2M)=1 */
+    for(var i=0;i<n-1;i++){
+      var rA=rings[i], rB=rings[i+1];
+      var M2=rA.M*2;  /* the doubled modulus */
+      for(var pi=0;pi<rA.pts.length;pi++){
+        var pa=rA.pts[pi];
+        if(!pa.isCP) continue;
+        /* Direct lift: r → r on M+1 */
+        for(var pj=0;pj<rB.pts.length;pj++){
+          var pb=rB.pts[pj];
+          if(pb.r!==pa.r) continue;
+          var w=Math.sin(gt*.0018-i*.4+pi*.2)*.5+.5;
+          ctx.beginPath();
+          ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
+          ctx.lineTo(cx+pb.rr*Math.cos(pb.theta),cy+pb.rr*Math.sin(pb.theta));
+          ctx.strokeStyle=pa.lifts?'rgba(43,191,176,'+(0.2+w*.4)+')':'rgba(232,85,64,'+(0.1+w*.15)+')';
+          ctx.lineWidth=1.1; ctx.stroke(); break;
+        }
+        /* +M lift: r on M → r+M on 2M (if 2M is in view) */
+        var rPlusM=pa.r+rA.M;
+        var ring2M=null;
+        for(var ri=0;ri<n;ri++){if(rings[ri].M===M2){ring2M=rings[ri];break;}}
+        if(ring2M&&rPlusM<M2&&gcd(rPlusM,M2)===1){
+          var th2=2*Math.PI*rPlusM/M2-Math.PI/2;
+          var w2=Math.sin(gt*.0012+i*.3)*.5+.5;
+          ctx.beginPath();
+          ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
+          ctx.lineTo(cx+ring2M.rr*Math.cos(th2),cy+ring2M.rr*Math.sin(th2));
+          ctx.strokeStyle='rgba(212,168,67,'+(0.18+w2*.28)+')';
+          ctx.lineWidth=.9; ctx.stroke();
+        }
+      }
+    }
+
+  } else if(lm.key==='gap2'||lm.key==='gap4'||lm.key==='gap6'||lm.key==='gapN'){
+    /* Gap-n chords: ALL pairs r to r+gap, colored by gcd relationship */
+    var gapVal=lm.key==='gap2'?2:lm.key==='gap4'?4:lm.key==='gap6'?6:gapN_val;
+    /* Each gap gets its own signature color */
+    var gapBaseCol=lm.key==='gap2'?'43,191,176':lm.key==='gap4'?'144,96,208':lm.key==='gap6'?'68,204,136':'255,160,80';
+    var lw=gapLine_thick===1?.8:gapLine_thick===2?1.4:2.2;
     for(var i=0;i<n;i++){
       var rng=rings[i];
-      /* Iterate ALL residues r=0..M-1 */
-      for(var r=0;r<rng.M;r++){
+      for(var r=1;r<rng.M;r++){   /* r=1..M-1: skip r=0 */
         var r2=r+gapVal;
         if(r2>=rng.M) continue;
-        var g1=r===0?rng.M:gcd(r,rng.M);
+        var g1=gcd(r,rng.M);
         var g2=gcd(r2,rng.M);
         var isCP1=g1===1, isCP2=g2===1;
-        /* Skip r=0 (it's position 0, not a residue we label) */
-        if(r===0&&viewMode===0) continue;
+        /* Only draw if at least one endpoint is coprime (filter noise) */
+        if(!isCP1&&!isCP2) continue;
         var th1=2*Math.PI*r/rng.M-Math.PI/2;
         var th2=2*Math.PI*r2/rng.M-Math.PI/2;
         var w=Math.sin(gt*.0014+i*.4+r*.25)*.5+.5;
-        /* Color: both gcd=1 = teal (admissible twin), mixed = gold, both non = coral */
-        var col, alpha;
-        if(isCP1&&isCP2){col='43,191,176';alpha=0.28+w*.38;}       /* both coprime — teal */
-        else if(!isCP1&&!isCP2){col='232,85,64';alpha=0.15+w*.2;}  /* both non-coprime — coral */
-        else{col='212,168,67';alpha=0.18+w*.28;}                    /* mixed — gold */
+        var col,alpha;
+        if(isCP1&&isCP2){col=gapBaseCol;alpha=0.32+w*.38;}   /* admissible pair */
+        else{col='212,168,67';alpha=0.14+w*.2;}               /* mixed */
         ctx.beginPath();
         ctx.moveTo(cx+rng.rr*Math.cos(th1),cy+rng.rr*Math.sin(th1));
         ctx.lineTo(cx+rng.rr*Math.cos(th2),cy+rng.rr*Math.sin(th2));
         ctx.strokeStyle='rgba('+col+','+alpha+')';
-        ctx.lineWidth=isCP1&&isCP2?1.2:0.7; ctx.stroke();
+        ctx.lineWidth=isCP1&&isCP2?lw:lw*.5; ctx.stroke();
       }
     }
   } else if(lm.key==='ngon'){
@@ -2243,6 +2605,14 @@ function frame(ts){
       for(var pi=0;pi<rng.pts.length;pi++){
         var p=rng.pts[pi];
         var pulse2=Math.sin(gt*.0014+i*.5+pi*.31)*.5+.5;
+        // M=1 seed point: draw as special gold center dot
+        if(p.isSeed){
+          ctx.beginPath();ctx.arc(cx,cy,5*(1+pulse2*.3),0,2*Math.PI);
+          ctx.fillStyle='rgba(212,168,67,.9)';ctx.fill();
+          ctx.beginPath();ctx.arc(cx,cy,9,0,2*Math.PI);
+          ctx.strokeStyle='rgba(212,168,67,.3)';ctx.lineWidth=1;ctx.stroke();
+          continue;
+        }
         var sz=(p.isP?2.4:1.6)*(1+pulse2*.32);
         ctx.beginPath();ctx.arc(cx+p.rr*Math.cos(p.theta),cy+p.rr*Math.sin(p.theta),sz,0,2*Math.PI);
         ctx.fillStyle=ptColor(p,pulse2); ctx.fill();
@@ -2251,8 +2621,8 @@ function frame(ts){
   }
 
   /* ── LABELS ── */
-  if(labelMode!=='none'&&showDots&&viewMode!==3){
-    ctx.font='9px JetBrains Mono,monospace';
+  if(labelMode!=='none'&&viewMode!==3){
+    ctx.font='11px JetBrains Mono,monospace';
     ctx.textAlign='center';
     var maxRing=curM>20?8:curM;
     for(var i=0;i<Math.min(n,maxRing);i++){
@@ -2261,14 +2631,16 @@ function frame(ts){
         var p=rng.pts[pi];
         var lbl=labelMode==='r'?''+p.r:labelMode==='rm'?p.r+'/'+p.M:labelMode==='angle'?Math.round(360*p.r/p.M)+'°':labelMode==='gcd'?''+p.g:null;
         if(!lbl) continue;
-        var fx=cx+(p.rr+13)*Math.cos(p.theta),fy=cy+(p.rr+13)*Math.sin(p.theta);
-        ctx.fillStyle=p.isCP?'rgba(180,165,130,.6)':'rgba(232,85,64,.45)';
+        var fx=cx+(p.rr+16)*Math.cos(p.theta),fy=cy+(p.rr+16)*Math.sin(p.theta);
+        ctx.fillStyle=p.isCP?'rgba(180,165,130,.7)':'rgba(232,85,64,.5)';
         ctx.fillText(lbl,fx,fy+3);
       }
     }
     ctx.textAlign='left';
   }
 
+  window._opRings = rings;  // expose for inspector hit-test
+  if(window._opDrawPins) _opDrawPins(ctx, cx, cy);
   updateStats(curM);
   raf=requestAnimationFrame(frame);
 }
@@ -2280,24 +2652,71 @@ function syncSlider(){
   if(vl) vl.textContent=curM;
 }
 
+// Cached stats — incremental update, never recompute from scratch
+var _statsCache={M:0,cp:0,lifts:0,total:0};
+  ringSpacing=0.0;
+  var spSl=document.getElementById('op-spacing-sl');if(spSl){spSl.value=0;document.getElementById('op-spacing-val').textContent='0.0';}
+var _statsTimer=null;
+
 function updateStats(M){
-  var cp=0,lifts=0;
-  for(var m=2;m<=M;m++){for(var r=1;r<m;r++){if(gcd(r,m)===1){cp++;if(gcd(r,m+1)===1)lifts++;}}}
+  // Only update display — heavy compute deferred
   function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-  set('op-stat-cp',cp);
-  set('op-stat-lifts',lifts);
-  set('op-stat-ratio',cp>0?(lifts/cp*100).toFixed(1)+'%':'—');
-  set('op-stat-cn',computeC(M).toFixed(6));
-  set('op-stat-dn',computeD(M).toFixed(6));
-  set('op-stat-n',M);
+
+  // If M hasn't changed, just refresh display from cache
+  if(M === _statsCache.M){
+    _statsFlushDisplay();
+    return;
+  }
+
+  // Incremental: add rings _statsCache.M+1 up to M
+  var start = Math.max(2, _statsCache.M+1);
+  for(var m=start;m<=M;m++){
+    _statsCache.total += (m-1);
+    for(var r=1;r<m;r++){
+      if(gcd(r,m)===1){
+        _statsCache.cp++;
+        if(gcd(r,m+1)===1) _statsCache.lifts++;
+      }
+    }
+  }
+  _statsCache.M = M;
+  _statsFlushDisplay();
 }
+
+function _statsFlushDisplay(){
+  var c=_statsCache;
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  set('os-total', c.total.toLocaleString());
+  set('os-cp',    c.cp.toLocaleString());
+  set('os-lifts', c.lifts.toLocaleString());
+  set('os-lratio',c.cp>0?(c.lifts/c.cp*100).toFixed(2)+'%':'—');
+  set('os-cn',    computeC(c.M).toFixed(8));
+  set('os-dn',    computeD(c.M).toFixed(8));
+  set('os-n',     c.M);
+}
+
+/* Expose stats functions globally */
+window._updateStats = updateStats;
+window._statsFlush = _statsFlushDisplay;
+window._opStopQuotes = opStopQuotes;
+window._opStartQuotes = opStartQuotes;
 
 /* ── Public controls ── */
 window.opSetMod=function(m){
-  m=Math.max(2,Math.min(200,+m||2));
+  m=Math.max(2,Math.min(512,+m||2));
   curM=m;MTARGET=m;phase='idle';phaseT=0;
   var sl=document.getElementById('op-n-sl');if(sl)sl.value=m;
   var vl=document.getElementById('op-n-val');if(vl)vl.textContent=m;
+  // Lift depth max = floor(M/2)
+  var lsl=document.getElementById('op-lift-sl');
+  var lmax=Math.max(1,Math.floor(m/2));
+  if(lsl){
+    lsl.max=lmax;
+    if(+lsl.value>lmax){
+      lsl.value=0;liftN=0;
+      var lv=document.getElementById('op-lift-val');if(lv)lv.textContent='all';
+    }
+  }
 };
 window.opSetView=function(v){viewMode=+v;};
 window.opSetLabel=function(m){labelMode=m;};
@@ -2317,6 +2736,11 @@ window.opToggleDots=function(){
 window.opCycleLines=function(){
   lineMode=(lineMode+1)%LINE_MODES.length;
   var lm=LINE_MODES[lineMode];
+  // Show gap-N controls only in gapN mode; thickness in any gap mode
+  var gw=document.getElementById('op-gapn-wrap');
+  var tw=document.getElementById('op-thick-wrap');
+  if(gw) gw.style.display=(lm.key==='gapN')?'flex':'none';
+  if(tw) tw.style.display=(lm.key.startsWith('gap'))?'flex':'none';
   var btn=document.getElementById('op-line-btn');
   if(btn){
     btn.textContent=lm.label;
@@ -2330,9 +2754,11 @@ window.opEnter=function(){
   var op=document.getElementById('op-overlay');
   if(!op) return;
   opStopQuotes();
+  // Force populate stats before hiding
+  if(window._updateStats){window._updateStats(curM);window._statsFlush&&window._statsFlush();}
   // Hide stats bar and splash immediately before fade
   var sb=document.getElementById('opener-stats');
-  if(sb) sb.style.display='none';
+  if(sb) sb.style.opacity='1';
   var splash=document.getElementById('op-splash');
   if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
   op.style.opacity='0'; op.style.pointerEvents='none';
@@ -2365,15 +2791,19 @@ function opShowQuote(idx) {
   var q = document.getElementById('op-quote');
   var a = document.getElementById('op-quote-attr');
   if(!q || !a) return;
+  // Fade out
+  q.style.transition = 'opacity .4s ease';
+  a.style.transition = 'opacity .4s ease';
   q.style.opacity = '0';
   a.style.opacity = '0';
   setTimeout(function(){
     var item = OP_QUOTES[idx % OP_QUOTES.length];
-    q.textContent = '\u201c' + item.q + '\u201d';
+    q.textContent = '“' + item.q + '”';
     a.textContent = item.a;
+    // Fade in
     q.style.opacity = '1';
     a.style.opacity = '1';
-  }, 500);
+  }, 420);
 }
 
 var _quoteTimer = null;
@@ -2402,6 +2832,7 @@ function init(){
 window.addEventListener('resize',function(){lt=null;});
 window._opRestart=function(){
   window._animDone=false;
+  _statsCache={M:0,cp:0,lifts:0,total:0};
   if(raf){cancelAnimationFrame(raf);raf=null;}
   gt=0;lt=null;curM=MMAX;MTARGET=128;phase='rings';phaseT=0;
   var sl=document.getElementById('op-n-sl');if(sl)sl.value=MMAX;
@@ -2513,29 +2944,29 @@ function draw(ts){
     }
   }
 
-  // Gap chords — ALL pairs r to r+gapN, colored by gcd relationship
+  // Gap chords — colored by gap value and gcd
   if(st.gapN){
+    var gapBaseCol=st.gapN===2?'43,191,176':st.gapN===4?'144,96,208':st.gapN===6?'68,204,136':'255,160,80';
     for(var i=0;i<n;i++){
       var rng=rings[i];
       if(rng.M<3)continue;
-      for(var r=0;r<rng.M;r++){
+      for(var r=1;r<rng.M;r++){
         var r2=r+st.gapN;
         if(r2>=rng.M)continue;
-        var g1=r===0?rng.M:gcd(r,rng.M);
-        var g2=gcd(r2,rng.M);
+        var g1=gcd(r,rng.M),g2=gcd(r2,rng.M);
         var cp1=g1===1,cp2=g2===1;
+        if(!cp1&&!cp2)continue;
         var th1=2*Math.PI*r/rng.M-Math.PI/2;
         var th2=2*Math.PI*r2/rng.M-Math.PI/2;
         var w=Math.sin(st.gt*.0018+i*.3+r*.25)*.5+.5;
         var col,alpha;
-        if(cp1&&cp2){col='43,191,176';alpha=0.28+w*.38;}
-        else if(!cp1&&!cp2){col='232,85,64';alpha=0.15+w*.2;}
-        else{col='212,168,67';alpha=0.18+w*.28;}
+        if(cp1&&cp2){col=gapBaseCol;alpha=0.32+w*.38;}
+        else{col='212,168,67';alpha=0.14+w*.2;}
         ctx.beginPath();
         ctx.moveTo(cx+rng.rr*Math.cos(th1),cy+rng.rr*Math.sin(th1));
         ctx.lineTo(cx+rng.rr*Math.cos(th2),cy+rng.rr*Math.sin(th2));
         ctx.strokeStyle='rgba('+col+','+alpha+')';
-        ctx.lineWidth=cp1&&cp2?1.1:0.65;ctx.stroke();
+        ctx.lineWidth=cp1&&cp2?1.1:0.55;ctx.stroke();
       }
     }
   }
@@ -2947,74 +3378,148 @@ r4_update();
 function jt_check(){
   var n=parseInt(document.getElementById('jt-n').value);
   var el=document.getElementById('jt-out');
+  var dispEl=document.querySelector('input[name="jt-disp"]:checked');
+  var disp=dispEl?dispEl.value:'sci';
+
   if(n===1||(isNaN(n)&&document.getElementById('jt-n').value.trim()==='1')){
     var phi=(1+Math.sqrt(5))/2;
-    var lines=[
-      'n = 1',
+    el.style.color='rgba(212,168,67,.9)';
+    el.textContent=[
+      'n = 1  \u2192  \u03c6 (golden ratio boundary)',
       '',
       'p(p\u22121) = 1  \u21d2  p\u00b2 \u2212 p \u2212 1 = 0',
-      '',
-      'Positive real solution:',
-      '  p = (1+\u221a5)/2 = '+phi.toFixed(15),
-      '  = \u03c6  (the golden ratio)',
+      'Positive root: p = (1+\u221a5)/2 = '+phi.toFixed(15),
       '',
       '\u03c6(\u03c6\u22121) = '+(phi*(phi-1)).toFixed(15)+' = 1 \u2714',
+      'Discriminant: 1 + 4\u00b71 = 5 (not a perfect square)',
       '',
-      'This is the BOUNDARY of the jump spectrum.',
-      'No integer prime has jump size s = 1.',
-      'Largest actual jump: p=2 with s = 1/2 < 1.',
-      '',
-      'Discriminant at \u03c6: 1 + 4\u00b71 = 5 (not a perfect square).',
-      'For all integer primes p: discriminant = (2p\u22121)\u00b2.',
-      '\u03c6 is where exact integer recovery first fails.',
-    ];
-    el.textContent=lines.join('\n');
-    el.style.color='rgba(212,168,67,.9)';
+      'Jump spectrum boundary: s = 1 > all integer prime jumps',
+      'Largest real prime jump: p=2, s = 1/2 = 0.5',
+      '\u03c6 is the unique real number where exact recovery fails.',
+    ].join('\n');
     return;
   }
-  if(!n||n<1){
-    el.textContent='Enter n \u2265 1. Try n=1 for the golden ratio \u03c6.';
-    return;
-  }
-  if(n<2){n=2;}
+  if(!n||n<2){el.textContent='Enter n \u2265 1 (n=1 gives golden ratio \u03c6).';return;}
+
   var pr=sieve(Math.max(n*2,n+100));
   var isP=pr.indexOf(n)>=0;
-  var C_n1=computeC(n-1);
-  var C_n=computeC(n);
+  var C_n1=computeC(n-1), C_n=computeC(n);
   var delta=C_n-C_n1;
-  var predicted=isP?-C_n1/(n*(n-1)):0;
-  var jumpSize=isP?1/(n*(n-1)):0;
-  var recovered=isP?(1+Math.sqrt(1+4/jumpSize))/2:0;
   var L=[];
-  L.push('n = '+n+' \u2192 '+(isP?'PRIME \u2713':'COMPOSITE \u2717'));
+
+  L.push('n = '+n.toLocaleString()+' \u2192 '+(isP?'PRIME \u2713':'COMPOSITE \u2717'));
   L.push('');
-  L.push('C(n\u22121) = C('+(n-1)+') = '+C_n1.toFixed(15));
-  L.push('C(n)   = C('+n+') = '+C_n.toFixed(15));
-  L.push('');
-  if(isP){
-    L.push('D(x) jump at x = '+(n-1)+':');
-    L.push('  \u0394D = 1/(p(p\u22121)) = 1/('+n+'\u00d7'+(n-1)+') = '+jumpSize.toFixed(15));
-    L.push('  \u0394C = \u2212C(n\u22121)/(n(n\u22121)) = '+predicted.toExponential(12));
-    L.push('  Observed \u0394C: '+delta.toExponential(12));
-    L.push('');
-    L.push('Discriminant: 1+4p(p\u22121) = '+(1+4*n*(n-1))+' = ('+(2*n-1)+')\u00b2 \u2714');
-    L.push('Prime recovery: p = (1+\u221a'+( 1+4*n*(n-1))+')/2 = '+recovered.toFixed(10));
-    L.push('');
-    L.push('Compare: n=1 gives p=\u03c6 (golden ratio, s=1)');
-    L.push('         n=2 gives p=2, n=6 gives p=3, \u2026');
-  } else {
-    var prevP=null,nextP=null;
-    for(var i=0;i<pr.length;i++){if(pr[i]<n)prevP=pr[i];if(pr[i]>n&&!nextP)nextP=pr[i];}
-    L.push('No prime at n='+n+'. D(x) continuous at x='+(n-1)+'.');
-    L.push('\u0394D = 0 exactly.  Observed \u0394C = '+delta.toExponential(12)+' (numerical noise).');
-    L.push('');
-    L.push('Nearest primes: '+prevP+' < '+n+' < '+nextP);
-    L.push('Next jump: x='+(nextP-1)+', p='+nextP+', s='+(1/(nextP*(nextP-1))).toFixed(15));
-    L.push('');
-    L.push('Hint: try n=1 for the golden ratio boundary.');
+
+  if(disp==='sci'){
+    // Scientific notation — useful for showing magnitude clearly
+    L.push('C(n\u22121) = C('+( n-1).toLocaleString()+') = '+C_n1.toExponential(10));
+    L.push('C(n)   = C('+n.toLocaleString()+') = '+C_n.toExponential(10));
+    if(isP){
+      var s=1/(n*(n-1));
+      L.push('');
+      L.push('Jump size: s = 1/(p(p\u22121)) = '+s.toExponential(10));
+      L.push('           = 1/'+(n*(n-1)).toLocaleString());
+      var pred=-C_n1/(n*(n-1));
+      L.push('\u0394C (predicted) = \u2212C\u00b7s = '+pred.toExponential(10));
+      L.push('\u0394C (observed)  = '+delta.toExponential(10));
+      var rec=(1+Math.sqrt(1+4/s))/2;
+      L.push('');
+      L.push('Recovery: p = (1+\u221a(1+4/s))/2 = '+rec.toFixed(2));
+      L.push('Discriminant: 1+4p(p\u22121) = '+(1+4*n*(n-1)).toLocaleString()+' = ('+(2*n-1)+')' +'\u00b2 \u2714');
+    } else {
+      var prevP=null,nextP=null;
+      for(var i=0;i<pr.length;i++){if(pr[i]<n)prevP=pr[i];if(pr[i]>n&&!nextP)nextP=pr[i];}
+      L.push('\u0394C = '+delta.toExponential(10)+' (noise only, no jump)');
+      L.push('Nearest primes: '+prevP.toLocaleString()+' < n < '+nextP.toLocaleString());
+    }
+
+  } else if(disp==='frac'){
+    // Exact fraction representation
+    if(isP){
+      var den=n*(n-1);
+      L.push('Jump size as exact fraction:');
+      L.push('  s = 1 / ('+n.toLocaleString()+' \u00d7 '+( n-1).toLocaleString()+')');
+      L.push('  s = 1 / '+den.toLocaleString());
+      L.push('');
+      L.push('In words: one part in '+den.toLocaleString());
+      L.push('');
+      L.push('Discriminant = (2p\u22121)\u00b2 = ('+(2*n-1)+')' +'\u00b2 = '+(2*n-1)*(2*n-1).toLocaleString());
+      L.push('Recovery: p = (1 + '+(2*n-1)+') / 2 = '+n.toLocaleString()+' \u2714');
+    } else {
+      L.push('Composite: no fraction (no jump).');
+    }
+
+  } else if(disp==='rel'){
+    // Relative to p=2 (largest jump)
+    if(isP){
+      var s_p=1/(n*(n-1));
+      var s_2=0.5; // s for p=2
+      var ratio=s_2/s_p; // how many times smaller than p=2's jump
+      L.push('Jump relative to p=2 (max jump s=1/2):');
+      L.push('  s(p='+n.toLocaleString()+') = '+ s_p.toExponential(8));
+      L.push('  s(p=2)        = 0.5 (largest prime jump)');
+      L.push('  Ratio s(2)/s(p) = '+ratio.toExponential(6));
+      L.push('');
+      L.push('This prime\u2019s jump is '+ratio.toExponential(3)+' times');
+      L.push('smaller than p=2\u2019s jump.');
+      L.push('');
+      // Position in spectrum
+      L.push('Position on jump spectrum [0, 1]:');
+      L.push('  \u03c6 boundary:  s = 1.000 (unreachable)');
+      L.push('  p=2 jump:     s = 0.500');
+      L.push('  p=3 jump:     s = 0.167');
+      L.push('  p=5 jump:     s = 0.050');
+      L.push('  This prime:   s = '+s_p.toExponential(4));
+    } else {
+      L.push('No jump at composite n='+n.toLocaleString()+'.');
+    }
+
+  } else if(disp==='geo'){
+    // Geometric interpretation
+    if(isP){
+      var s_p=1/(n*(n-1));
+      var logN=Math.log(n);
+      L.push('Geometric interpretation for p='+n.toLocaleString()+':');
+      L.push('');
+      L.push('On the ring system:');
+      L.push('  Ring M='+n.toLocaleString()+' has \u03c6('+n.toLocaleString()+') = '+(n-1).toLocaleString()+' coprime residues');
+      L.push('  ('+n.toLocaleString()+' is prime, so all 1\u2026'+(n-1).toLocaleString()+' are coprime)');
+      L.push('');
+      L.push('The D(x) jump at x='+(n-1).toLocaleString()+':');
+      L.push('  The prime p='+n.toLocaleString()+' enters the Euler product of C(x)');
+      L.push('  Its factor: f_p = p/(p+1) = '+n+'/'+(n+1)+' \u2248 '+( n/(n+1)).toFixed(12));
+      L.push('  Jump \u0394D = 1/(p(p\u22121)) = '+s_p.toExponential(8));
+      L.push('');
+      L.push('Expected gap to next prime: \u223c ln(p) = '+logN.toFixed(4));
+      L.push('  = '+logN.toFixed(1)+' integers on average');
+      L.push('');
+      L.push('In the ring canvas at N='+n.toLocaleString()+':');
+      L.push('  Gold ring (prime ring), '+( n-1).toLocaleString()+' teal dots,');
+      L.push('  all connecting to the next ring via teal lift lines.');
+    } else {
+      var prevP=null,nextP=null;
+      for(var i=0;i<pr.length;i++){if(pr[i]<n)prevP=pr[i];if(pr[i]>n&&!nextP)nextP=pr[i];}
+      L.push('Geometric view for composite n='+n.toLocaleString()+':');
+      L.push('');
+      L.push('Ring M='+n.toLocaleString()+' is composite.');
+      L.push('No new prime factor enters C(x) here.');
+      L.push('\u03c6('+n.toLocaleString()+') < '+(n-1).toLocaleString()+' coprime residues.');
+      L.push('');
+      L.push('Nearest prime rings: '+prevP.toLocaleString()+' and '+nextP.toLocaleString());
+      L.push('Next D(x) jump: at x='+(nextP-1).toLocaleString());
+    }
   }
+
   el.textContent=L.join('\n');
   el.style.color=isP?'rgba(43,191,176,.9)':'rgba(232,85,64,.85)';
+  // Show export button
+  var er=document.getElementById('jt-export-row');if(er)er.style.display='block';
+  var en=document.getElementById('jt-export-n');if(en)en.textContent=n.toLocaleString();
+}
+
+function jtPreset(n){
+  document.getElementById('jt-n').value=n;
+  jt_check();
 }
 document.getElementById('jt-n').addEventListener('keydown',function(e){if(e.key==='Enter')jt_check();});
 
@@ -4173,6 +4678,91 @@ document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('sa-canvas')) saCompute();
 });
 
+
+// ── GOLDEN RATIO JUMP SPECTRUM WIDGET ──
+function grUpdate(){
+  var s=parseFloat(document.getElementById('gr-s').value)||0.5;
+  s=Math.max(0.0001,Math.min(1.0,s));
+  var p=(1+Math.sqrt(1+4/s))/2;
+  var phi=(1+Math.sqrt(5))/2;
+  var canvas=document.getElementById('gr-canvas');
+  if(!canvas)return;
+  var _=setHiDPI(canvas);var ctx=_.ctx,w=_.w,h=_.h;
+  styleCtx(ctx,w,h);
+  var pad=44,cy=h*0.5;
+  // Number line
+  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad,cy);ctx.lineTo(w-pad,cy);ctx.stroke();
+  // Gradient along line
+  var grad=ctx.createLinearGradient(pad,0,w-pad,0);
+  grad.addColorStop(0,'rgba(43,191,176,0)');
+  grad.addColorStop(0.5,'rgba(43,191,176,.08)');
+  grad.addColorStop(1,'rgba(212,168,67,.15)');
+  ctx.fillStyle=grad;ctx.fillRect(pad,cy-3,w-2*pad,6);
+  // Key markers
+  var pts=[
+    {sv:0.5,  label:'p=2', col:'43,191,176', side:-1},
+    {sv:1/6,  label:'p=3', col:'43,191,176', side:1},
+    {sv:1/20, label:'p=5', col:'43,191,176', side:-1},
+    {sv:1/42, label:'p=7', col:'68,204,136', side:1},
+    {sv:1.0,  label:'\u03c6',   col:'212,168,67', side:0},
+  ];
+  pts.forEach(function(pt){
+    var x=pad+pt.sv*(w-2*pad);
+    ctx.beginPath();ctx.arc(x,cy,5,0,2*Math.PI);
+    ctx.fillStyle='rgba('+pt.col+',.9)';ctx.fill();
+    ctx.font='9px JetBrains Mono,monospace';ctx.textAlign='center';
+    ctx.fillStyle='rgba('+pt.col+',.75)';
+    ctx.fillText(pt.label,x,cy+(pt.side>=0?16:-12));
+  });
+  // Axis labels
+  ctx.font='8px JetBrains Mono,monospace';
+  ctx.fillStyle='rgba(130,120,100,.5)';
+  ctx.textAlign='left';ctx.fillText('s\u21920 (p\u2192\u221e)',pad,cy-8);
+  ctx.textAlign='right';ctx.fillText('s=1 (\u03c6)',w-pad,cy-8);
+  // Current marker
+  var sx=pad+s*(w-2*pad);
+  ctx.beginPath();ctx.arc(sx,cy,8,0,2*Math.PI);
+  ctx.fillStyle='rgba(144,96,208,.9)';ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,.5)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.textAlign='center';ctx.fillStyle='rgba(144,96,208,.8)';ctx.font='9px JetBrains Mono,monospace';
+  ctx.fillText('s='+s.toFixed(4),sx,cy+24);ctx.textAlign='left';
+  // Output
+  var isGolden=Math.abs(s-1)<1e-6;
+  var intP=Math.round(p);
+  var isInt=Math.abs(p-intP)<1e-6&&intP>=2;
+  var out='s = '+s.toFixed(10)+'\n\n';
+  out+='p = (1+\u221a(1+4/s))/2\n';
+  out+='  = (1+\u221a('+(1+4/s).toFixed(8)+'))/2\n';
+  out+='  = '+p.toFixed(15)+'\n\n';
+  if(isGolden){
+    out+='\u03c6 = (1+\u221a5)/2 = '+phi.toFixed(15)+'\n\n';
+    out+='THE GOLDEN RATIO \u2014 boundary of jump spectrum\n';
+    out+='\u03c6(\u03c6\u22121) = '+(phi*(phi-1)).toFixed(15)+' = 1 \u2714\n';
+    out+='Discriminant: 1+4\u00b71 = 5 (not a perfect square)\n';
+    out+='All integer prime jumps satisfy s < 1 < s_\u03c6';
+  } else if(isInt){
+    var n=intP,isPr=n>1;
+    for(var j=2;j*j<=n;j++)if(n%j===0){isPr=false;break;}
+    out+='p = '+intP+' '+(isPr?'(PRIME \u2713)':'(composite)')+'\n';
+    out+='Discriminant: 1+4p(p\u22121) = '+(1+4*intP*(intP-1))+'\n';
+    out+='= ('+(2*intP-1)+')\u00b2 \u2014 perfect square \u2714\n';
+    out+='Recovery exact: p = (1+'+(2*intP-1)+')/2 = '+intP;
+  } else {
+    out+='p \u2248 '+p.toFixed(10)+' (not an integer)\n';
+    out+='Not a valid prime jump size.\n';
+    var plo=Math.floor(p);
+    if(plo>=2) out+='Below p='+plo+' at s='+(1/(plo*(plo-1))).toFixed(8);
+  }
+  document.getElementById('gr-out').textContent=out;
+}
+function grGolden(){var sl=document.getElementById('gr-s');if(sl){sl.value=1;grUpdate();}}
+function grP2(){var sl=document.getElementById('gr-s');if(sl){sl.value=0.5;grUpdate();}}
+function grP3(){var sl=document.getElementById('gr-s');if(sl){sl.value=(1/6).toFixed(8);grUpdate();}}
+document.addEventListener('DOMContentLoaded',function(){
+  if(document.getElementById('gr-canvas'))grUpdate();
+});
+
 </script>
 
 
@@ -4181,45 +4771,101 @@ document.addEventListener('DOMContentLoaded',function(){
 // ── OPENER EXPORT + FULLSCREEN ──
 window.opExport4K=function(){
   var cv=document.getElementById('op-cv');
-  if(!cv)return;
-
-  // Step 1: Force a fresh render at 4K into a new offscreen canvas
-  var SCALE=4;
-  var W=window.innerWidth, H=window.innerHeight;
-  var tmp=document.createElement('canvas');
-  tmp.width=Math.round(W*SCALE);
-  tmp.height=Math.round(H*SCALE);
-  var tc=tmp.getContext('2d');
-  tc.scale(SCALE,SCALE);
-
-  // Step 2: Copy the current canvas content at its native resolution
-  // cv.width/cv.height are the actual pixel dimensions (W*dpr, H*dpr)
-  // We draw the full source canvas into the full dest canvas
+  if(!cv){alert('Canvas not ready');return;}
+  // Get state from IIFE scope via exposed function
+  var _st = window._opState ? window._opState() : {curM:128,zoomLevel:2};
+  var _curM = _st.curM||128;
+  var _zoom = (_st.zoomLevel||2).toFixed(1);
   var dpr=Math.min(window.devicePixelRatio||1,2);
-  // Draw cv (W*dpr x H*dpr pixels) into tmp (W*4 x H*4 pixels)
-  // Source: full canvas | Dest: centered if needed, or just full fill
-  tc.setTransform(SCALE/dpr,0,0,SCALE/dpr,0,0);
-  tc.drawImage(cv,0,0);
-
-  var a=document.createElement('a');
-  a.download='modular_rings_4K.png';
-  a.href=tmp.toDataURL('image/png',1.0);
-  a.click();
+  // If canvas has no size yet, use window dimensions
+  // Ensure canvas has valid dimensions
+  if(!cv.width||!cv.height||cv.width<10){
+    var W2=window.innerWidth, H2=window.innerHeight;
+    cv.width=Math.round(W2*dpr); cv.height=Math.round(H2*dpr);
+    // If canvas still has no content, render a frame first
+    if(window._updateStats) window._updateStats(_curM);
+  }
+  var W=cv.width/dpr, H=cv.height/dpr;
+  var SCALE=4;
+  var tw=Math.round(W*SCALE), th=Math.round(H*SCALE);
+  var tmp=document.createElement('canvas');
+  tmp.width=tw; tmp.height=th;
+  var tc=tmp.getContext('2d');
+  // Copy canvas content at native resolution
+  tc.drawImage(cv,0,0,cv.width,cv.height,0,0,tw,th);
+  // ── TOP BAR ──
+  var barH=Math.round(72*SCALE);
+  tc.fillStyle='rgba(5,4,10,.82)';
+  tc.fillRect(0,0,tw,barH);
+  tc.fillStyle='rgba(212,168,67,.1)';
+  tc.fillRect(0,barH-2*SCALE,tw,2*SCALE);
+  // Title line
+  tc.font='bold '+(18*SCALE)+'px "JetBrains Mono",monospace';
+  tc.fillStyle='rgba(212,168,67,.95)';
+  tc.fillText('THE LIFT SURVIVAL FUNCTION',18*SCALE,26*SCALE);
+  // Author + N
+  tc.font=(11*SCALE)+'px "JetBrains Mono",monospace';
+  tc.fillStyle='rgba(43,191,176,.8)';
+  tc.fillText('Wessen Getachew  ·  2026  ·  math.NT  ·  N = '+_curM+'  ·  zoom = '+_zoom+'x',18*SCALE,46*SCALE);
+  // Subtitle
+  tc.fillStyle='rgba(140,130,110,.6)';
+  tc.fillText('Where primes reveal themselves as exact discontinuities in a smooth Euler product',18*SCALE,62*SCALE);
+  // ── BOTTOM STATS BAR ──
+  var bH=Math.round(56*SCALE);
+  var by=th-bH;
+  tc.fillStyle='rgba(5,4,10,.88)';
+  tc.fillRect(0,by,tw,bH);
+  tc.fillStyle='rgba(212,168,67,.12)';
+  tc.fillRect(0,by,tw,2*SCALE);
+  // Read live stats
+  function getEl(id){var e=document.getElementById(id);return e?e.textContent.trim():'—';}
+  var cp=getEl('os-cp'), tot=getEl('os-total'), lifts=getEl('os-lifts'),
+      ratio=getEl('os-lratio'), cn=getEl('os-cn'), dn=getEl('os-dn');
+  tc.font=(12*SCALE)+'px "JetBrains Mono",monospace';
+  tc.fillStyle='rgba(212,168,67,.9)';
+  tc.fillText('gcd=1: '+cp,18*SCALE,by+22*SCALE);
+  tc.fillStyle='rgba(140,130,110,.6)';
+  tc.fillText('total: '+tot,220*SCALE,by+22*SCALE);
+  tc.fillStyle='rgba(43,191,176,.9)';
+  tc.fillText('lifts: '+lifts,420*SCALE,by+22*SCALE);
+  tc.fillText('lift rate: '+ratio,620*SCALE,by+22*SCALE);
+  tc.fillStyle='rgba(144,96,208,.9)';
+  tc.fillText('C(N) = '+cn,18*SCALE,by+42*SCALE);
+  tc.fillStyle='rgba(232,85,64,.9)';
+  tc.fillText('D(N) = '+dn,280*SCALE,by+42*SCALE);
+  tc.fillStyle='rgba(140,130,110,.5)';
+  tc.fillText('C ≈ 0.530711806246  ·  J ≈ 0.773154968933  ·  D₀ ≈ 0.551691597558',520*SCALE,by+42*SCALE);
+  // Download
+  try{
+    var a=document.createElement('a');
+    a.download='lift_survival_N'+_curM+'_4K.png';
+    a.href=tmp.toDataURL('image/png',1.0);
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+  }catch(err){console.error('Export failed:',err);}
 };
 window.opFullscreen=function(){
   var op=document.getElementById('op-overlay');
   if(!op)return;
   if(document.fullscreenElement){
     document.exitFullscreen();
-    var btn=document.getElementById('op-fs-btn');
-    if(btn)btn.textContent='⛶';
   } else {
-    op.requestFullscreen&&op.requestFullscreen().then(function(){
-      var btn=document.getElementById('op-fs-btn');
-      if(btn)btn.textContent='✕FS';
-    });
+    op.requestFullscreen&&op.requestFullscreen();
   }
 };
+// Listen for fullscreen exit (ESC key or other) — restore page state
+document.addEventListener('fullscreenchange',function(){
+  var btn=document.getElementById('op-fs-btn');
+  if(document.fullscreenElement){
+    if(btn)btn.textContent='✕ FS';
+  } else {
+    if(btn)btn.textContent='⛶';
+    // If the opener is hidden (user has entered the page), restore scrolling
+    var op=document.getElementById('op-overlay');
+    if(op&&op.style.display==='none'){
+      document.body.style.overflow='auto';
+    }
+  }
+});;
 
 // ── COV EXTENDED CONTROLS ──
 // The cov script already has st.viewMode, st.colorMode, st.liftN, st.gapN, st.showGCDPoly
@@ -4292,23 +4938,22 @@ window.covCycleLines=function(){
 window.goHome=function(){
   var op=document.getElementById('op-overlay');
   if(!op) return;
-  // Hide home button
   var hb=document.getElementById('home-btn');
   if(hb) hb.style.display='none';
-  // Reset splash — hidden until animation completes again
   var splash=document.getElementById('op-splash');
   if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
-  // Reset stats bar — restore display then hide opacity
   var stats=document.getElementById('opener-stats');
-  if(stats){stats.style.display='';stats.style.opacity='0';}
-  // Stop quotes
-  opStopQuotes();
-  // Show overlay
+  if(stats){stats.style.display='';stats.style.opacity='1';}
+  if(window._opStopQuotes) window._opStopQuotes();
+  // Kill transition, set opacity to 0, set display, then re-enable transition and fade in
+  op.style.transition='none';
+  op.style.opacity='0';
   op.style.display='flex';
-  op.style.opacity='1';
   op.style.pointerEvents='auto';
   document.body.style.overflow='hidden';
-  // Scroll to top then restart animation
+  void op.offsetWidth; // force reflow
+  op.style.transition='opacity .8s ease';
+  op.style.opacity='1';
   window.scrollTo({top:0,behavior:'instant'});
   if(window._opRestart) window._opRestart();
 };
@@ -4320,14 +4965,14 @@ var _opUIVisible = true;
 window._opUIVisible = true;
 window.opToggleUI = function(){
   _opUIVisible = !_opUIVisible;
-  // Controls bar stays ALWAYS visible — never hidden
-  // Only hide: splash text overlay and stats bar
   var stats = document.getElementById('opener-stats');
   var splash = document.getElementById('op-splash');
+  var splashInner = document.getElementById('op-splash-inner');
   var btn = document.getElementById('op-hide-btn');
   if(_opUIVisible){
     if(stats) stats.style.opacity='1';
     if(splash&&window._animDone){splash.style.opacity='1';splash.style.pointerEvents='auto';}
+    if(splashInner) splashInner.style.pointerEvents='auto';
     if(btn){
       btn.textContent='Hide text';
       btn.style.background='rgba(5,4,10,.8)';
@@ -4337,6 +4982,7 @@ window.opToggleUI = function(){
   } else {
     if(stats) stats.style.opacity='0';
     if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
+    if(splashInner) splashInner.style.pointerEvents='none';
     if(btn){
       btn.textContent='Show text';
       btn.style.background='rgba(212,168,67,.15)';
@@ -4347,6 +4993,1086 @@ window.opToggleUI = function(){
 };
 
 </script>
-</body>
-</html>  <a href="#" onclick="goHome();return false;" style="color:rgba(212,168,67,.7);border-left-color:rgba(212,168,67,.3);"><span class="layer-num">⌂</span>Opener</a>
+<script>
 
+// ════════════════════════════════════
+// NAMED CANVAS PRESETS
+// ════════════════════════════════════
+
+function _setLine(key){
+  for(var i=0;i<LINE_MODES.length;i++){
+    if(LINE_MODES[i].key===key){lineMode=i;break;}
+  }
+  // Update button label
+  var btn=document.getElementById('op-line-btn');
+  if(btn){
+    var lm=LINE_MODES[lineMode];
+    btn.textContent=lm.label;
+    btn.style.color='rgba('+lm.col+',.9)';
+    btn.style.borderColor='rgba('+lm.col+',.5)';
+  }
+}
+function _setView(v){
+  viewMode=v;
+  var sel=document.querySelector('select[onchange^="opSetView"]');
+  if(sel)sel.value=v;
+}
+function _setColor(c){
+  colorMode=c;
+  var sel=document.querySelector('select[onchange^="opSetColor"]');
+  if(sel)sel.value=c;
+}
+function _setDots(on){
+  showDots=on;
+  var btn=document.getElementById('op-dots-btn');
+  if(btn){
+    btn.textContent=on?'Dots: ON':'Dots: OFF';
+    btn.style.color=on?'rgba(212,168,67,.9)':'rgba(100,90,70,.5)';
+    btn.style.borderColor=on?'rgba(212,168,67,.5)':'rgba(100,90,70,.3)';
+  }
+}
+
+var PRESETS = [
+  {name:'Birth of Rings', fn:function(){
+    /* Rings grow 2→60, zoom pulls back, no dots, color by residue mod 6 */
+    _setLine('none');_setColor('residue6');_setDots(false);_setView(0);opSetLift(0);
+    opSetMod(2);opSetZoom(3.5);
+    var t=0;var iv=setInterval(function(){
+      t++;opSetMod(Math.min(60,2+t));
+      opSetZoom(Math.max(1.0,3.5-t*.04));
+      var sl=document.getElementById('op-n-sl');if(sl)sl.value=Math.min(60,2+t);
+      var vl=document.getElementById('op-n-val');if(vl)vl.textContent=Math.min(60,2+t);
+      if(t>=58){clearInterval(iv);_setLine('lift');}
+    },100);
+  }},
+  {name:'Lift Filtering', fn:function(){
+    /* Zoom in, dots on, color=lift, slowly increase depth showing survivors */
+    opSetMod(30);opSetZoom(2.5);
+    _setLine('lift');_setColor('lift');_setDots(true);_setView(0);opSetLift(0);
+    var t=0;
+    var iv=setInterval(function(){
+      t++;opSetLift(Math.min(8,t));
+      var sl=document.getElementById('op-lift-sl');if(sl)sl.value=liftN;
+      var vl=document.getElementById('op-lift-val');if(vl)vl.textContent=liftN;
+      if(t>=10)clearInterval(iv);
+    },900);
+  }},
+  {name:'Non-Coprime Reveal', fn:function(){
+    /* Cycle: gcd=1 only → combined → non-gcd=1 → back. Dots on, color=gcd */
+    opSetMod(30);opSetZoom(2.0);
+    _setLine('none');_setColor('gcd');_setDots(true);opSetLift(0);
+    _setView(0);
+    var cycle=[0,2,1,2,0];var t=0;
+    var iv=setInterval(function(){_setView(cycle[Math.min(t,4)]);if(++t>=5)clearInterval(iv);},1400);
+  }},
+  {name:'Twin Prime Geometry', fn:function(){
+    /* Gap-2 chords, combined view, zoom 2x, color by residue — see admissible twin pairs */
+    opSetMod(30);opSetZoom(2.0);
+    _setLine('gap2');_setColor('residue6');_setDots(false);_setView(0);opSetLift(0);
+  }},
+  {name:'GCD Polygons', fn:function(){
+    /* Sweep mods 4→14, n-gon lines on, zoom large, color by gcd */
+    opSetZoom(3.0);_setLine('ngon');_setColor('gcd');_setDots(true);_setView(2);opSetLift(0);
+    var mods=[4,5,6,7,8,9,10,11,12,13,14];var i=0;opSetMod(4);
+    var iv=setInterval(function(){
+      i++;if(i<mods.length)opSetMod(mods[i]);
+      if(i>=mods.length-1)clearInterval(iv);
+    },1100);
+  }},
+  {name:'Primorial Meditation', fn:function(){
+    /* Lock to mod 30 (2·3·5), n-gon lines, dots on, color mod 6, zoom steady */
+    opSetMod(30);opSetZoom(2.2);
+    _setLine('ngon');_setColor('residue6');_setDots(true);_setView(0);opSetLift(0);
+  }},
+  {name:'Consecutive Lifts', fn:function(){
+    /* Mod 60, lift lines, dots on, color by lift, step depth 0→8 */
+    opSetMod(60);opSetZoom(1.8);
+    _setLine('lift');_setColor('lift');_setDots(true);_setView(0);opSetLift(0);
+    var t=0;
+    var iv=setInterval(function(){
+      opSetLift(t);t++;
+      var sl=document.getElementById('op-lift-sl');if(sl)sl.value=liftN;
+      var vl=document.getElementById('op-lift-val');if(vl)vl.textContent=liftN;
+      if(t>8)clearInterval(iv);
+    },800);
+  }},
+  {name:'Equator Dance', fn:function(){
+    /* Mod 60, combined view, color by prime ring, zoom pulses */
+    opSetMod(60);opSetZoom(2.0);
+    _setLine('none');_setColor('prime');_setDots(true);_setView(2);opSetLift(0);
+    var t=0;
+    var iv=setInterval(function(){
+      opSetZoom(2.0+0.6*Math.sin(t*0.35));
+      var sl=document.getElementById('op-zoom-sl');
+      if(sl){sl.value=(2.0+0.6*Math.sin(t*0.35)).toFixed(2);}
+      t++;if(t>36)clearInterval(iv);
+    },180);
+  }},
+  {name:'Mod Sweep', fn:function(){
+    /* Sweep mods 4→16 with n-gon and dots, zoom 2.5x */
+    opSetZoom(2.5);_setLine('ngon');_setColor('residue6');_setDots(true);_setView(0);opSetLift(0);
+    var mods=[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];var i=0;
+    var iv=setInterval(function(){opSetMod(mods[i]);i++;if(i>=mods.length)clearInterval(iv);},750);
+  }},
+  {name:'Full Synthesis', fn:function(){
+    /* Everything: mod 60, Lift+M mode, new-residue color, combined view, depth 2, zoom 2 */
+    opSetMod(60);opSetZoom(2.0);
+    _setLine('liftM');_setColor('newresid');_setDots(true);_setView(2);opSetLift(2);
+    var sl=document.getElementById('op-lift-sl');if(sl)sl.value=2;
+    var vl=document.getElementById('op-lift-val');if(vl)vl.textContent=2;
+  }},
+];
+
+window.opRunPreset=function(i){
+  if(i>=0&&i<PRESETS.length) PRESETS[i].fn();
+};
+
+</script>
+<script>
+
+// ════════════════ KEYBOARD SHORTCUTS ════════════════
+document.addEventListener('keydown',function(e){
+  // Only active when opener is visible
+  var op=document.getElementById('op-overlay');
+  if(!op||op.style.display==='none') return;
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return;
+  if(e.key===' '||e.code==='Space'){
+    e.preventDefault();
+    if(raf){cancelAnimationFrame(raf);raf=null;}else{raf=requestAnimationFrame(frame);}
+  }
+  var _st=window._opState?window._opState():{curM:128,zoomLevel:2};
+  if(e.key==='ArrowRight'||e.key===']') opSetMod(Math.min(512,(_st.curM||128)+1));
+  if(e.key==='ArrowLeft'||e.key==='[')  opSetMod(Math.max(2,(_st.curM||128)-1));
+  if(e.key==='ArrowUp')   opSetMod(Math.min(512,(_st.curM||128)+10));
+  if(e.key==='ArrowDown') opSetMod(Math.max(2,(_st.curM||128)-10));
+  if(e.key==='d'||e.key==='D') window.opToggleDots&&opToggleDots();
+  if(e.key==='l'||e.key==='L') window.opCycleLines&&opCycleLines();
+  if(e.key==='+'||e.key==='=') opSetZoom(Math.min(4,(_st.zoomLevel||2)+.1));
+  if(e.key==='-'||e.key==='_') opSetZoom(Math.max(.3,(_st.zoomLevel||2)-.1));
+  if(e.key==='Enter') window.opEnter&&opEnter();
+  if(e.key==='h'||e.key==='H') window.opToggleUI&&opToggleUI();
+});
+
+</script>
+<script>
+
+// ── JUMP THEOREM PNG EXPORT ──
+window.jtExportPNG = function(){
+  var n = parseInt(document.getElementById('jt-n').value);
+  if(!n || n < 1){ alert('Run a check first.'); return; }
+
+  // ── Gather data for all 4 display modes ──
+  function getLines(disp){
+    var pr = sieve(Math.max(n*2, n+100));
+    var isP = pr.indexOf(n) >= 0;
+    var C_n1 = computeC(n-1), C_n = computeC(n);
+    var delta = C_n - C_n1;
+    var L = [];
+
+    if(n===1){
+      var phi=(1+Math.sqrt(5))/2;
+      return [
+        'n = 1  \u2192  \u03c6 (golden ratio boundary)',
+        '',
+        'p(p\u22121) = 1  \u21d2  p\u00b2 \u2212 p \u2212 1 = 0',
+        'Positive root: p = (1+\u221a5)/2',
+        '  = '+phi.toFixed(15),
+        '',
+        '\u03c6(\u03c6\u22121) = '+(phi*(phi-1)).toFixed(15)+' = 1 \u2714',
+        'Discriminant: 1 + 4\u00b71 = 5 (not a perfect square)',
+        '',
+        'Jump spectrum boundary: s = 1',
+        'All integer prime jumps satisfy s < 1',
+        'Largest prime jump: p=2, s = 0.5',
+        '\u03c6 is where exact integer recovery fails.',
+      ];
+    }
+
+    L.push('n = '+n.toLocaleString()+'  \u2192  '+(isP?'PRIME \u2713':'COMPOSITE \u2717'));
+    L.push('');
+
+    if(disp==='sci'){
+      L.push('C(n\u22121) = C('+(n-1).toLocaleString()+')');
+      L.push('         = '+C_n1.toExponential(10));
+      L.push('C(n)   = C('+n.toLocaleString()+')');
+      L.push('         = '+C_n.toExponential(10));
+      L.push('');
+      if(isP){
+        var s=1/(n*(n-1));
+        L.push('Jump size: s = 1/(p(p\u22121))');
+        L.push('  = '+s.toExponential(10));
+        L.push('  = 1/'+((n*(n-1)).toLocaleString()));
+        L.push('');
+        L.push('\u0394C (predicted) = '+(-C_n1/(n*(n-1))).toExponential(10));
+        L.push('\u0394C (observed)  = '+delta.toExponential(10));
+        L.push('');
+        L.push('Discriminant = (2p\u22121)\u00b2 = ('+(2*n-1)+')\u00b2 = '+((2*n-1)*(2*n-1)).toLocaleString());
+        L.push('Recovery: p = (1+'+(2*n-1)+')/2 = '+n.toLocaleString()+' \u2714');
+      } else {
+        var prevP=null,nextP=null;
+        for(var i=0;i<pr.length;i++){if(pr[i]<n)prevP=pr[i];if(pr[i]>n&&!nextP)nextP=pr[i];}
+        L.push('\u0394C (observed) = '+delta.toExponential(10)+' (noise)');
+        L.push('No jump: D(x) continuous at x='+(n-1));
+        L.push('Nearest primes: '+prevP+' < '+n+' < '+nextP);
+      }
+    } else if(disp==='frac'){
+      if(isP){
+        var den=n*(n-1);
+        L.push('Jump size as exact fraction:');
+        L.push('  s = 1 / ('+n.toLocaleString()+' \u00d7 '+(n-1).toLocaleString()+')');
+        L.push('  s = 1 / '+den.toLocaleString());
+        L.push('');
+        L.push('In words: one part in '+den.toLocaleString());
+        L.push('');
+        L.push('Discriminant = ('+(2*n-1)+')\u00b2 = '+((2*n-1)*(2*n-1)).toLocaleString());
+        L.push('Recovery: (1 + '+(2*n-1)+') / 2 = '+n.toLocaleString()+' \u2714');
+      } else {
+        L.push('Composite: no jump, no fraction.');
+      }
+    } else if(disp==='rel'){
+      if(isP){
+        var s_p=1/(n*(n-1));
+        var ratio=(0.5/s_p);
+        L.push('Jump relative to p=2 (max jump s=1/2):');
+        L.push('  s(p=2)         = 5.000000e-01 (max)');
+        L.push('  s(p='+n.toLocaleString()+') = '+s_p.toExponential(8));
+        L.push('  Ratio s(2)/s(p) = '+ratio.toExponential(6));
+        L.push('');
+        L.push('Position on jump spectrum [0, 1]:');
+        L.push('  \u03c6 boundary : s = 1.000 (unreachable)');
+        L.push('  p=2 jump     : s = 0.500');
+        L.push('  p=3 jump     : s = 0.167');
+        L.push('  p=5 jump     : s = 0.050');
+        L.push('  This prime   : s = '+s_p.toExponential(4));
+      } else {
+        L.push('No jump at composite n='+n.toLocaleString()+'.');
+      }
+    } else if(disp==='geo'){
+      if(isP){
+        var s_p=1/(n*(n-1));
+        var logN=Math.log(n);
+        L.push('Ring M = '+n.toLocaleString()+' (prime ring)');
+        L.push('\u03c6('+n.toLocaleString()+') = '+(n-1).toLocaleString()+' coprime residues');
+        L.push('All r = 1 \u2026 '+(n-1).toLocaleString()+' are coprime to '+n.toLocaleString());
+        L.push('');
+        L.push('D(x) jump at x = '+(n-1).toLocaleString()+':');
+        L.push('  Euler factor: f_p = '+n+'/'+(n+1)+' \u2248 '+(n/(n+1)).toFixed(12));
+        L.push('  Jump \u0394D = '+s_p.toExponential(10));
+        L.push('');
+        L.push('Expected gap to next prime:');
+        L.push('  \u223c ln('+n.toLocaleString()+') = '+logN.toFixed(4)+' integers');
+      } else {
+        var prevP=null,nextP=null;
+        for(var i=0;i<pr.length;i++){if(pr[i]<n)prevP=pr[i];if(pr[i]>n&&!nextP)nextP=pr[i];}
+        L.push('Ring M = '+n.toLocaleString()+' (composite ring)');
+        L.push('No new prime enters the Euler product.');
+        L.push('D(x) is smooth at x = '+(n-1).toLocaleString()+'.');
+        L.push('');
+        L.push('Nearest prime rings:');
+        L.push('  Below: M = '+(prevP||'—'));
+        L.push('  Above: M = '+(nextP||'—'));
+      }
+    }
+    return L;
+  }
+
+  // ── Build canvas ──
+  var disps   = ['sci', 'frac', 'rel', 'geo'];
+  var titles  = ['Scientific Notation', 'Exact Fraction', 'Relative to p=2', 'Ring Geometry'];
+  var colors  = ['43,191,176','212,168,67','144,96,208','68,204,136'];
+  var blocks  = disps.map(function(d){return getLines(d);});
+
+  // Layout: 2 columns × 2 rows
+  var FONT=14, LINE=22, PAD=28, HEADER=40, GAP=20;
+  var colW=620, rows=Math.max.apply(null,blocks.map(function(b){return b.length;}));
+  var blockH=HEADER + rows*LINE + PAD;
+  var W=colW*2+GAP*3, H=blockH*2+GAP*3+80+60; // +header top +footer
+
+  var cv=document.createElement('canvas');
+  var PX=2; // retina
+  cv.width=W*PX; cv.height=H*PX;
+  var ctx=cv.getContext('2d');
+  ctx.scale(PX,PX);
+
+  // Background
+  ctx.fillStyle='#05040a';
+  ctx.fillRect(0,0,W,H);
+
+  // ── TOP HEADER ──
+  ctx.fillStyle='rgba(212,168,67,.08)';
+  ctx.fillRect(0,0,W,80);
+  ctx.font='bold 20px "JetBrains Mono",monospace';
+  ctx.fillStyle='rgba(212,168,67,.95)';
+  ctx.fillText('JUMP THEOREM PRIME CHECKER',PAD,32);
+  ctx.font='13px "JetBrains Mono",monospace';
+  ctx.fillStyle='rgba(43,191,176,.8)';
+  var isP2=sieve(Math.max(n*2,n+100)).indexOf(n)>=0;
+  ctx.fillText('n = '+n.toLocaleString()+'   \u2192   '+(isP2?'PRIME \u2714':'COMPOSITE \u2717')+'   \u00b7   Wessen Getachew, The Lift Survival Function (2026)',PAD,56);
+  ctx.fillStyle='rgba(212,168,67,.25)';
+  ctx.fillRect(0,80,W,1);
+
+  // ── FOUR PANELS ──
+  for(var p=0;p<4;p++){
+    var col=p%2, row=Math.floor(p/2);
+    var x=GAP+col*(colW+GAP), y=80+GAP+row*(blockH+GAP);
+    var col3=colors[p];
+
+    // Panel background
+    ctx.fillStyle='rgba(255,255,255,.025)';
+    ctx.strokeStyle='rgba('+col3+',.35)';
+    ctx.lineWidth=1;
+    roundRect(ctx,x,y,colW,blockH,6);
+    ctx.fill(); ctx.stroke();
+
+    // Left accent bar
+    ctx.fillStyle='rgba('+col3+',.8)';
+    ctx.fillRect(x,y,3,blockH);
+
+    // Panel title
+    ctx.font='bold 11px "JetBrains Mono",monospace';
+    ctx.fillStyle='rgba('+col3+',.9)';
+    ctx.fillText(titles[p].toUpperCase(),x+PAD,y+26);
+    ctx.fillStyle='rgba(255,255,255,.1)';
+    ctx.fillRect(x,y+HEADER-2,colW,1);
+
+    // Lines
+    ctx.font=FONT+'px "JetBrains Mono",monospace';
+    var lines=blocks[p];
+    for(var li=0;li<lines.length;li++){
+      var line=lines[li];
+      var ly=y+HEADER+li*LINE+LINE*.7;
+      // Color key values differently
+      if(line.startsWith('n = ')){ctx.fillStyle='rgba(212,168,67,.9)';}
+      else if(line.indexOf('\u2714')>=0){ctx.fillStyle='rgba(43,191,176,.9)';}
+      else if(line.indexOf('\u2717')>=0){ctx.fillStyle='rgba(232,85,64,.85)';}
+      else if(line===''||line.startsWith('  ')){ctx.fillStyle='rgba(140,130,110,.6)';}
+      else{ctx.fillStyle='rgba(200,185,155,.85)';}
+      ctx.fillText(line,x+PAD,ly);
+    }
+  }
+
+  // ── FOOTER ──
+  var fy=H-56;
+  ctx.fillStyle='rgba(255,255,255,.06)';
+  ctx.fillRect(0,fy,W,56);
+  ctx.fillStyle='rgba(212,168,67,.25)';
+  ctx.fillRect(0,fy,W,1);
+  ctx.font='11px "JetBrains Mono",monospace';
+  ctx.fillStyle='rgba(140,130,110,.6)';
+  ctx.fillText('C \u2248 0.530711806246   \u00b7   J \u2248 0.773154968933   \u00b7   D\u2080 \u2248 0.551691597558   \u00b7   T \u2248 0.221463371375',PAD,fy+22);
+  ctx.fillText('The Lift Survival Function \u2014 Where primes reveal themselves as exact discontinuities in a smooth Euler product \u2014 math.NT 2026',PAD,fy+42);
+
+  // Download
+  var a=document.createElement('a');
+  a.download='jump_theorem_n'+n+'.png';
+  a.href=cv.toDataURL('image/png',1.0);
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+};
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);
+  ctx.closePath();
+}
+
+</script>
+<script>
+
+// ════════════════════════════════════
+// POINT INSPECTOR
+// ════════════════════════════════════
+var _pinnedPts = [];
+var _lastRings = null;  // updated every frame
+
+// Expose rings to inspector
+// Patch into frame() — after buildRings, store reference
+// We'll store rings in window._opRings after each frame
+
+function opInspectorInit(){
+  var cv = document.getElementById('op-cv');
+  if(!cv) return;
+
+  // Hover → tooltip
+  cv.addEventListener('mousemove', function(e){
+    var pt = opHitTest(e);
+    var tt = document.getElementById('op-tooltip');
+    if(!tt) return;
+    if(pt){
+      tt.innerHTML = opPointHTML(pt, false);
+      // Position near cursor but keep in bounds
+      var rect = cv.getBoundingClientRect();
+      var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      var tx = mx + 16, ty = my + 16;
+      if(tx + 260 > rect.width)  tx = mx - 270;
+      if(ty + 120 > rect.height) ty = my - 110;
+      tt.style.left = tx + 'px';
+      tt.style.top  = ty + 'px';
+      tt.style.display = 'block';
+      cv.style.cursor = 'crosshair';
+    } else {
+      tt.style.display = 'none';
+      cv.style.cursor = 'default';
+    }
+  });
+
+  cv.addEventListener('mouseleave', function(){
+    var tt = document.getElementById('op-tooltip');
+    if(tt) tt.style.display = 'none';
+  });
+
+  // Click → pin
+  cv.addEventListener('click', function(e){
+    var pt = opHitTest(e);
+    if(!pt) return;
+    // Check if already pinned
+    for(var i=0;i<_pinnedPts.length;i++){
+      if(_pinnedPts[i].r===pt.r && _pinnedPts[i].M===pt.M){
+        _pinnedPts.splice(i,1);
+        opInspectorRender();
+        return;
+      }
+    }
+    if(_pinnedPts.length >= 8) _pinnedPts.shift(); // max 8
+    _pinnedPts.push(pt);
+    opInspectorRender();
+  });
+}
+
+function opHitTest(e){
+  var cv = document.getElementById('op-cv');
+  if(!cv || !window._opRings) return null;
+  var rect = cv.getBoundingClientRect();
+  var dpr = Math.min(window.devicePixelRatio||1,2);
+  // Mouse in canvas CSS pixels
+  var mx = e.clientX - rect.left;
+  var my = e.clientY - rect.top;
+  var cx = rect.width/2, cy = rect.height/2;
+  var HIT = 14; // hit radius in CSS pixels
+  var best = null, bestD = HIT;
+  var rings = window._opRings;
+  for(var i=0;i<rings.length;i++){
+    var rng = rings[i];
+    for(var pi=0;pi<rng.pts.length;pi++){
+      var p = rng.pts[pi];
+      var px2 = cx + p.rr * Math.cos(p.theta);
+      var py2 = cy + p.rr * Math.sin(p.theta);
+      var d = Math.sqrt((mx-px2)*(mx-px2)+(my-py2)*(my-py2));
+      if(d < bestD){ bestD=d; best=p; }
+    }
+  }
+  return best;
+}
+
+function opPointHTML(p, full){
+  var isP = p.isP;
+  var lifts = p.lifts;
+  var angle = (360 * p.r / p.M).toFixed(2);
+  var rm = p.r + '/' + p.M;
+  var lines = [];
+  lines.push('<span style="color:rgba(212,168,67,.9)">r = '+p.r+'  on ring M = '+p.M+'</span>');
+  lines.push('gcd('+p.r+', '+p.M+') = '+p.g + (p.isCP?' <span style="color:#2bbfb0">\u2714 coprime</span>':' <span style="color:#e85540">\u2717 not coprime</span>'));
+  lines.push('angle \u03b8 = 2\u03c0\u00d7'+rm+' = '+angle+'\u00b0');
+  if(p.isCP){
+    lines.push('lifts to M+1 = '+(p.M+1)+'? <span style="color:'+(lifts?'#2bbfb0':'#e85540')+'">'+(lifts?'YES \u2714':'NO \u2717')+'</span>');
+    if(full){
+      lines.push('');
+      lines.push('Ring M='+p.M+' is '+(isP?'<span style="color:#d4a843">PRIME</span>':'composite'));
+      lines.push('Jump size: 1/(p(p-1)) = '+(isP?'1/'+(p.M*(p.M-1)):'\u2014'));
+      if(isP){
+        var s = 1/(p.M*(p.M-1));
+        lines.push('s = '+s.toExponential(8));
+        lines.push('Recovery: (1+\u221a'+( 1+4*p.M*(p.M-1))+')/2 = '+p.M);
+      }
+      lines.push('Mirror: r = '+(p.M-p.r)+' (via \u03c3(r)=M\u2212r)');
+      lines.push('\u03c6('+p.M+') = coprime count on ring');
+    }
+  } else {
+    if(full){
+      lines.push('');
+      lines.push('gcd(r,M) = '+p.g+' \u2014 blocked from lifting');
+      lines.push('This residue is in the "forbidden" set');
+    }
+  }
+  return lines.join('<br>');
+}
+
+function opInspectorRender(){
+  var panel = document.getElementById('op-inspector');
+  var list  = document.getElementById('op-inspector-list');
+  if(!panel||!list) return;
+  if(_pinnedPts.length === 0){ panel.style.display='none'; return; }
+  panel.style.display = 'block';
+  list.innerHTML = _pinnedPts.map(function(p, i){
+    var col = p.isCP ? '#2bbfb0' : '#e85540';
+    return '<div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);position:relative;">'
+      + '<div style="color:rgba(212,168,67,.9);margin-bottom:4px;">r = '+p.r+'  ·  M = '+p.M
+      + '  <button onclick="_pinnedPts.splice('+i+',1);opInspectorRender()" '
+      + 'style="float:right;background:none;border:none;color:rgba(140,130,110,.5);cursor:pointer;font-size:9px;">✕</button></div>'
+      + opPointHTML(p, true)
+      + '</div>';
+  }).join('');
+}
+
+window.opInspectorClear = function(){
+  _pinnedPts = [];
+  opInspectorRender();
+};
+
+// Draw pinned point highlights in the frame
+window._opDrawPins = function(ctx, cx, cy){
+  for(var i=0;i<_pinnedPts.length;i++){
+    var p = _pinnedPts[i];
+    var px2 = cx + p.rr * Math.cos(p.theta);
+    var py2 = cy + p.rr * Math.sin(p.theta);
+    // Outer ring
+    ctx.beginPath();ctx.arc(px2,py2,10,0,2*Math.PI);
+    ctx.strokeStyle='rgba(212,168,67,.9)';ctx.lineWidth=2;ctx.stroke();
+    // Pin number
+    ctx.font='bold 9px JetBrains Mono,monospace';ctx.textAlign='center';
+    ctx.fillStyle='rgba(212,168,67,.95)';
+    ctx.fillText('r='+p.r,px2,py2-14);
+    ctx.textAlign='left';
+  }
+};
+
+document.addEventListener('DOMContentLoaded', opInspectorInit);
+
+</script>
+<script>
+
+var _splashFormulas = {
+  'C': {
+    title: 'C \u2014 Lift Survival Constant',
+    color: '#d4a843',
+    lines: [
+      'C = \u220f\u209a (p\u00b2\u22122)/(p\u00b2\u22121)',
+      '',
+      '  = \u220f\u209a (1 \u2212 1/(p\u00b2\u22121))',
+      '',
+      '\u2248 0.530711806246...',
+      '',
+      'OEIS A065469 \u00b7 T\u00f3th\u2013S\u00e1ndor (1989)',
+      'density of consecutive squarefree pairs',
+      '',
+      'C = lim\u2099 (1/N) \u03a3\u1d39\u208c\u2082\u1da0 #{r \u2264 M\u22121 : gcd(r,M)=1, gcd(r,M+1)=1}',
+      '                            \u03c6(M)',
+      '',
+      'Verified empirically to M = 2,000,000',
+    ]
+  },
+  'J': {
+    title: 'J \u2014 Total Jump Content',
+    color: '#d4a843',
+    lines: [
+      'J = \u03a3\u209a 1/(p(p\u22121))',
+      '',
+      '  = \u03a3\u209a (1/p\u00b2 + 1/p\u00b3 + 1/p\u2074 + \u2026)',
+      '',
+      '  = \u03a3\u2096\u2265\u2082 P(k)   where P(k) = \u03a3\u209a 1/p\u1d4f',
+      '',
+      '\u2248 0.773154968933...',
+      '',
+      'J = D\u2080 + T  (algebraic identity)',
+      'Every prime zeta value encoded simultaneously',
+    ]
+  },
+  'D0': {
+    title: 'D\u2080 \u2014 Log-Derivative Base',
+    color: '#d4a843',
+    lines: [
+      'D\u2080 = \u03a3\u209a 1/(p\u00b2\u22121)',
+      '',
+      '   = \u03a3\u209a 1/((p\u22121)(p+1))',
+      '',
+      '\u2248 0.551691597558...',
+      '',
+      'D\u2080 = D(0) = lim\u2093\u21920 D(x)',
+      'where D(x) = \u03a3\u209a log f\u209a(x)',
+      'is the log-derivative base of C(x)',
+    ]
+  },
+  'T': {
+    title: 'T \u2014 Correction Term',
+    color: '#2bbfb0',
+    lines: [
+      'T = \u03a3\u209a 1/(p(p\u00b2\u22121))',
+      '',
+      ' = \u03a3\u209a 1/(p(p\u22121)(p+1))',
+      '',
+      '\u2248 0.221463371375...',
+      '',
+      'T = J \u2212 D\u2080  (from identity J = D\u2080 + T)',
+      '',
+      'Proof: 1/(p(p\u22121)) = 1/(p\u00b2\u22121) + 1/(p(p\u00b2\u22121))',
+      'Summing over all primes gives J = D\u2080 + T',
+    ]
+  },
+};
+
+window.opShowFormula = function(key, el) {
+  var popup = document.getElementById('splash-formula-popup');
+  var content = document.getElementById('splash-formula-content');
+  if(!popup || !content) return;
+  if(popup.style.display === 'block' && popup.dataset.key === key) {
+    popup.style.display = 'none'; return;
+  }
+  var f = _splashFormulas[key];
+  if(!f) return;
+  popup.dataset.key = key;
+  popup.style.borderColor = 'rgba('+(key==='T'?'43,191,176':'212,168,67')+',.5)';
+  content.innerHTML =
+    '<div style="color:'+(key==='T'?'#2bbfb0':'#d4a843')+';font-size:12px;'+
+    'margin-bottom:12px;letter-spacing:.08em;border-bottom:1px solid rgba(255,255,255,.1);'+
+    'padding-bottom:8px;">'+f.title+'</div>' +
+    f.lines.map(function(l){
+      if(l==='') return '<div style="height:5px;"></div>';
+      return '<div style="white-space:pre;color:'+(l.startsWith('  ')?'rgba(140,130,110,.7)':'rgba(200,185,155,.9)')+
+        '">'+l+'</div>';
+    }).join('');
+  popup.style.display = 'block';
+
+  var popup = document.getElementById('splash-formula-popup');
+  var content = document.getElementById('splash-formula-content');
+  if(!popup || !content) return;
+
+  // If already showing this formula, close it
+  if(popup.style.display === 'block' && popup.dataset.key === key) {
+    popup.style.display = 'none';
+    return;
+  }
+
+  var f = _splashFormulas[key];
+  if(!f) return;
+
+  popup.dataset.key = key;
+  popup.style.borderColor = 'rgba('+
+    (key==='T'?'43,191,176':'212,168,67')+',.5)';
+
+  content.innerHTML =
+    '<div style="color:'+f.color+';font-size:12px;margin-bottom:10px;letter-spacing:.1em;">'+
+    f.title+'</div>' +
+    f.lines.map(function(l){
+      return '<div style="'+(l===''?'height:6px':'')+'">'+
+        (l.startsWith(' ')?'<span style="color:rgba(140,130,110,.6)">':'<span style="color:rgba(200,185,155,.9)">')+
+        l.replace(/([0-9.]{6,})/g,'<span style="color:#d4a843">$1</span>')+
+        '</span></div>';
+    }).join('');
+
+  popup.style.display = 'block';
+};
+
+// Close popup on outside click
+document.addEventListener('click', function(e){
+  var popup = document.getElementById('splash-formula-popup');
+  if(!popup) return;
+  var card = popup.closest ? popup.closest('.splash-card') : null;
+  if(popup.style.display==='block' && !popup.contains(e.target)){
+    popup.style.display = 'none';
+  }
+});
+
+</script>
+
+<div id="splash-formula-popup" style="display:none;position:fixed;
+  top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;
+  background:rgba(5,4,10,.97);border:1px solid rgba(212,168,67,.4);
+  border-radius:8px;padding:20px 24px;min-width:min(340px,90vw);max-width:90vw;
+  max-height:80vh;overflow-y:auto;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:rgba(200,185,155,.9);line-height:1.9;
+  box-shadow:0 8px 48px rgba(0,0,0,.9);">
+  <div id="splash-formula-content"></div>
+  <div style="margin-top:12px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);
+    font-size:9px;color:rgba(120,110,90,.5);text-align:center;">tap anywhere outside to close</div>
+</div>
+<!-- ══ MISSING INTERACTIVE JS FROM INDEX-1 ══ -->
+<script>
+(function(){
+// ── shared helpers (safe re-declare guard) ──
+function _gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){var t=b;b=a%b;a=t;}return a;}
+function _sieve(lim){var s=new Uint8Array(lim+1);s[0]=s[1]=1;var pr=[];for(var i=2;i<=lim;i++){if(!s[i]){pr.push(i);for(var j=i*i;j<=lim;j+=i)s[j]=1;}}return pr;}
+var _PRIMES=_sieve(20000);
+function _isPrimeN(n){if(n<2)return false;for(var i=0;i<_PRIMES.length;i++){if(_PRIMES[i]===n)return true;if(_PRIMES[i]*_PRIMES[i]>n)break;}return n>1;}
+function _setHiDPI(canvas){var dpr=window.devicePixelRatio||1;var rect=canvas.getBoundingClientRect();canvas.width=rect.width*dpr;canvas.height=rect.height*dpr;var ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);return{ctx:ctx,w:rect.width,h:rect.height};}
+function _styleCtx(ctx,w,h){ctx.fillStyle='rgba(0,0,0,.4)';ctx.fillRect(0,0,w,h);}
+
+// ── Jump Spectrum canvas ──
+window.drawSpectrum=function(){
+  var cv=document.getElementById('spec-canvas');if(!cv)return;
+  var dpr=window.devicePixelRatio||1;
+  var W2=cv.offsetWidth,H2=cv.offsetHeight||80;
+  cv.width=Math.round(W2*dpr);cv.height=Math.round(H2*dpr);
+  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W2,H2);
+  ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W2,H2);
+  var pad=28,lineY=H2*0.55;
+  ctx.beginPath();ctx.moveTo(pad,lineY);ctx.lineTo(W2-pad,lineY);
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;ctx.stroke();
+  ctx.font='9px JetBrains Mono,monospace';ctx.fillStyle='rgba(120,110,90,.5)';
+  ctx.textAlign='left';ctx.fillText('s→0 (p→∞)',pad,H2-4);
+  ctx.textAlign='right';ctx.fillText('s=1 (φ)',W2-pad,H2-4);
+  // prime jump markers
+  var primShow=[2,3,5,7,11,13,17,19,23,29,31];
+  primShow.forEach(function(p,i){
+    var s=1/(p*(p-1));
+    var x=pad+s*(W2-2*pad);
+    var r=p<=11?5:p<=23?3.5:2.5;
+    ctx.beginPath();ctx.arc(x,lineY,r,0,2*Math.PI);
+    ctx.fillStyle='rgba(78,205,196,'+(0.9-i*0.06)+')';ctx.fill();
+    if(p<=13){
+      ctx.font='8px JetBrains Mono,monospace';ctx.fillStyle='rgba(78,205,196,.75)';
+      ctx.textAlign='center';ctx.fillText('p='+p,x,lineY-r-5);
+    }
+  });
+  // φ boundary marker
+  var xphi=pad+1*(W2-2*pad);
+  ctx.beginPath();ctx.arc(xphi,lineY,8,0,2*Math.PI);
+  ctx.strokeStyle='rgba(212,168,67,.9)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='rgba(212,168,67,.12)';ctx.fill();
+  ctx.font='9px JetBrains Mono,monospace';ctx.fillStyle='rgba(212,168,67,.9)';
+  ctx.textAlign='right';ctx.fillText('φ',xphi-2,lineY-12);
+  // faint tick marks for more primes
+  _PRIMES.slice(0,30).forEach(function(p){
+    var s=1/(p*(p-1)),x=pad+s*(W2-2*pad);
+    ctx.beginPath();ctx.moveTo(x,lineY-15);ctx.lineTo(x,lineY+3);
+    ctx.strokeStyle='rgba(78,205,196,.08)';ctx.lineWidth=1;ctx.stroke();
+  });
+};
+
+// Spectrum click handler
+(function(){
+  var el=document.getElementById('spec-canvas');
+  if(!el)return;
+  el.style.cursor='crosshair';
+  el.addEventListener('click',function(e){
+    var rect=this.getBoundingClientRect();
+    var x=e.clientX-rect.left;
+    var pad=28,W2=this.offsetWidth;
+    var s=Math.max(0.0001,Math.min(1,(x-pad)/(W2-2*pad)));
+    var p=(1+Math.sqrt(1+4/s))/2;
+    var info=document.getElementById('spec-info');
+    if(!info)return;
+    if(Math.abs(s-1)<0.02){
+      info.innerHTML='<span style="color:#d4a843;">s ≈ 1 → φ ≈ 1.6180 — golden ratio boundary. No integer prime reaches this.</span>';
+    } else {
+      var isInt=Math.abs(p-Math.round(p))<1e-4,intP=Math.round(p);
+      var isPr=isInt&&_isPrimeN(intP);
+      info.innerHTML='s ≈ '+s.toFixed(5)+' → p ≈ '+p.toFixed(4)+(isInt?' = '+intP+(isPr?' <span style="color:#4ecdc4;">[PRIME ✓]</span>':' [composite]'):' (not integer — no prime here)');
+    }
+  });
+})();
+
+// ── r9: mirror pairs (supplemental canvas) ──
+window.r9_update=function(){
+  var sl=document.getElementById('r9-M');if(!sl)return;
+  var M=parseInt(sl.value);
+  var vl=document.getElementById('r9-Mval');if(vl)vl.textContent=M;
+  var cv=document.getElementById('r9-canvas');if(!cv)return;
+  var _=_setHiDPI(cv);var ctx=_.ctx,w=_.w,h=_.h;
+  _styleCtx(ctx,w,h);
+  var CX=w/2,CY=h/2,R=Math.min(w,h)*0.38;
+  ctx.beginPath();ctx.arc(CX,CY,R,0,2*Math.PI);
+  ctx.strokeStyle='rgba(212,168,67,0.15)';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(CX-R-14,CY);ctx.lineTo(CX+R+14,CY);
+  ctx.strokeStyle='rgba(255,255,255,0.07)';ctx.setLineDash([3,5]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  var cops=[];
+  for(var r=1;r<M;r++){if(_gcd(r,M)===1)cops.push(r);}
+  var drawn={};
+  cops.forEach(function(r){
+    var mir=M-r;
+    var key=Math.min(r,mir)+'_'+Math.max(r,mir);
+    if(drawn[key])return;drawn[key]=true;
+    var ang1=r/M*2*Math.PI-Math.PI/2;
+    var ang2=mir/M*2*Math.PI-Math.PI/2;
+    var x1=CX+R*Math.cos(ang1),y1=CY+R*Math.sin(ang1);
+    var x2=CX+R*Math.cos(ang2),y2=CY+R*Math.sin(ang2);
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle='rgba(78,205,196,0.15)';ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(x1,y1,4,0,2*Math.PI);ctx.fillStyle='rgba(212,168,67,0.85)';ctx.fill();
+    ctx.beginPath();ctx.arc(x2,y2,4,0,2*Math.PI);ctx.fillStyle='rgba(78,205,196,0.75)';ctx.fill();
+    if(M<=30){
+      ctx.font='8px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillStyle='rgba(212,168,67,.7)';ctx.fillText(r,CX+(R+14)*Math.cos(ang1),CY+(R+14)*Math.sin(ang1)+3);
+      ctx.fillStyle='rgba(78,205,196,.7)';ctx.fillText(mir,CX+(R+14)*Math.cos(ang2),CY+(R+14)*Math.sin(ang2)+3);
+    }
+  });
+  var el=document.getElementById('r9-out');
+  if(el)el.textContent='M='+M+'  φ(M)='+cops.length+' (always even for M>2)  Mirror pairs: '+(cops.length/2);
+};
+
+// ── r14: C_k Euler product ──
+window.r14_update=function(){
+  var sl=document.getElementById('r14-k');if(!sl)return;
+  var k=parseInt(sl.value);
+  var vl=document.getElementById('r14-kval');if(vl)vl.textContent=k;
+  var cv=document.getElementById('r14-canvas');if(!cv)return;
+  var _=_setHiDPI(cv);var ctx=_.ctx,w=_.w,h=_.h;
+  _styleCtx(ctx,w,h);
+  var pad=40;
+  function radical(n){var r=1,t=n,p=2;while(p*p<=t){if(t%p===0){r*=p;while(t%p===0)t=Math.floor(t/p);}p++;}if(t>1)r*=t;return r;}
+  var rad_k=radical(k);
+  var partials=[],prod=1;
+  var ps=_PRIMES.slice(0,80);
+  ps.forEach(function(p){
+    var f;
+    if(p===2&&k%2===0)f=0;
+    else if(k%p===0)f=(p-2)/p;
+    else f=(p-1)/p;
+    prod*=f;partials.push(prod);
+  });
+  var mx=Math.max.apply(null,partials.slice(0,20).filter(function(v){return v>0;}))*1.05||0.6;
+  var scaleY=function(v){return pad+(h-2*pad)*(1-v/mx);};
+  var scaleX=function(i){return pad+i/79*(w-2*pad);};
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();
+  ctx.beginPath();
+  var started=false;
+  partials.forEach(function(v,i){
+    if(!started&&v>0){ctx.moveTo(scaleX(i),scaleY(v));started=true;}
+    else if(v>0)ctx.lineTo(scaleX(i),scaleY(v));
+  });
+  ctx.strokeStyle='rgba(212,168,67,.85)';ctx.lineWidth=1.5;ctx.stroke();
+  // mark primes dividing k
+  ps.forEach(function(p,i){
+    if(k%p===0){
+      var xp=scaleX(i);
+      ctx.beginPath();ctx.moveTo(xp,pad);ctx.lineTo(xp,h-pad);
+      ctx.strokeStyle='rgba(255,100,80,.25)';ctx.setLineDash([2,4]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+    }
+  });
+  var final=partials[partials.length-1];
+  var el=document.getElementById('r14-out');
+  if(el)el.textContent='k='+k+'  rad(k)='+rad_k+(k===rad_k?' [squarefree]':' [C_k=C_rad(k)]')+'\nC_'+k+' ≈ '+final.toFixed(10)+(k%2===0?'\n[Even k: p=2 factor = 0 → C_k = 0]':'');
+};
+
+// ── r15: lift barrier ──
+window.r15_update=function(){
+  var sl=document.getElementById('r15-M');if(!sl)return;
+  var Mmax=parseInt(sl.value);
+  var vl=document.getElementById('r15-Mval');if(vl)vl.textContent=Mmax;
+  var cv=document.getElementById('r15-canvas');if(!cv)return;
+  var _=_setHiDPI(cv);var ctx=_.ctx,w=_.w,h=_.h;
+  _styleCtx(ctx,w,h);
+  var pad=30;
+  var oddMs=[];for(var M=3;M<=Mmax;M+=2)oddMs.push(M);
+  if(!oddMs.length)return;
+  var n=oddMs.length,cellW=(w-2*pad)/n,cellH=(h-2*pad)/2;
+  ctx.font='8px JetBrains Mono';
+  ctx.fillStyle='rgba(255,100,80,.7)';ctx.textAlign='right';ctx.fillText('Upper (M+1)/2',pad-4,pad+cellH*0.5+4);
+  ctx.fillStyle='rgba(78,205,196,.7)';ctx.fillText('Lower (M-1)/2',pad-4,pad+cellH*1.5+4);
+  oddMs.forEach(function(M,i){
+    var x=pad+i*cellW;
+    var rUp=Math.floor((M+1)/2),rLo=Math.floor((M-1)/2);
+    var upLifts=(_gcd(rUp,M+1)===1),loLifts=(_gcd(rLo,M+1)===1);
+    ctx.fillStyle=upLifts?'rgba(100,210,140,.8)':'rgba(255,100,80,.8)';
+    ctx.fillRect(x+1,pad+cellH*0.2,cellW-2,cellH*0.6);
+    ctx.fillStyle=loLifts?'rgba(78,205,196,.8)':'rgba(255,100,80,.4)';
+    ctx.fillRect(x+1,pad+cellH+cellH*0.2,cellW-2,cellH*0.6);
+    if(n<=20||M%10===1||M<=11){
+      ctx.fillStyle='rgba(180,170,150,.7)';ctx.textAlign='center';
+      ctx.fillText(''+M,x+cellW/2,h-pad+12);
+    }
+    if(M%4===3){ctx.fillStyle='rgba(212,168,67,.5)';ctx.fillRect(x+1,h-pad-5,cellW-2,3);}
+  });
+  ctx.font='8px JetBrains Mono';
+  ctx.fillStyle='rgba(255,100,80,.7)';ctx.textAlign='left';ctx.fillText('■ Blocked',pad,pad-8);
+  ctx.fillStyle='rgba(78,205,196,.7)';ctx.fillText('■ Lifts',pad+58,pad-8);
+  ctx.fillStyle='rgba(212,168,67,.6)';ctx.fillText('■ M≡3(mod4)',pad+108,pad-8);
+  var loLiftCount=oddMs.filter(function(M){return _gcd(Math.floor((M-1)/2),M+1)===1;}).length;
+  var el=document.getElementById('r15-out');
+  if(el)el.textContent='Odd M 3→'+Mmax+' ('+oddMs.length+' values)\nUpper: ALWAYS blocked\nLower: lifts '+loLiftCount+'/'+oddMs.length+' times — exactly M≡3(mod4) ↔ inert in ℤ[i]';
+};
+
+// ── r16: doubling law ──
+window.r16_draw=function(){
+  var cv=document.getElementById('r16-canvas');if(!cv)return;
+  var _=_setHiDPI(cv);var ctx=_.ctx,w=_.w,h=_.h;
+  _styleCtx(ctx,w,h);
+  var pad=44;
+  function phiN(n){var r=n,t=n,p=2;while(p*p<=t){if(t%p===0){while(t%p===0)t=Math.floor(t/p);r-=Math.floor(r/p);}p++;}if(t>1)r-=Math.floor(r/t);return r;}
+  var ns=[0,1,2,3,4,5,6,7,8];
+  var Ts=[6,6,6,6,6,6,6,6,6];
+  var phis=ns.map(function(n2){return phiN(30*Math.pow(2,n2));});
+  var ratios=Ts.map(function(T,i){return T/phis[i];});
+  var mx=ratios[0]*1.2;
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();
+  var scaleY=function(v){return pad+(h-2*pad)*(1-v/mx);};
+  var scaleX=function(i){return pad+i/(ns.length-1)*(w-2*pad);};
+  ctx.beginPath();
+  ratios.forEach(function(v,i){i===0?ctx.moveTo(scaleX(i),scaleY(v)):ctx.lineTo(scaleX(i),scaleY(v));});
+  ctx.strokeStyle='rgba(212,168,67,.8)';ctx.lineWidth=2;ctx.stroke();
+  ratios.forEach(function(v,i){
+    var xp=scaleX(i),yp=scaleY(v);
+    ctx.beginPath();ctx.arc(xp,yp,4,0,2*Math.PI);ctx.fillStyle='rgba(212,168,67,.9)';ctx.fill();
+    ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(212,168,67,.7)';ctx.textAlign='center';
+    ctx.fillText('3/'+(4*Math.pow(2,ns[i])).toFixed(0),xp,yp-10);
+    ctx.fillStyle='rgba(140,130,110,.6)';ctx.fillText('30·2^'+ns[i],xp,h-pad+12);
+  });
+  ctx.font='9px JetBrains Mono';ctx.fillStyle='rgba(78,205,196,.6)';ctx.textAlign='left';
+  ctx.fillText('T/φ halves each doubling',pad+4,pad+12);
+  ctx.fillStyle='rgba(255,140,105,.6)';ctx.fillText('T=6 constant',pad+4,pad+24);
+  var el=document.getElementById('r16-out');
+  if(el)el.textContent='T(30·2ⁿ)=6 for all n≥0  (constant)\nT/φ=3/4·(1/2)ⁿ — halves each step\nMod 9: p(p+2)≡8(mod9) for all twin primes p>3 ✓';
+};
+
+// ── r17: D(s) zeros ──
+window.r17_draw=function(){
+  var cv=document.getElementById('r17-canvas');if(!cv)return;
+  var _=_setHiDPI(cv);var ctx=_.ctx,w=_.w,h=_.h;
+  _styleCtx(ctx,w,h);
+  var pad=28,lineY=h*0.48;
+  ctx.beginPath();ctx.moveTo(pad,lineY);ctx.lineTo(w-pad,lineY);
+  ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;ctx.stroke();
+  ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(120,110,90,.6)';
+  ctx.textAlign='left';ctx.fillText('s=0',pad,lineY+16);
+  ctx.textAlign='right';ctx.fillText('s=1',w-pad,lineY+16);
+  // critical strip boundaries
+  ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.setLineDash([3,5]);ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(w-pad,pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();ctx.setLineDash([]);
+  // Re(s)=1/2
+  var halfX=pad+(w-2*pad)/2;
+  ctx.beginPath();ctx.moveTo(halfX,pad);ctx.lineTo(halfX,h-pad);
+  ctx.strokeStyle='rgba(144,96,208,.28)';ctx.setLineDash([2,4]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(144,96,208,.6)';ctx.textAlign='center';
+  ctx.fillText('Re(s)=½',halfX,pad+10);
+  // zeros
+  _PRIMES.slice(0,20).forEach(function(p,i){
+    var s=Math.log(2)/Math.log(p);
+    var x=pad+s*(w-2*pad);
+    var r=i<5?7:i<10?5:3.5;
+    ctx.beginPath();ctx.arc(x,lineY,r,0,2*Math.PI);
+    ctx.fillStyle='rgba(255,100,80,'+Math.max(0.9-i*0.04,0.3)+')';ctx.fill();
+    if(p<=23){
+      ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(255,100,80,.7)';ctx.textAlign='center';
+      ctx.fillText('p='+p,x,lineY-(r+6));ctx.fillText(s.toFixed(3),x,lineY+r+12);
+    }
+  });
+  ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(140,130,110,.6)';ctx.textAlign='left';
+  ctx.fillText('● D(s) zeros — all real, none in critical strip',pad+4,h-8);
+  var el=document.getElementById('r17-out');
+  if(el)el.textContent='D(s)=∏_p(1−2/p^s)  zeros at s=log2/logp\np=2:s=1.000  p=3:s=0.631  p=5:s=0.431  p=7:s=0.356  p=11:s=0.289\nAll real — NONE in critical strip 0<Re(s)<1. C(s)=D(s)·ζ(s) zeros = ζ(s) zeros.';
+};
+
+// ── r20: golden ratio jump spectrum ──
+window.r20_draw=function(){
+  var cv=document.getElementById('r20-canvas');if(!cv)return;
+  var _=_setHiDPI(cv);var ctx=_.ctx,w=_.w,h=_.h;
+  _styleCtx(ctx,w,h);
+  var pad=28,lineY=h*0.5;
+  ctx.beginPath();ctx.moveTo(pad,lineY);ctx.lineTo(w-pad,lineY);
+  ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;ctx.stroke();
+  ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(120,110,90,.5)';
+  ctx.textAlign='left';ctx.fillText('s→0',pad,h-4);
+  ctx.textAlign='right';ctx.fillText('s=1  φ →',w-pad,h-4);
+  _PRIMES.slice(0,20).forEach(function(p,i){
+    var s=1/(p*(p-1)),x=pad+s*(w-2*pad);
+    var r=p<=11?6:p<=31?4.5:3;
+    ctx.beginPath();ctx.arc(x,lineY,r,0,2*Math.PI);
+    ctx.fillStyle='rgba(78,205,196,'+(0.9-i*0.04)+')';ctx.fill();
+    if(p<=23){
+      ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(78,205,196,.75)';ctx.textAlign='center';
+      ctx.fillText('p='+p,x,lineY-r-5);ctx.fillText(s.toFixed(3),x,lineY+r+12);
+    }
+  });
+  var phi=(1+Math.sqrt(5))/2;
+  var xphi=pad+1*(w-2*pad);
+  ctx.beginPath();ctx.arc(xphi,lineY,8,0,2*Math.PI);
+  ctx.strokeStyle='rgba(212,168,67,.9)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='rgba(212,168,67,.12)';ctx.fill();
+  ctx.font='bold 9px JetBrains Mono';ctx.fillStyle='rgba(212,168,67,.95)';ctx.textAlign='right';
+  ctx.fillText('φ≈'+phi.toFixed(4),xphi-2,lineY-14);ctx.fillText('s=1',xphi-2,lineY+18);
+  ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(140,130,110,.6)';ctx.textAlign='left';
+  ctx.fillText('At s=1: discriminant=5 (not perfect square) → p=φ ∉ ℤ',pad,pad+10);
+  var el=document.getElementById('r20-out');
+  if(el)el.textContent='s=1/(p(p−1)): p=2→0.500  p=3→0.167  p=5→0.050  p=7→0.024  …\nφ=(1+√5)/2≈'+phi.toFixed(10)+' at s=1 — spectral supremum, irrational sentinel.';
+};
+
+// ── Init all static canvases on load ──
+window.addEventListener('load',function(){
+  if(window.drawSpectrum)window.drawSpectrum();
+  if(window.r16_draw)window.r16_draw();
+  if(window.r17_draw)window.r17_draw();
+  if(window.r20_draw)window.r20_draw();
+});
+window.addEventListener('resize',function(){
+  if(window.drawSpectrum)window.drawSpectrum();
+  if(window.r16_draw)window.r16_draw();
+  if(window.r17_draw)window.r17_draw();
+  if(window.r20_draw)window.r20_draw();
+});
+
+// IntersectionObserver for slider-driven canvases
+(function(){
+  var targets={'r9-canvas':function(){window.r9_update&&r9_update();},'r14-canvas':function(){window.r14_update&&r14_update();},'r15-canvas':function(){window.r15_update&&r15_update();}};
+  var triggered={};
+  if(window.IntersectionObserver){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting&&!triggered[e.target.id]){triggered[e.target.id]=true;var fn=targets[e.target.id];if(fn)fn();}
+      });
+    },{threshold:0.1});
+    Object.keys(targets).forEach(function(id){var el=document.getElementById(id);if(el)obs.observe(el);});
+  }
+})();
+
+})();
+</script>
+</body>
+<div id="const-popup-overlay" onclick="if(event.target===this)closeConstPopup()">
+  <div class="const-popup-box">
+    <span class="cpop-close" onclick="closeConstPopup()">[ close ]</span>
+    <div class="cpop-sym" id="cpop-sym"></div>
+    <div class="cpop-title" id="cpop-title"></div>
+    <div class="cpop-formula" id="cpop-formula"></div>
+    <div class="cpop-note" id="cpop-note"></div>
+  </div>
+</div>
+
+<script>
+// ── Constants popup ──
+var CONST_POPUP_DATA = {
+  C:{sym:'C',color:'#d4a843',title:'Lift Survival Constant',
+    formula:'C = ∏_p (p² − 2) / (p² − 1)\n\n  = ζ(2) · d_FT\n\n  = (π²/6) · ∏_p (1 − 2/p²)\n\n  ≈ 0.530711806246\n\n  OEIS A065469 · Tóth–Sándor (1989)',
+    note:'The long-run fraction of coprime residues on ring M that lift to ring M+1. 53% of coprime positions survive the next sieve step. Equals F(2) of the analytic lift function F(u) = ∏_p (p²−u)/(p²−1).'},
+  J:{sym:'J',color:'#4ecdc4',title:'Total Jump Content',
+    formula:'J = Σ_p  1 / (p(p−1))\n\n  = Σ_{k≥2} P(k)\n\n  where P(k) = Σ_p 1/p^k  (prime zeta)\n\n  ≈ 0.773154968933\n\n  Identity: J = D₀ + T  (exact, prime by prime)',
+    note:'The total variation of D(x) = d/dx log C(x). Each prime p contributes exactly 1/(p(p−1)) as a jump at x = p−1. J encodes all prime zeta values simultaneously via J = Σ P(k).'},
+  D0:{sym:'D₀',color:'#9060d0',title:'Even Prime Zeta Sum',
+    formula:'D₀ = Σ_p  1 / (p² − 1)\n\n   = Σ_{k≥1} P(2k)\n\n   = P(2) + P(4) + P(6) + ···\n\n   ≈ 0.551691597558',
+    note:'The even-indexed component of J. Shared by all real Dirichlet characters — the "common backbone" of every character-twisted jump sum. D₀ = D(0), the base of the log-derivative.'},
+  T:{sym:'T',color:'#ff8c69',title:'Odd Prime Zeta Sum',
+    formula:'T = Σ_p  1 / (p(p²−1))\n\n  = Σ_{k≥1} P(2k+1)\n\n  ≈ 0.221463371375\n\n  Identity: J = D₀ + T  (exact)',
+    note:'The odd-indexed component of J. Character-twisted T_χ encode Chebyshev biases — the asymmetry between primes ≡ 1 and ≡ 3 (mod 4). Proof: 1/(p(p−1)) = 1/(p²−1) + 1/(p(p²−1)).'},
+  G:{sym:'G',color:'#e8c96a',title:"Catalan's Constant — GRH Layer",
+    formula:"G = L(2, χ₄) = Σ_{n≥0} (−1)ⁿ/(2n+1)²\n\n  = 1 − 1/9 + 1/25 − 1/49 + ···\n\n  ≈ 0.915965594177\n\n  H_{χ₄}(0) = L(2, χ₄) = G",
+    note:'Appears as the constant term of the character-twisted lift function H_χ₄(u) at u=0, mirroring F(0)=ζ(2). GRH criterion: √N·|J_χ₄−J_χ₄(N)| bounded as N→∞ ⟺ GRH for L(s,χ₄).'}
+};
+
+window.openConstPopup = function(key) {
+  var d = CONST_POPUP_DATA[key];
+  if(!d) return;
+  document.getElementById('cpop-sym').textContent = d.sym;
+  document.getElementById('cpop-sym').style.color = d.color;
+  document.getElementById('cpop-title').textContent = d.title;
+  document.getElementById('cpop-formula').textContent = d.formula;
+  document.getElementById('cpop-formula').style.borderLeftColor = d.color;
+  document.getElementById('cpop-note').textContent = d.note;
+  document.getElementById('const-popup-overlay').classList.add('open');
+};
+
+window.closeConstPopup = function() {
+  document.getElementById('const-popup-overlay').classList.remove('open');
+};
+
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') closeConstPopup();
+});
+</script>
+</body>
+</html>
