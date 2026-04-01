@@ -518,7 +518,7 @@ input[type=range] {
   display:flex;flex-direction:column;transition:opacity .8s ease;">
 
   <!-- Canvas fills everything -->
-  <canvas id="op-cv" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+  <canvas id="op-cv" style="position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:crisp-edges;image-rendering:-webkit-optimize-contrast;"></canvas>
 
   <!-- Top controls bar -->
   <div id="op-ui-wrap" style="position:absolute;inset:0;z-index:6;pointer-events:none;">
@@ -539,12 +539,16 @@ input[type=range] {
     flex-wrap:wrap;padding:8px 12px;background:rgba(5,4,10,.78);
     border-bottom:1px solid rgba(212,168,67,.12);flex-shrink:0;">
 
-    <!-- N slider -->
+    <!-- N slider + direct input -->
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);letter-spacing:.1em;">N=</span>
     <input id="op-n-sl" type="range" min="2" max="512" value="2" step="1"
       oninput="opSetMod(+this.value)"
-      style="width:130px;accent-color:#d4a843;cursor:pointer;">
-    <span id="op-n-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#d4a843;min-width:28px;">2</span>
+      style="width:110px;accent-color:#d4a843;cursor:pointer;">
+    <input id="op-n-input" type="number" min="2" max="512" value="2"
+      onchange="opSetMod(Math.max(2,Math.min(512,+this.value||2)))"
+      style="width:52px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#d4a843;
+      background:rgba(255,255,255,.05);border:1px solid rgba(212,168,67,.3);
+      border-radius:2px;padding:3px 5px;outline:none;">
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
@@ -552,22 +556,50 @@ input[type=range] {
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Zoom</span>
     <input id="op-zoom-sl" type="range" min="0.3" max="4.0" value="2.0" step="0.05"
       oninput="opSetZoom(+this.value);document.getElementById('op-zoom-val').textContent=parseFloat(this.value).toFixed(1)+'x'"
-      style="width:80px;accent-color:#d4a843;cursor:pointer;">
+      style="width:70px;accent-color:#d4a843;cursor:pointer;">
     <span id="op-zoom-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#d4a843;min-width:30px;">2.0x</span>
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
-    <!-- Ring spacing / collapse to unit circle -->
+    <!-- Ring spacing -->
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Spread</span>
     <input id="op-spacing-sl" type="range" min="0" max="1" value="0" step="0.02"
       oninput="opSetSpacing(+this.value);document.getElementById('op-spacing-val').textContent=parseFloat(this.value).toFixed(2)"
-      style="width:80px;accent-color:#9060d0;cursor:pointer;">
+      style="width:70px;accent-color:#9060d0;cursor:pointer;">
     <span id="op-spacing-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(144,96,208,.9);min-width:28px;">0.00</span>
-    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.5);">→ ○</span>
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
-    <!-- View mode: now includes No Dots option -->
+    <!-- Rotation: a/b × 360° input -->
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Rot</span>
+    <input id="op-rot-a" type="number" value="1" min="0" step="1"
+      oninput="opSetRotFrac()"
+      style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
+      border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.5);">/</span>
+    <input id="op-rot-b" type="number" value="12" min="1" step="1"
+      oninput="opSetRotFrac()"
+      style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
+      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
+      border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.5);">×360°</span>
+    <!-- Cumulative toggle -->
+    <button id="op-rot-cum-btn" onclick="opToggleRotCum()"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 7px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.35);
+      color:rgba(144,96,208,.6);cursor:pointer;border-radius:2px;white-space:nowrap;"
+      title="Toggle: fixed angle vs cumulative per ring">Cum: OFF</button>
+    <!-- Direction toggle -->
+    <button id="op-rot-dir-btn" onclick="opToggleRotDir()"
+      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 7px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.35);
+      color:rgba(144,96,208,.6);cursor:pointer;border-radius:2px;white-space:nowrap;"
+      title="Inner→Outer or Outer→Inner rotation direction">In→Out</button>
+
+    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
+
+    <!-- View mode -->
     <select onchange="opSetView(+this.value)"
       style="font-family:'JetBrains Mono',monospace;font-size:11px;
       background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
@@ -617,14 +649,12 @@ input[type=range] {
       color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
       Lines: Lift</button>
 
-    <!-- Lift depth (only relevant for lift mode) -->
+    <!-- Lift depth — max synced to N -->
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">depth</span>
     <input id="op-lift-sl" type="range" min="0" max="64" value="0" step="1"
-      oninput="opSetLift(+this.value);document.getElementById('op-lift-val').textContent=this.value==0?'all':this.value"
+      oninput="opSetLift(+this.value)"
       style="width:70px;accent-color:#2bbfb0;cursor:pointer;">
     <span id="op-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#2bbfb0;min-width:20px;">all</span>
-
-    <!-- Enter -->
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
@@ -687,20 +717,48 @@ input[type=range] {
       </div>
 
       <div style="font-family:'JetBrains Mono',monospace;font-size:clamp(8px,1.8vw,10px);
-        letter-spacing:.08em;color:rgba(140,130,110,.6);margin-bottom:20px;">
+        letter-spacing:.08em;color:rgba(140,130,110,.6);margin-bottom:16px;">
         Where primes reveal themselves as exact discontinuities in a smooth Euler product
       </div>
 
-      <!-- Cycling quote -->
+      <!-- Cycling quote — compact -->
       <div id="op-quote" style="font-family:'EB Garamond',Georgia,serif;
-        font-size:clamp(13px,2.2vw,20px);color:rgba(200,185,155,.82);
-        font-style:italic;line-height:1.55;margin-bottom:8px;
-        min-height:60px;display:flex;align-items:center;justify-content:center;
-        opacity:0;transition:opacity .4s ease;">
+        font-size:clamp(12px,2vw,17px);color:rgba(200,185,155,.75);
+        font-style:italic;line-height:1.5;margin-bottom:4px;
+        display:flex;align-items:center;justify-content:center;
+        opacity:0;transition:opacity .4s ease;min-height:0;">
       </div>
       <div id="op-quote-attr" style="font-family:'JetBrains Mono',monospace;
-        font-size:11px;letter-spacing:.1em;color:rgba(120,110,90,.55);
-        margin-bottom:32px;opacity:0;transition:opacity .4s ease;"></div>
+        font-size:9px;letter-spacing:.1em;color:rgba(120,110,90,.5);
+        margin-bottom:14px;opacity:0;transition:opacity .4s ease;"></div>
+
+      <!-- Golden ratio / prime recovery formula — clickable φ -->
+      <div style="margin-bottom:20px;padding:12px 16px;
+        background:rgba(212,168,67,.06);border:1px solid rgba(212,168,67,.2);
+        border-radius:4px;font-family:'JetBrains Mono',monospace;">
+        <div style="font-size:8px;letter-spacing:.2em;color:rgba(212,168,67,.55);
+          text-transform:uppercase;margin-bottom:8px;">Prime Recovery · Jump Theorem</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center;">
+          <div>
+            <div style="font-size:9px;color:rgba(43,191,176,.7);letter-spacing:.08em;margin-bottom:5px;">Any prime p from jump size s</div>
+            <div style="font-size:clamp(12px,2vw,15px);color:#ede6d8;">
+              p = (1 + √(1 + 4/s)) / 2
+            </div>
+          </div>
+          <div onclick="opGoldenClick()" style="cursor:pointer;border-radius:3px;padding:4px;
+            transition:background .2s;" onmouseover="this.style.background='rgba(212,168,67,.12)'"
+            onmouseout="this.style.background='transparent'" title="Click — run the checker at s=1">
+            <div style="font-size:9px;color:rgba(212,168,67,.7);letter-spacing:.08em;margin-bottom:5px;">At s = 1 · the boundary ↗</div>
+            <div style="font-size:clamp(12px,2vw,15px);color:#d4a843;">
+              φ = (1 + √5) / 2 ≈ 1.6180
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:8px;padding-top:7px;border-top:1px solid rgba(255,255,255,.06);
+          font-size:8px;color:rgba(140,130,110,.45);text-align:center;letter-spacing:.05em;">
+          Same quadratic · φ is the unreachable sentinel · every prime jump has s &lt; 1
+        </div>
+      </div>
 
       <!-- Enter button — large, prominent -->
       <button onclick="opEnter()"
@@ -763,11 +821,11 @@ input[type=range] {
     </div>
   </div>
 
-  <!-- Stats bar at bottom — single unified bar -->
-  <div id="opener-stats" style="position:absolute;bottom:0;left:0;right:0;z-index:4;
+  <!-- Stats bar at bottom — fixed to viewport, shown only during opener -->
+  <div id="opener-stats" style="position:fixed;bottom:0;left:0;right:0;z-index:960;
     background:rgba(5,4,10,.92);border-top:1px solid rgba(212,168,67,.15);
     font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(150,140,120,.7);
-    padding:5px 14px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+    padding:5px 14px;display:none;gap:14px;flex-wrap:wrap;align-items:center;
     opacity:0;transition:opacity .8s ease;">
     <span>gcd=1: <span id="os-cp" style="color:#d4a843;">—</span></span>
     <span>/ <span id="os-total" style="color:rgba(160,150,130,.5);">—</span></span>
@@ -2319,6 +2377,9 @@ var gt=0,lt=null,raf=null;
 var MMAX=2,MTARGET=128,curM=2;
 var phase='rings',phaseT=0;
 var liftN=0;
+var rotFracA=1, rotFracB=12; // rotation = a/b * 360°
+var rotCumulative=false;      // cumulative per ring or fixed
+var rotOuterIn=false;         // false=inner→outer, true=outer→inner
 var viewMode=0;     // 0=gcd1 only  1=non-gcd1 only  2=combined  3=no points
 var showDots=true;
 var zoomLevel=2.0;
@@ -2358,13 +2419,23 @@ function buildRings(mmax){
     var spreadRr=(M-1)/(mmax-1)*maxR*.92+maxR*.06;
     var rr=spreadRr*(1-ringSpacing)+outerR*ringSpacing;
     var pts=[];
+    // Per-ring rotation offset from a/b*360 setting
+    var rotBase = (rotFracB > 0) ? (rotFracA / rotFracB) * 2 * Math.PI : 0;
+    var ringIdx = M - 2; // 0-based index (M=2 → idx=0)
+    var rotOff;
+    if(!rotCumulative) {
+      rotOff = rotBase; // same fixed offset per ring
+    } else {
+      // cumulative: each ring adds one more increment
+      var idx = rotOuterIn ? (mmax - M) : ringIdx;
+      rotOff = rotBase * idx;
+    }
     for(var r=0;r<M;r++){
       var g=r===0?M:gcd(r,M);
       var isCP=g===1;
       if(viewMode===0&&!isCP) continue;
       if(viewMode===1&&isCP) continue;
-      // viewMode 2 and 3: include all (3=no dots but still need pts for lines)
-      var theta=2*Math.PI*r/M-Math.PI/2;
+      var theta=2*Math.PI*r/M - Math.PI/2 + rotOff;
       pts.push({r:r,M:M,g:g,isCP:isCP,theta:theta,rr:rr,
         lifts:isCP&&r>0&&gcd(r,M+1)===1,isP:isPrime(M)});
     }
@@ -2397,7 +2468,7 @@ function frame(ts){
 
   W=cv.clientWidth||window.innerWidth;
   H=cv.clientHeight||window.innerHeight;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min((window.devicePixelRatio||1)*2,4);
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){
     cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.scale(dpr,dpr);
   }
@@ -2407,11 +2478,10 @@ function frame(ts){
   /* Phase */
   if(phase==='rings'&&phaseT>400){
     phase='expand';phaseT=0;
-    // Show stats bar immediately when animation starts
     var sb=document.getElementById('opener-stats');
     if(sb&&window._opUIVisible!==false){
+      sb.style.display='flex';
       sb.style.opacity='1';
-      // Force populate stats immediately
       updateStats(curM);
       _statsFlushDisplay();
     }
@@ -2422,13 +2492,12 @@ function frame(ts){
     curM=Math.round(MMAX+(MTARGET-MMAX)*ease);
     if(prog>=1){
       phase='idle';curM=MTARGET;
-      /* Show splash overlay after animation completes */
       window._animDone = true;
       setTimeout(function(){
         var splash=document.getElementById('op-splash');
         if(splash&&window._opUIVisible!==false){splash.style.opacity='1';splash.style.pointerEvents='auto';}
         var stats=document.getElementById('opener-stats');
-        if(stats&&window._opUIVisible!==false){stats.style.opacity='1';}
+        if(stats&&window._opUIVisible!==false){stats.style.display='flex';stats.style.opacity='1';}
         if(window.opStartQuotes) opStartQuotes();
       }, 400);
     }
@@ -2467,8 +2536,10 @@ function frame(ts){
 
   /* ── LINES ── */
   if(lm.key==='lift'){
-    /* Teal = lifts, coral = breaks, only gcd=1 pts */
-    // Special: draw lift from M=1 center to M=2 coprime points
+    /* Two-color lift dynamics:
+       - Teal: r on ring M → r on ring M+1 (direct lift, same residue)
+       - Gold: r on ring M → M+1-r on ring M+1 (mirror partner lift)
+       Together they form the two halves of the cardioid-like symmetry */
     if(rings[0]&&rings[0].isSeed&&rings[1]){
       var r2=rings[1];
       for(var pi=0;pi<r2.pts.length;pi++){
@@ -2482,24 +2553,45 @@ function frame(ts){
     }
     for(var i=0;i<n-1;i++){
       var rA=rings[i],rB=rings[i+1];
+      var Mnext=rA.M+1;
       for(var pi=0;pi<rA.pts.length;pi++){
         var pa=rA.pts[pi];
         if(!pa.isCP) continue;
+        // Depth filter: r must survive liftN consecutive rings
         if(liftN>0){var ok=true;for(var li=1;li<=liftN;li++){if(gcd(pa.r,pa.M+li)!==1){ok=false;break;}}if(!ok)continue;}
+        var w=Math.sin(gt*.0018-i*.4+pi*.2)*.5+.5;
+        var depthFactor=liftN>0?Math.min(1,liftN/5):0;
+
+        // — Direct lift: r → r on M+1 (teal)
         for(var pj=0;pj<rB.pts.length;pj++){
           var pb=rB.pts[pj];
           if(pb.r!==pa.r) continue;
-          var w=Math.sin(gt*.0018-i*.4+pi*.2)*.5+.5;
-          /* Color by lift depth: deep survivors glow brighter */
-          var depthFactor=liftN>0?Math.min(1,liftN/5):0;
           var liftCol=liftN>0?
             'rgba('+(Math.round(43+depthFactor*120))+','+(Math.round(191-depthFactor*60))+','+Math.round(176+depthFactor*60)+',' :
             'rgba(43,191,176,';
           ctx.beginPath();
           ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
           ctx.lineTo(cx+pb.rr*Math.cos(pb.theta),cy+pb.rr*Math.sin(pb.theta));
-          ctx.strokeStyle=pa.lifts?(liftCol+(0.25+w*.42)+')'):('rgba(232,85,64,'+(0.1+w*.18)+')');
-          ctx.lineWidth=pa.lifts?(1.1+depthFactor*.8):.6; ctx.stroke(); break;
+          ctx.strokeStyle=pa.lifts?(liftCol+(0.28+w*.38)+')'):('rgba(232,85,64,'+(0.08+w*.15)+')');
+          ctx.lineWidth=pa.lifts?(1.0+depthFactor*.7):.55; ctx.stroke(); break;
+        }
+
+        // — Mirror lift: r → (M+1-r) on M+1 (gold), only if that residue is coprime to M+1
+        var mirrorR = Mnext - pa.r;
+        if(mirrorR > 0 && mirrorR < Mnext && gcd(mirrorR, Mnext) === 1 && pa.lifts) {
+          // Find mirror point on rB
+          var mirTh = 2*Math.PI*mirrorR/Mnext - Math.PI/2;
+          // Apply same rotation offset as rB
+          var rotBase2 = (rotFracB > 0) ? (rotFracA / rotFracB) * 2 * Math.PI : 0;
+          var rotOff2 = !rotCumulative ? rotBase2 : rotBase2 * (rotOuterIn ? (curM - rB.M) : (rB.M - 2));
+          mirTh += rotOff2;
+          var mx2 = cx + rB.rr * Math.cos(mirTh);
+          var my2 = cy + rB.rr * Math.sin(mirTh);
+          ctx.beginPath();
+          ctx.moveTo(cx+pa.rr*Math.cos(pa.theta),cy+pa.rr*Math.sin(pa.theta));
+          ctx.lineTo(mx2, my2);
+          ctx.strokeStyle='rgba(212,168,67,'+(0.2+w*.32)+')';
+          ctx.lineWidth=0.8+depthFactor*.5; ctx.stroke();
         }
       }
     }
@@ -2706,22 +2798,43 @@ window.opSetMod=function(m){
   m=Math.max(2,Math.min(512,+m||2));
   curM=m;MTARGET=m;phase='idle';phaseT=0;
   var sl=document.getElementById('op-n-sl');if(sl)sl.value=m;
+  var ni=document.getElementById('op-n-input');if(ni)ni.value=m;
   var vl=document.getElementById('op-n-val');if(vl)vl.textContent=m;
-  // Lift depth max = floor(M/2)
+  // Depth slider max = m-1
   var lsl=document.getElementById('op-lift-sl');
-  var lmax=Math.max(1,Math.floor(m/2));
   if(lsl){
-    lsl.max=lmax;
-    if(+lsl.value>lmax){
-      lsl.value=0;liftN=0;
-      var lv=document.getElementById('op-lift-val');if(lv)lv.textContent='all';
-    }
+    lsl.max=Math.max(1,m-1);
+    if(+lsl.value>m-1){lsl.value=0;liftN=0;}
+    var lv=document.getElementById('op-lift-val');
+    if(lv)lv.textContent=liftN===0?'all':liftN;
   }
 };
 window.opSetView=function(v){viewMode=+v;};
 window.opSetLabel=function(m){labelMode=m;};
 window.opSetColor=function(m){colorMode=m;};
-window.opSetLift=function(n){liftN=Math.max(0,+n||0);};
+window.opSetLift=function(n){
+  liftN=Math.max(0,Math.min(curM-1,+n||0));
+  var lv=document.getElementById('op-lift-val');
+  if(lv)lv.textContent=liftN===0?'all':liftN;
+};
+
+window.opSetRotFrac=function(){
+  var a=parseInt(document.getElementById('op-rot-a').value)||0;
+  var b=parseInt(document.getElementById('op-rot-b').value)||1;
+  rotFracA=a; rotFracB=Math.max(1,b);
+};
+window.opToggleRotCum=function(){
+  rotCumulative=!rotCumulative;
+  var btn=document.getElementById('op-rot-cum-btn');
+  if(btn){btn.textContent='Cum: '+(rotCumulative?'ON':'OFF');
+    btn.style.color=rotCumulative?'rgba(144,96,208,.95)':'rgba(144,96,208,.6)';
+    btn.style.borderColor=rotCumulative?'rgba(144,96,208,.6)':'rgba(144,96,208,.35)';}
+};
+window.opToggleRotDir=function(){
+  rotOuterIn=!rotOuterIn;
+  var btn=document.getElementById('op-rot-dir-btn');
+  if(btn)btn.textContent=rotOuterIn?'Out→In':'In→Out';
+};
 
 window.opToggleDots=function(){
   showDots=!showDots;
@@ -2750,15 +2863,29 @@ window.opCycleLines=function(){
   }
 };
 
+window.opGoldenClick=function(){
+  // Enter the page first, then navigate to jump checker and run n=1
+  opEnter();
+  setTimeout(function(){
+    // Set n=1 in the checker
+    var inp=document.getElementById('jt-n');
+    if(inp) inp.value='1';
+    // Run the check
+    if(window.jt_check) jt_check();
+    // Scroll to layer5
+    var sec=document.getElementById('layer5');
+    if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+  }, 900);
+};
+
 window.opEnter=function(){
   var op=document.getElementById('op-overlay');
   if(!op) return;
   opStopQuotes();
-  // Force populate stats before hiding
   if(window._updateStats){window._updateStats(curM);window._statsFlush&&window._statsFlush();}
-  // Hide stats bar and splash immediately before fade
+  // Hide stats and splash before fade
   var sb=document.getElementById('opener-stats');
-  if(sb) sb.style.opacity='1';
+  if(sb){sb.style.opacity='0';setTimeout(function(){sb.style.display='none';},800);}
   var splash=document.getElementById('op-splash');
   if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
   op.style.opacity='0'; op.style.pointerEvents='none';
@@ -2824,7 +2951,7 @@ function init(){
   if(!cv) return;
   ctx=cv.getContext('2d');
   W=window.innerWidth; H=window.innerHeight;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min((window.devicePixelRatio||1)*2,4);
   cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr);
   ctx.scale(dpr,dpr);
   raf=requestAnimationFrame(frame);
@@ -2880,7 +3007,7 @@ function draw(ts){
   if(!ov||ov.style.display==='none'){return;}
   if(!st.lt)st.lt=ts;
   var dt=Math.min(ts-st.lt,50);st.lt=ts;st.gt+=dt;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min((window.devicePixelRatio||1)*2,4);
   var W=window.innerWidth,H=window.innerHeight-52;
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){
     cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);
@@ -3057,7 +3184,7 @@ window.covOpen=function(desc,mod,liftN,cfg){
   ov.style.display='flex';
   document.body.style.overflow='hidden';
   // Size canvas
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min((window.devicePixelRatio||1)*2,4);
   cv.width=Math.round(window.innerWidth*dpr);
   cv.height=Math.round((window.innerHeight-52)*dpr);
   ctx.scale(dpr,dpr);
@@ -3081,7 +3208,7 @@ window.covExport4K=function(){
   var cv=document.getElementById('cov-cv');
   if(!cv)return;
   var SCALE=4;
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min((window.devicePixelRatio||1)*2,4);
   var tmp=document.createElement('canvas');
   tmp.width=Math.round(cv.width*SCALE/dpr);
   tmp.height=Math.round(cv.height*SCALE/dpr);
@@ -4776,7 +4903,7 @@ window.opExport4K=function(){
   var _st = window._opState ? window._opState() : {curM:128,zoomLevel:2};
   var _curM = _st.curM||128;
   var _zoom = (_st.zoomLevel||2).toFixed(1);
-  var dpr=Math.min(window.devicePixelRatio||1,2);
+  var dpr=Math.min((window.devicePixelRatio||1)*2,4);
   // If canvas has no size yet, use window dimensions
   // Ensure canvas has valid dimensions
   if(!cv.width||!cv.height||cv.width<10){
@@ -4942,16 +5069,18 @@ window.goHome=function(){
   if(hb) hb.style.display='none';
   var splash=document.getElementById('op-splash');
   if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
+  var splashInner=document.getElementById('op-splash-inner');
+  if(splashInner) splashInner.style.pointerEvents='none';
+  // Hide stats — animation will show it again
   var stats=document.getElementById('opener-stats');
-  if(stats){stats.style.display='';stats.style.opacity='1';}
-  if(window._opStopQuotes) window._opStopQuotes();
-  // Kill transition, set opacity to 0, set display, then re-enable transition and fade in
+  if(stats){stats.style.display='none';stats.style.opacity='0';}
+  if(window.opStopQuotes) opStopQuotes();
   op.style.transition='none';
   op.style.opacity='0';
   op.style.display='flex';
   op.style.pointerEvents='auto';
   document.body.style.overflow='hidden';
-  void op.offsetWidth; // force reflow
+  void op.offsetWidth;
   op.style.transition='opacity .8s ease';
   op.style.opacity='1';
   window.scrollTo({top:0,behavior:'instant'});
@@ -4970,7 +5099,7 @@ window.opToggleUI = function(){
   var splashInner = document.getElementById('op-splash-inner');
   var btn = document.getElementById('op-hide-btn');
   if(_opUIVisible){
-    if(stats) stats.style.opacity='1';
+    if(stats&&window._animDone){stats.style.display='flex';stats.style.opacity='1';}
     if(splash&&window._animDone){splash.style.opacity='1';splash.style.pointerEvents='auto';}
     if(splashInner) splashInner.style.pointerEvents='auto';
     if(btn){
@@ -4980,7 +5109,7 @@ window.opToggleUI = function(){
       btn.style.color='rgba(212,168,67,.6)';
     }
   } else {
-    if(stats) stats.style.opacity='0';
+    if(stats){stats.style.opacity='0';setTimeout(function(){if(!_opUIVisible)stats.style.display='none';},600);}
     if(splash){splash.style.opacity='0';splash.style.pointerEvents='none';}
     if(splashInner) splashInner.style.pointerEvents='none';
     if(btn){
@@ -5446,7 +5575,7 @@ function opHitTest(e){
   var cv = document.getElementById('op-cv');
   if(!cv || !window._opRings) return null;
   var rect = cv.getBoundingClientRect();
-  var dpr = Math.min(window.devicePixelRatio||1,2);
+  var dpr = Math.min((window.devicePixelRatio||1)*2,4);
   // Mouse in canvas CSS pixels
   var mx = e.clientX - rect.left;
   var my = e.clientY - rect.top;
@@ -6031,25 +6160,31 @@ window.addEventListener('resize',function(){
     <div class="cpop-title" id="cpop-title"></div>
     <div class="cpop-formula" id="cpop-formula"></div>
     <div class="cpop-note" id="cpop-note"></div>
+    <button id="cpop-goto" style="display:none;margin-top:18px;
+      font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;
+      background:transparent;border:1px solid;padding:8px 18px;
+      cursor:pointer;border-radius:2px;transition:background .2s;width:100%;"
+      onmouseover="this.style.background='rgba(255,255,255,.06)'"
+      onmouseout="this.style.background='transparent'"></button>
   </div>
 </div>
 
 <script>
 // ── Constants popup ──
 var CONST_POPUP_DATA = {
-  C:{sym:'C',color:'#d4a843',title:'Lift Survival Constant',
+  C:{sym:'C',color:'#d4a843',title:'Lift Survival Constant',section:'layer3',sectionLabel:'Layer 03 — Constant C',
     formula:'C = ∏_p (p² − 2) / (p² − 1)\n\n  = ζ(2) · d_FT\n\n  = (π²/6) · ∏_p (1 − 2/p²)\n\n  ≈ 0.530711806246\n\n  OEIS A065469 · Tóth–Sándor (1989)',
     note:'The long-run fraction of coprime residues on ring M that lift to ring M+1. 53% of coprime positions survive the next sieve step. Equals F(2) of the analytic lift function F(u) = ∏_p (p²−u)/(p²−1).'},
-  J:{sym:'J',color:'#4ecdc4',title:'Total Jump Content',
+  J:{sym:'J',color:'#4ecdc4',title:'Total Jump Content',section:'layer6',sectionLabel:'Layer 06 — Total Jump J',
     formula:'J = Σ_p  1 / (p(p−1))\n\n  = Σ_{k≥2} P(k)\n\n  where P(k) = Σ_p 1/p^k  (prime zeta)\n\n  ≈ 0.773154968933\n\n  Identity: J = D₀ + T  (exact, prime by prime)',
     note:'The total variation of D(x) = d/dx log C(x). Each prime p contributes exactly 1/(p(p−1)) as a jump at x = p−1. J encodes all prime zeta values simultaneously via J = Σ P(k).'},
-  D0:{sym:'D₀',color:'#9060d0',title:'Even Prime Zeta Sum',
+  D0:{sym:'D₀',color:'#9060d0',title:'Even Prime Zeta Sum',section:'layer6',sectionLabel:'Layer 06 — Total Jump J',
     formula:'D₀ = Σ_p  1 / (p² − 1)\n\n   = Σ_{k≥1} P(2k)\n\n   = P(2) + P(4) + P(6) + ···\n\n   ≈ 0.551691597558',
     note:'The even-indexed component of J. Shared by all real Dirichlet characters — the "common backbone" of every character-twisted jump sum. D₀ = D(0), the base of the log-derivative.'},
-  T:{sym:'T',color:'#ff8c69',title:'Odd Prime Zeta Sum',
+  T:{sym:'T',color:'#ff8c69',title:'Odd Prime Zeta Sum',section:'layer6',sectionLabel:'Layer 06 — Total Jump J',
     formula:'T = Σ_p  1 / (p(p²−1))\n\n  = Σ_{k≥1} P(2k+1)\n\n  ≈ 0.221463371375\n\n  Identity: J = D₀ + T  (exact)',
     note:'The odd-indexed component of J. Character-twisted T_χ encode Chebyshev biases — the asymmetry between primes ≡ 1 and ≡ 3 (mod 4). Proof: 1/(p(p−1)) = 1/(p²−1) + 1/(p(p²−1)).'},
-  G:{sym:'G',color:'#e8c96a',title:"Catalan's Constant — GRH Layer",
+  G:{sym:'G',color:'#e8c96a',title:"Catalan's Constant — GRH Layer",section:'layer8',sectionLabel:'Layer 08 — GRH Criterion',
     formula:"G = L(2, χ₄) = Σ_{n≥0} (−1)ⁿ/(2n+1)²\n\n  = 1 − 1/9 + 1/25 − 1/49 + ···\n\n  ≈ 0.915965594177\n\n  H_{χ₄}(0) = L(2, χ₄) = G",
     note:'Appears as the constant term of the character-twisted lift function H_χ₄(u) at u=0, mirroring F(0)=ζ(2). GRH criterion: √N·|J_χ₄−J_χ₄(N)| bounded as N→∞ ⟺ GRH for L(s,χ₄).'}
 };
@@ -6063,6 +6198,29 @@ window.openConstPopup = function(key) {
   document.getElementById('cpop-formula').textContent = d.formula;
   document.getElementById('cpop-formula').style.borderLeftColor = d.color;
   document.getElementById('cpop-note').textContent = d.note;
+  // Update go-to-section button
+  var btn = document.getElementById('cpop-goto');
+  if(btn && d.section){
+    btn.textContent = '→ ' + d.sectionLabel;
+    btn.style.borderColor = d.color;
+    btn.style.color = d.color;
+    btn.onclick = function(){
+      closeConstPopup();
+      // If on opener, enter first
+      var op = document.getElementById('op-overlay');
+      var doNav = function(){
+        var sec = document.getElementById(d.section);
+        if(sec) sec.scrollIntoView({behavior:'smooth', block:'start'});
+      };
+      if(op && op.style.display !== 'none'){
+        opEnter();
+        setTimeout(doNav, 900);
+      } else {
+        doNav();
+      }
+    };
+    btn.style.display = 'inline-block';
+  }
   document.getElementById('const-popup-overlay').classList.add('open');
 };
 
