@@ -776,10 +776,10 @@ input[type=range] {
 
   <!-- Top controls bar -->
   <div id="op-ctrl-bar" style="position:relative;z-index:2;display:flex;gap:6px;align-items:center;
-    flex-wrap:wrap;padding:8px 12px;background:rgba(5,4,10,.78);
+    flex-wrap:wrap;padding:8px 12px;background:rgba(5,4,10,.85);
     border-bottom:1px solid rgba(212,168,67,.12);flex-shrink:0;">
 
-    <!-- N slider + direct input -->
+    <!-- N slider + direct input — always visible -->
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);letter-spacing:.1em;">N=</span>
     <input id="op-n-sl" type="range" min="2" max="512" value="2" step="1"
       oninput="opSetMod(+this.value)"
@@ -792,123 +792,7 @@ input[type=range] {
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
-    <!-- Zoom slider -->
-    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Zoom</span>
-    <input id="op-zoom-sl" type="range" min="0.3" max="4.0" value="1.0" step="0.05"
-      oninput="opSetZoom(+this.value);document.getElementById('op-zoom-val').textContent=parseFloat(this.value).toFixed(1)+'x'"
-      style="width:70px;accent-color:#d4a843;cursor:pointer;">
-    <span id="op-zoom-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#d4a843;min-width:30px;">1.0x</span>
-
-    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
-
-    <!-- Ring spacing -->
-    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Spread</span>
-    <input id="op-spacing-sl" type="range" min="0" max="1" value="0" step="0.02"
-      oninput="opSetSpacing(+this.value);document.getElementById('op-spacing-val').textContent=parseFloat(this.value).toFixed(2)"
-      style="width:70px;accent-color:#9060d0;cursor:pointer;">
-    <span id="op-spacing-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(144,96,208,.9);min-width:28px;">0.00</span>
-
-    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
-
-    <!-- Rotation: a/b × 360° input -->
-    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Rot</span>
-    <input id="op-rot-a" type="number" value="1" min="0" step="1"
-      oninput="opSetRotFrac()"
-      style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
-      border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
-    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.5);">/</span>
-    <input id="op-rot-b" type="number" value="4" min="1" step="1"
-      oninput="opSetRotFrac()"
-      style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
-      background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
-      border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
-    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.5);">×360°</span>
-    <!-- Cumulative toggle -->
-    <button id="op-rot-cum-btn" onclick="opToggleRotCum()"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 7px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.35);
-      color:rgba(144,96,208,.6);cursor:pointer;border-radius:2px;white-space:nowrap;"
-      title="Toggle: fixed angle vs cumulative per ring">Cum: OFF</button>
-    <!-- Direction toggle -->
-    <button id="op-rot-dir-btn" onclick="opToggleRotDir()"
-      style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 7px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.35);
-      color:rgba(144,96,208,.6);cursor:pointer;border-radius:2px;white-space:nowrap;"
-      title="Inner→Outer or Outer→Inner rotation direction">In→Out</button>
-
-    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
-
-    <!-- View mode -->
-    <select onchange="opSetView(+this.value)"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;
-      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
-      color:rgba(200,185,155,.8);padding:5px 8px;border-radius:2px;cursor:pointer;">
-      <option value="0">gcd=1 only</option>
-      <option value="1">Non-gcd=1 only</option>
-      <option value="2">Combined</option>
-    </select>
-
-    <!-- Color mode -->
-    <select onchange="opSetColor(this.value)"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;
-      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
-      color:rgba(200,185,155,.8);padding:5px 8px;border-radius:2px;cursor:pointer;">
-      <option value="residue6">Color: r mod 6</option>
-      <option value="lift">Color: lifts</option>
-      <option value="gcd">Color: gcd</option>
-      <option value="prime">Color: prime ring</option>
-      <option value="newresid">Color: new residue</option>
-    </select>
-
-    <!-- Label mode -->
-    <select onchange="opSetLabel(this.value)"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;
-      background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
-      color:rgba(200,185,155,.8);padding:5px 8px;border-radius:2px;cursor:pointer;">
-      <option value="r">Label: r</option>
-      <option value="rm">Label: r/M</option>
-      <option value="angle">Label: angle°</option>
-      <option value="gcd">Label: gcd value</option>
-      <option value="none" selected>Label: none</option>
-    </select>
-
-    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
-
-    <!-- Dots toggle -->
-    <button id="op-dots-btn" onclick="opToggleDots()"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.5);
-      color:rgba(212,168,67,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
-      Dots: ON</button>
-
-    <!-- Line mode cycle -->
-    <button id="op-line-btn" onclick="opCycleLines()"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.5);
-      color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
-      Lines: N-gon</button>
-
-    <!-- Lift depth — max synced to N -->
-    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">depth</span>
-    <input id="op-lift-sl" type="range" min="0" max="64" value="0" step="1"
-      oninput="opSetLift(+this.value)"
-      style="width:70px;accent-color:#2bbfb0;cursor:pointer;">
-    <span id="op-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#2bbfb0;min-width:20px;">all</span>
-
-    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
-
-    <!-- Export + fullscreen -->
-    <button onclick="opExport4K()" title="Export 4K PNG"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.4);
-      color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;">⬇ 4K</button>
-    <button onclick="opFullscreen()" title="Fullscreen" id="op-fs-btn"
-      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
-      background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.4);
-      color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">⛶</button>
-
-    <!-- Presets dropdown -->
+    <!-- Presets — always visible -->
     <select onchange="opRunPreset(+this.value);this.selectedIndex=0;"
       style="font-family:'JetBrains Mono',monospace;font-size:11px;
       background:rgba(5,4,10,.8);border:1px solid rgba(43,191,176,.35);
@@ -926,13 +810,256 @@ input[type=range] {
       <option value="9">Full Synthesis</option>
     </select>
 
+    <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
+
+    <!-- Advanced toggle -->
+    <button id="op-adv-btn" onclick="opToggleAdv()"
+      style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:5px 13px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.45);
+      color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;letter-spacing:.08em;
+      transition:all .2s;white-space:nowrap;">
+      ⚙ Advanced ▾</button>
+
+    <!-- Export + fullscreen — always visible -->
+    <button onclick="opExport4K()" title="Export 4K PNG"
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.4);
+      color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;">⬇ 4K</button>
+    <button onclick="opFullscreen()" title="Fullscreen" id="op-fs-btn"
+      style="font-family:'JetBrains Mono',monospace;font-size:11px;padding:5px 12px;
+      background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.4);
+      color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">⛶</button>
+
     <button onclick="opEnter()" title="Skip intro"
       style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;
       letter-spacing:.12em;text-transform:uppercase;padding:5px 14px;
       border:1px solid rgba(212,168,67,.5);background:rgba(212,168,67,.08);
       color:rgba(212,168,67,.7);cursor:pointer;border-radius:2px;">
       Skip &#8594;</button>
+
   </div>
+
+  <!-- ══ ADVANCED PANEL — dropdown below ctrl-bar ══ -->
+  <div id="op-adv-panel" style="display:none;position:relative;z-index:2;
+    background:rgba(8,6,16,.96);border-bottom:1px solid rgba(144,96,208,.2);
+    padding:10px 14px 14px;flex-shrink:0;flex-direction:column;gap:12px;">
+
+    <!-- Row 1: View / Color / Label / Dots / Lines -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+      padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.05);">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;
+        letter-spacing:.18em;color:rgba(144,96,208,.6);text-transform:uppercase;
+        min-width:100%;margin-bottom:2px;">Display</span>
+
+      <select onchange="opSetView(+this.value)"
+        style="font-family:'JetBrains Mono',monospace;font-size:10px;
+        background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+        color:rgba(200,185,155,.8);padding:4px 7px;border-radius:2px;cursor:pointer;">
+        <option value="0">gcd=1 only</option>
+        <option value="1">Non-gcd=1 only</option>
+        <option value="2">Combined</option>
+      </select>
+
+      <select onchange="opSetColor(this.value)"
+        style="font-family:'JetBrains Mono',monospace;font-size:10px;
+        background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+        color:rgba(200,185,155,.8);padding:4px 7px;border-radius:2px;cursor:pointer;">
+        <option value="residue6">Color: r mod 6</option>
+        <option value="lift">Color: lifts</option>
+        <option value="gcd">Color: gcd</option>
+        <option value="prime">Color: prime ring</option>
+        <option value="newresid">Color: new residue</option>
+        <option value="order">Color: ord(r) mod N</option>
+        <option value="qr">Color: QR / NQR</option>
+      </select>
+
+      <select onchange="opSetLabel(this.value)"
+        style="font-family:'JetBrains Mono',monospace;font-size:10px;
+        background:rgba(5,4,10,.8);border:1px solid rgba(255,255,255,.12);
+        color:rgba(200,185,155,.8);padding:4px 7px;border-radius:2px;cursor:pointer;">
+        <option value="r">Label: r</option>
+        <option value="rm">Label: r/M</option>
+        <option value="angle">Label: angle°</option>
+        <option value="gcd">Label: gcd value</option>
+        <option value="order">Label: ord(r)</option>
+        <option value="none" selected>Label: none</option>
+      </select>
+
+      <button id="op-dots-btn" onclick="opToggleDots()"
+        style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;
+        background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.5);
+        color:rgba(212,168,67,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
+        Dots: ON</button>
+
+      <button id="op-line-btn" onclick="opCycleLines()"
+        style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;
+        background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.5);
+        color:rgba(43,191,176,.9);cursor:pointer;border-radius:2px;white-space:nowrap;">
+        Lines: N-gon</button>
+    </div>
+
+    <!-- Row 2: Zoom / Spread / Depth -->
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+      padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.05);">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;
+        letter-spacing:.18em;color:rgba(144,96,208,.6);text-transform:uppercase;
+        min-width:100%;margin-bottom:2px;">Canvas</span>
+
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">Zoom</span>
+      <input id="op-zoom-sl" type="range" min="0.3" max="4.0" value="1.0" step="0.05"
+        oninput="opSetZoom(+this.value);document.getElementById('op-zoom-val').textContent=parseFloat(this.value).toFixed(1)+'x'"
+        style="width:70px;accent-color:#d4a843;cursor:pointer;">
+      <span id="op-zoom-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#d4a843;min-width:30px;">1.0x</span>
+
+      <span style="color:rgba(80,70,55,.4);">|</span>
+
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">Spread</span>
+      <input id="op-spacing-sl" type="range" min="0" max="1" value="0" step="0.02"
+        oninput="opSetSpacing(+this.value);document.getElementById('op-spacing-val').textContent=parseFloat(this.value).toFixed(2)"
+        style="width:70px;accent-color:#9060d0;cursor:pointer;">
+      <span id="op-spacing-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(144,96,208,.9);min-width:28px;">0.00</span>
+
+      <span style="color:rgba(80,70,55,.4);">|</span>
+
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">Depth</span>
+      <input id="op-lift-sl" type="range" min="0" max="64" value="0" step="1"
+        oninput="opSetLift(+this.value)"
+        style="width:70px;accent-color:#2bbfb0;cursor:pointer;">
+      <span id="op-lift-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#2bbfb0;min-width:20px;">all</span>
+
+      <span style="color:rgba(80,70,55,.4);">|</span>
+
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">Dot size</span>
+      <input id="op-dotsize-sl" type="range" min="1" max="10" value="4" step="0.5"
+        oninput="opSetDotSize(+this.value);document.getElementById('op-dotsize-val').textContent=parseFloat(this.value).toFixed(1)"
+        style="width:60px;accent-color:#d4a843;cursor:pointer;">
+      <span id="op-dotsize-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#d4a843;min-width:24px;">4.0</span>
+
+      <span style="color:rgba(80,70,55,.4);">|</span>
+
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">Speed</span>
+      <input id="op-speed-sl" type="range" min="0" max="3" value="1" step="0.1"
+        oninput="opSetSpeed(+this.value);document.getElementById('op-speed-val').textContent=parseFloat(this.value).toFixed(1)+'×'"
+        style="width:60px;accent-color:#2bbfb0;cursor:pointer;">
+      <span id="op-speed-val" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#2bbfb0;min-width:28px;">1.0×</span>
+    </div>
+
+    <!-- Row 3: Rotation -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+      padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.05);">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;
+        letter-spacing:.18em;color:rgba(144,96,208,.6);text-transform:uppercase;
+        min-width:100%;margin-bottom:2px;">Rotation</span>
+
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">Rot</span>
+      <input id="op-rot-a" type="number" value="1" min="0" step="1" oninput="opSetRotFrac()"
+        style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
+        background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
+        border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.5);">/</span>
+      <input id="op-rot-b" type="number" value="4" min="1" step="1" oninput="opSetRotFrac()"
+        style="width:38px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,185,155,.9);
+        background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);
+        border-radius:2px;padding:3px 4px;outline:none;text-align:center;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.5);">×360°</span>
+      <button id="op-rot-cum-btn" onclick="opToggleRotCum()"
+        style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 7px;
+        background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.35);
+        color:rgba(144,96,208,.6);cursor:pointer;border-radius:2px;white-space:nowrap;"
+        title="Toggle: fixed angle vs cumulative per ring">Cum: OFF</button>
+      <button id="op-rot-dir-btn" onclick="opToggleRotDir()"
+        style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 7px;
+        background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.35);
+        color:rgba(144,96,208,.6);cursor:pointer;border-radius:2px;white-space:nowrap;"
+        title="Inner→Outer or Outer→Inner rotation direction">In→Out</button>
+    </div>
+
+    <!-- Row 4: Number Theory — a/b geometry tests -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:9px;
+        letter-spacing:.18em;color:rgba(212,168,67,.6);text-transform:uppercase;
+        min-width:100%;margin-bottom:2px;">Geometry of Integers — a/b (residue a, modulus b)</span>
+
+      <!-- a/b input -->
+      <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">a=</span>
+        <input id="op-ab-a" type="number" value="1" min="0" step="1"
+          style="width:48px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#d4a843;
+          background:rgba(255,255,255,.05);border:1px solid rgba(212,168,67,.3);
+          border-radius:2px;padding:3px 5px;outline:none;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.4);">/</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(150,140,120,.7);">b=N</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(120,110,90,.4);">(b synced to N slider)</span>
+      </div>
+
+      <!-- Test buttons -->
+      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;">
+        <button onclick="opABTest('order')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.4);
+          color:rgba(43,191,176,.8);cursor:pointer;border-radius:2px;"
+          title="Multiplicative order of a mod b">ord(a) mod b</button>
+
+        <button onclick="opABTest('qr')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.4);
+          color:rgba(212,168,67,.8);cursor:pointer;border-radius:2px;"
+          title="Is a a quadratic residue mod b?">QR test</button>
+
+        <button onclick="opABTest('inverse')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.4);
+          color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;"
+          title="Modular inverse of a mod b">a⁻¹ mod b</button>
+
+        <button onclick="opABTest('orbit')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(68,204,136,.4);
+          color:rgba(68,204,136,.8);cursor:pointer;border-radius:2px;"
+          title="Orbit of a under multiplication mod b — highlight on ring">Orbit aⁿ mod b</button>
+
+        <button onclick="opABTest('primitive')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(232,85,64,.4);
+          color:rgba(232,85,64,.8);cursor:pointer;border-radius:2px;"
+          title="Is a a primitive root mod b?">Primitive root?</button>
+
+        <button onclick="opABTest('gap')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(43,191,176,.4);
+          color:rgba(43,191,176,.8);cursor:pointer;border-radius:2px;"
+          title="Highlight gap-a pairs on all rings (coprime pairs at distance a)">Gap-a highlight</button>
+
+        <button onclick="opABTest('legendre')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(212,168,67,.4);
+          color:rgba(212,168,67,.8);cursor:pointer;border-radius:2px;"
+          title="Legendre symbol (a/b) — requires b prime">Legendre (a/b)</button>
+
+        <button onclick="opABTest('frobenius')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(144,96,208,.4);
+          color:rgba(144,96,208,.8);cursor:pointer;border-radius:2px;"
+          title="Frobenius density: fraction of primes p≤b where a is a QR mod p">Frobenius density</button>
+
+        <button onclick="opABTest('carmichael')"
+          style="font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 9px;
+          background:rgba(5,4,10,.6);border:1px solid rgba(232,85,64,.4);
+          color:rgba(232,85,64,.8);cursor:pointer;border-radius:2px;"
+          title="Carmichael lambda: smallest k so that aᵏ≡1 mod b for all gcd(a,b)=1">λ(b) Carmichael</button>
+      </div>
+
+      <!-- Result panel -->
+      <div id="op-ab-out" style="font-family:'JetBrains Mono',monospace;font-size:10px;
+        color:rgba(200,185,155,.85);background:rgba(0,0,0,.3);
+        border:1px solid rgba(212,168,67,.15);border-radius:3px;
+        padding:8px 12px;min-height:40px;width:100%;white-space:pre;
+        line-height:1.6;margin-top:4px;">Enter a above, then click a test.</div>
+    </div>
+  </div>
+
+  <!-- Splash text overlay — appears after animation completes -->
+  
 
   <!-- Splash text overlay — appears after animation completes -->
   <div id="op-splash" style="position:absolute;inset:0;z-index:3;
@@ -2650,6 +2777,77 @@ var zoomLevel=1.0;
 var ringSpacing=0.0;  // 0=spread, 1=unit circle (all same radius)
 window.opSetZoom=function(v){zoomLevel=Math.max(.3,Math.min(4,+v||2));};
 window.opSetSpacing=function(v){ringSpacing=Math.max(0,Math.min(1,+v||0));};
+
+// ── Advanced panel toggle ──
+var _advOpen=false;
+window.opToggleAdv=function(){
+  _advOpen=!_advOpen;
+  var panel=document.getElementById('op-adv-panel');
+  var btn=document.getElementById('op-adv-btn');
+  if(panel){panel.style.display=_advOpen?'flex':'none';}
+  if(btn){
+    btn.textContent=_advOpen?'⚙ Advanced ▴':'⚙ Advanced ▾';
+    btn.style.borderColor=_advOpen?'rgba(144,96,208,.8)':'rgba(144,96,208,.45)';
+    btn.style.color=_advOpen?'rgba(180,140,220,1)':'rgba(144,96,208,.8)';
+  }
+};
+
+// ── Dot size multiplier ──
+var dotSizeMultiplier=1.0;
+window.opSetDotSize=function(v){dotSizeMultiplier=Math.max(0.25,Math.min(2.5,+v/4));};
+
+// ── Animation speed ──
+var animSpeed=1.0;
+window.opSetSpeed=function(v){animSpeed=Math.max(0,Math.min(3,+v||1));};
+
+// ── a/b Number theory tests ──
+var advHighlight=null;
+window.opABTest=function(test){
+  var a=parseInt(document.getElementById('op-ab-a').value)||1;
+  var b=curM;
+  var out=document.getElementById('op-ab-out');
+  if(!out)return;
+  advHighlight=null;
+  function gA(x,y){x=Math.abs(x);y=Math.abs(y);while(y){var t=y;y=x%y;x=t;}return x;}
+  function isPr(n){if(n<2)return false;for(var i=2;i*i<=n;i++)if(n%i===0)return false;return true;}
+  function mpow(base,exp,mod){if(mod===1)return 0;var r=1;base=((base%mod)+mod)%mod;while(exp>0){if(exp%2)r=r*base%mod;exp=Math.floor(exp/2);base=base*base%mod;}return r;}
+  function mInv(a,m){var m0=m,x0=0,x1=1;a=((a%m)+m)%m;if(m===1)return 0;while(a>1){if(m===0)break;var q=Math.floor(a/m),t=m;m=a%m;a=t;t=x0;x0=x1-q*x0;x1=t;}return x1<0?x1+m0:x1;}
+  function mOrd(a,m){a=((a%m)+m)%m;if(gA(a,m)!==1)return -1;var k=1,c=a*a%m;while(c!==a&&k<m){c=c*a%m;k++;}return k;}
+  function phi(n){var r=n,t=n;for(var p=2;p*p<=t;p++){if(t%p===0){r-=Math.floor(r/p);while(t%p===0)t=Math.floor(t/p);}}if(t>1)r-=Math.floor(r/t);return r;}
+  function lam(n){function lcm(a,b){return a/gA(a,b)*b;}if(n<=1)return 1;var res=1,t=n;for(var p=2;p*p<=t;p++){if(t%p===0){var k=0;while(t%p===0){k++;t=Math.floor(t/p);}res=lcm(res,(p===2&&k>=3)?Math.pow(2,k-2):(p-1)*Math.pow(p,k-1));}}if(t>1)res=lcm(res,t-1);return res;}
+  var L=[],am=((a%b)+b)%b;
+  L.push('a='+a+'  b=N='+b+'  gcd='+gA(a,b));L.push('');
+  if(test==='order'){
+    if(gA(am,b)!==1){L.push('gcd(a,b)≠1 → ord undefined');}
+    else{var ord=mOrd(am,b);L.push('ord('+a+') mod '+b+' = '+ord);var orb=[],c=am;for(var i=0;i<Math.min(ord,24);i++){orb.push(c);c=c*am%b;}L.push('Orbit: {'+orb.join('→')+(ord>24?'…':'')+'}');L.push('φ('+b+')='+phi(b)+'  ord|φ: '+(phi(b)%ord===0?'YES ✓':'NO'));advHighlight={type:'orbit',orb:orb,mod:b};}
+  }else if(test==='qr'){
+    var p=b;if(!isPr(p)||p===2){L.push('Needs b = odd prime (b='+b+')');}
+    else{var ls=mpow(am,(p-1)/2,p);var sym=ls===0?0:(ls===p-1?-1:1);L.push('Legendre ('+a+'/'+p+') = '+sym);if(sym===1){L.push(a+' IS a QR mod '+p+' ✓');var fx=[];for(var x=1;x<p&&fx.length<4;x++)if(x*x%p===am)fx.push(x);L.push('Solutions x²≡'+a+': {'+fx.join(',')+', '+(p-fx[0])+'…}');}else if(sym===0){L.push(p+' | '+a);}else{L.push(a+' is NOT a QR mod '+p+' ✗');}}
+  }else if(test==='inverse'){
+    if(gA(am,b)!==1){L.push('gcd(a,b)≠1 → inverse does not exist');}
+    else{var inv=mInv(am,b);L.push('a⁻¹ mod b = '+inv);L.push(am+'×'+inv+' mod '+b+' = '+am*inv%b+' '+(am*inv%b===1?'✓':'check'));L.push('Angles: '+a+'→'+(a/b*360).toFixed(1)+'°   inv→'+(inv/b*360).toFixed(1)+'°');advHighlight={type:'pair',r1:am,r2:inv,mod:b};}
+  }else if(test==='orbit'){
+    if(gA(am,b)!==1){L.push('gcd(a,b)≠1 → orbit undefined');}
+    else{var ord=mOrd(am,b);var orb=[],c=1;for(var i=0;i<ord;i++){c=c*am%b;orb.push(c);}L.push('Orbit ×'+a+' mod '+b+' (len '+ord+'):');L.push(orb.slice(0,24).join('→')+(orb.length>24?'…':''));if(ord===b-1&&isPr(b))L.push('→ PRIMITIVE ROOT ✓');advHighlight={type:'orbit',orb:orb,mod:b};}
+  }else if(test==='primitive'){
+    if(gA(am,b)!==1){L.push('gcd(a,b)≠1 → not a primitive root');}
+    else{var ph=phi(b),la=lam(b),ord=mOrd(am,b);L.push('φ('+b+')='+ph+'  λ('+b+')='+la+'  ord('+a+')='+ord);L.push(ord===ph?'✓ PRIMITIVE ROOT mod '+b:'✗ NOT primitive root (ord='+ord+'<φ='+ph+')');if(ord===ph&&isPr(b)){L.push('Generates all (ℤ/'+b+'ℤ)*');}}
+  }else if(test==='gap'){
+    var gap=am||1;L.push('Gap-'+gap+' coprime pairs, M=2..'+Math.min(b,40));var tot=0;
+    for(var m=2;m<=Math.min(b,40);m++){var ps=[];for(var r=1;r+gap<m;r++)if(gA(r,m)===1&&gA(r+gap,m)===1)ps.push(r);if(ps.length){L.push('M='+m+': {'+ps.join(',')+'}');tot+=ps.length;}}
+    L.push('Total: '+tot);if(gap===2)L.push('→ Twin coprime pairs (c.f. C₂)');advHighlight={type:'gap',gap:gap};
+  }else if(test==='legendre'){
+    var p=b;if(!isPr(p)||p===2){L.push('Needs b = odd prime');}
+    else{var am2=((a%p)+p)%p;var ls=mpow(am2,(p-1)/2,p);var sym=ls===0?0:(ls===p-1?-1:1);L.push('('+a+'/'+p+') = '+sym);var qrs=[];for(var x=1;x<p;x++){var sq=x*x%p;if(qrs.indexOf(sq)<0)qrs.push(sq);}qrs.sort(function(u,v){return u-v;});var nqrs=[];for(var x=1;x<p;x++)if(qrs.indexOf(x)<0)nqrs.push(x);L.push('QRs: {'+qrs.slice(0,15).join(',')+'}  ('+qrs.length+' total)');L.push('NQRs: {'+nqrs.slice(0,15).join(',')+'}  ('+nqrs.length+' total)');}
+  }else if(test==='frobenius'){
+    L.push('Frobenius density of '+a+' (primes ≤'+b+'):');var tot=0,qrc=0,pl=[];
+    for(var p=3;p<=b;p++){if(!isPr(p))continue;tot++;var am2=((a%p)+p)%p;if(am2===0)continue;if(mpow(am2,(p-1)/2,p)===1){qrc++;pl.push(p);}}
+    L.push('QR at '+qrc+'/'+tot+' primes → density '+(tot?(qrc/tot).toFixed(6):0));L.push('Chebotarev: → 1/2 for non-square a');L.push('QR primes: {'+pl.slice(0,12).join(',')+'}');
+  }else if(test==='carmichael'){
+    var la=lam(b),ph=phi(b);L.push('λ('+b+') = '+la);L.push('φ('+b+') = '+ph);L.push('λ|φ: '+(ph%la===0?'YES':'NO'));if(gA(am,b)===1){L.push('Check: '+a+'^'+la+' mod '+b+' = '+mpow(am,la,b)+' '+(mpow(am,la,b)===1?'✓':'✗'));}L.push('Is '+b+' Carmichael? '+(b>1&&!isPr(b)&&(b-1)%la===0?'LIKELY ✓':'NO'));}
+  out.textContent=L.join('\n');
+};
+
 // Expose read-only state for external functions (export, formula popup, etc.)
 window._opState=function(){return {curM:curM,zoomLevel:zoomLevel,liftN:liftN,
   lineMode:lineMode,viewMode:viewMode,colorMode:colorMode,showDots:showDots,ringSpacing:ringSpacing};};
