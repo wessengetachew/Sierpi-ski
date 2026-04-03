@@ -1995,7 +1995,7 @@ input[type=range] {
   <div class="theorem-box">
     <div class="theorem-label">Observation — Connection to Hardy–Littlewood C₂</div>
     <p>The twin prime constant is C₂ = ∏<sub>p&gt;2</sub> p(p−2)/(p−1)² ≈ 0.6601618…</p>
-    <p style="margin-top:8px;">As p → ∞, T(p#)/φ(p#) → C₂. The Hardy–Littlewood conjecture #{twin primes ≤ N} ~ 2C₂ N/(log N)² is equivalent to T(p#)/φ(p#) converging to exactly this geometric ratio — a purely elementary statement about residue counting in the modular ring system.</p>
+    <p style="margin-top:8px;">As p → ∞, T(p#)/φ(p#) → <strong>0</strong>, not C₂. The ratio equals ∏<sub>q≤p, q>2</sub>(q−2)/(q−1) exactly, and this product diverges to zero by Mertens' theorem — more primes sieved means fewer surviving twin pairs per unit ring. C₂ involves the convergent combination ∏ q(q−2)/(q−1)², which carries an extra q/(q−1) factor per prime; see Layer 11 for the precise relationship.</p>
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('Twin pairs — gap-2 chords at primorial mod 30',30,0,{viewMode:0,colorMode:'residue6',showLifts:false,showGCDPoly:false,gapN:2})">View on Canvas — Gap-2 twin pairs at M=30</button>
@@ -2077,7 +2077,7 @@ input[type=range] {
     </div>
     <div class="theorem-box" style="grid-column:1/-1;border-left-color:#9060d0;">
       <div class="theorem-label" style="color:#9060d0;">Conjecture 3 — Path to Twin Prime</div>
-      <p>If J_twin > 0 (which requires infinitely many twin primes), then the gap-2 class is non-empty. The convergence of J_twin is equivalent to the Twin Prime Conjecture.</p>
+      <p>J_twin = Σ_{p: p+2 prime} 1/(p(p−1)) <em>diverges</em> (i.e. the sum is infinite) if and only if there are infinitely many twin primes. J_twin &gt; 0 is trivially true from the finitely many known pairs — what matters is whether the series has infinitely many terms. Proving J_twin = +∞ would establish the Twin Prime Conjecture.</p>
     </div>
   </div>
 
@@ -2257,19 +2257,20 @@ input[type=range] {
 
   <div class="theorem-box">
     <div class="theorem-label">Theorem — Doubling Transition Law</div>
-    <p>Let M_n = 30 &middot; 2^n. Then the twin-pair count satisfies:</p>
-    \[T(M_n) = 3 \cdot 2^n - 1\]
-    <p style="margin-top:10px;font-size:.9rem;"><em>Proof sketch:</em> The base M_0 = 30 = 2&middot;3&middot;5 has T(30) = 2 (the two admissible twin pairs: {11,13} and {17,19} in &Phi;(30)). Each doubling step M_n &rarr; 2M_n preserves admissibility mod 3 and mod 5, while the new factor 2 splits each valid pair into exactly two survivors. So T(M_{n+1}) = 2&middot;T(M_n) + 1. By induction with T(M_0) = 2, T(M_n) = 3&middot;2^n &minus; 1. ∎</p>
+    <p>Let M_n = 30 &middot; 2^n. Then the cyclic twin-pair count satisfies:</p>
+    \[T_{\text{cyc}}(M_n) = 3 \cdot 2^n\]
+    <p style="margin-top:10px;font-size:.9rem;"><em>Proof sketch:</em> T_cyc counts r ∈ Φ(M) with (r+2) mod M also in Φ(M). The base M_0 = 30 has T_cyc(30) = 3: the pairs {11,13}, {17,19}, and the cyclic pair {29, 1} (since 29+2 ≡ 1 mod 30, and gcd(1,30)=1). Each doubling M_n → 2M_n exactly doubles the count — the new factor of 2 splits each surviving cyclic pair into exactly two. So T_cyc(M_{n+1}) = 2·T_cyc(M_n). By induction, T_cyc(M_n) = 3·2^n. ∎</p>
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">Note: the non-cyclic count T_nw (pairs with r+2 &lt; M strictly) equals 3·2^n − 1 — one less at every n, because the wrap-around pair (M−1, 1) is excluded.</p>
   </div>
 
   <div class="insight">
-    <strong>Connection to C&rsquo;s infinite product:</strong> The ratio T(M_n)/&phi;(M_n) = (3&middot;2^n)/(8&middot;2^n) = 3/8 for all n. This is <em>exact</em> and constant — the twin-prime admissibility ratio stabilizes at 3/8 at all doublings of 30. The Hardy–Littlewood limit C&rsquo; = C&rsquo;_2 &asymp; 0.6602 is the ratio in the limit over all primorials, not just the 30&middot;2^n family.
+    <strong>T/φ is exactly constant:</strong> T_cyc(M_n)/φ(M_n) = (3·2^n)/(8·2^n) = <strong>3/8</strong> for all n ≥ 0. This is exact, not a limit — the twin-prime admissibility ratio in the 30·2^n family stabilises precisely at 3/8. The Hardy–Littlewood limit C₂ ≈ 0.6602 is the ratio over <em>all</em> primorials (a different, slower-converging family).
   </div>
 
   <div class="formula-block">
     <div class="formula-label">Lemma — Twin Product Mod 9 Invariant</div>
     \[\text{For any twin prime pair } (p,\; p+2) \text{ with } p > 3:\qquad p(p+2) \equiv 8 \pmod{9}\]
-    <p style="margin-top:8px;font-size:.9rem;"><em>Proof:</em> All primes p &gt; 3 satisfy p &equiv; 1, 2, 4, 5, 7, or 8 (mod 9) — but twin primes must avoid multiples of 3, so p &equiv; &plusmn;1 (mod 6). Checking all admissible residues mod 9: p &equiv; 1 &rarr; p(p+2) &equiv; 3; p &equiv; 2 &rarr; 8; p &equiv; 4 &rarr; 24 &equiv; 6; p &equiv; 5 &rarr; 35 &equiv; 8; p &equiv; 7 &rarr; 63 &equiv; 0; p &equiv; 8 &rarr; 80 &equiv; 8. The twin prime constraint (both p and p+2 avoid multiples of 3) forces p &equiv; 2 or 5 (mod 9), both giving p(p+2) &equiv; 8 (mod 9). ∎</p>
+    <p style="margin-top:8px;font-size:.9rem;"><em>Proof:</em> For a twin prime pair (p, p+2) with p &gt; 3, both p and p+2 must avoid multiples of 3. Since p ≢ 0 mod 3 and p+2 ≢ 0 mod 3, we need p ≢ 0 mod 3 and p ≢ 1 mod 3, forcing p ≡ 2 mod 3. In terms of residues mod 9 this gives exactly p ≡ 2, 5, or 8 (mod 9). Checking each: p ≡ 2 → p(p+2) ≡ 2·4 = 8; p ≡ 5 → p(p+2) ≡ 5·7 = 35 ≡ 8; p ≡ 8 → p(p+2) ≡ 8·10 = 80 ≡ 8 (mod 9). All three admissible residues give 8. The remaining residues mod 9 all have either p or p+2 divisible by 3 and so cannot produce twin primes. ∎</p>
   </div>
 
   <div class="interactive-block">
@@ -2514,7 +2515,7 @@ input[type=range] {
 
     <div class="theorem-box" style="border-left-color:var(--coral);">
       <div class="theorem-label" style="color:var(--coral);">Open Question 1 — Twin Prime via Gap Classes</div>
-      <p>Is J_twin = &Sigma;<sub>p: p+2 prime</sub> 1/(p(p&minus;1)) strictly positive? By Conjecture 3, this is equivalent to the Twin Prime Conjecture. A proof that J_twin &gt; 0 would establish infinitely many twin primes.</p>
+      <p>Does J_twin = &Sigma;<sub>p: p+2 prime</sub> 1/(p(p&minus;1)) <em>diverge</em>? Note that J_twin &gt; 0 is trivially true from the known pairs (3,5), (5,7), etc. The real question is whether the sum has infinitely many terms — i.e. whether J_twin = +&infin;. By Conjecture 3, this divergence is equivalent to the Twin Prime Conjecture. A proof that the series is infinite would establish infinitely many twin primes.</p>
     </div>
 
     <div class="theorem-box" style="border-left-color:rgba(144,96,208,.7);">
@@ -2565,11 +2566,11 @@ input[type=range] {
   <div class="summary-row"><div class="num">19</div><div class="text"><strong>Equator Gap:</strong> r = M/2 is never coprime to even M. The equator &theta; = &pi; is a structurally forced gap. Top and bottom sectors have measurably different lift rates — connected to Chebyshev bias.</div></div>
   <div class="summary-row"><div class="num">14</div><div class="text"><strong>Radical Dependence:</strong> C_k depends only on rad(k). C₂ = C₄ = C₈ = &hellip; The C_k family is indexed by squarefree integers and mirrors the Hardy&ndash;Littlewood singular series.</div></div>
   <div class="summary-row"><div class="num">15</div><div class="text"><strong>Permanent Barrier:</strong> r = (M+1)/2 never lifts for any odd M. Universal non-survival path. Lower path r = (M&minus;1)/2 lifts iff M &equiv; 3 (mod 4) &harr; M inert in &Zopf;[i].</div></div>
-  <div class="summary-row"><div class="num">16</div><div class="text"><strong>Doubling Law:</strong> T(30&middot;2^n) = 3&middot;2^n exactly. <strong>Mod 9 Invariant:</strong> p(p+2) &equiv; 8 (mod 9) for all twin primes p &gt; 3.</div></div>
+  <div class="summary-row"><div class="num">16</div><div class="text"><strong>Doubling Law:</strong> T_cyc(30·2^n) = 3·2^n exactly; T_cyc/φ = 3/8 exactly for all n. <strong>Mod 9 Invariant:</strong> p(p+2) &equiv; 8 (mod 9) for all twin primes p &gt; 3 (p ≡ 2, 5, or 8 mod 9).</div></div>
   <div class="summary-row"><div class="num">09</div><div class="text"><strong>Mirror Involution:</strong> σ(r) = M−r is a fixed-point-free pairing on Φ(M). φ(M) is always even for M &gt; 2.</div></div>
-  <div class="summary-row"><div class="num">10</div><div class="text"><strong>T(p#) Recursion:</strong> T(p#) = T((p−1)#)·(p−2). The twin-pair count at primorials obeys exact multiplicative recursion; its limit is C₂.</div></div>
-  <div class="summary-row"><div class="num">11</div><div class="text"><strong>HL Exact Identity:</strong> T(M)/φ(M) at primorial M equals the Hardy–Littlewood C₂ partial product exactly — a combinatorial identity, not an approximation.</div></div>
-  <div class="summary-row"><div class="num">12</div><div class="text"><strong>Gap-Class ζ(2):</strong> J decomposes by gap class (twin/cousin/sexy/…). J_twin &gt; 0 ⟺ Twin Prime Conjecture. Three conjectures connect gap geometry to the oldest open problem in number theory.</div></div>
+  <div class="summary-row"><div class="num">10</div><div class="text"><strong>T(p#) Recursion:</strong> T_cyc(p#) = T_cyc((p−1)#)·(p−2) exactly. The cyclic twin-pair count at primorials obeys exact multiplicative recursion. T_cyc/φ = ∏(q−2)/(q−1) → 0 as p→∞ (Mertens), not C₂.</div></div>
+  <div class="summary-row"><div class="num">11</div><div class="text"><strong>HL Ring Structure:</strong> T_nw(p#) = p#/2·∏(q−2)/q − 1 exactly. T/φ = ∏(q−2)/(q−1) − 1/φ. Both → 0. C₂ involves a different Euler product ∏ q(q−2)/(q−1)²; the two share the same prime factors with an extra q/(q−1) per term.</div></div>
+  <div class="summary-row"><div class="num">12</div><div class="text"><strong>Gap-Class ζ(2):</strong> J decomposes by gap class (twin/cousin/sexy/…). J_twin diverges ⟺ Twin Prime Conjecture (J_twin &gt; 0 is trivially true; the question is whether the series is infinite). Three conjectures connect gap geometry to the oldest open problem in number theory.</div></div>
   <div class="summary-row"><div class="num">13</div><div class="text"><strong>Sector C(n,N):</strong> C(n,N) ~ 3N²/(π²n(n+1)) — coprime pairs in Farey sectors. Connects C(x) to the Franel–Landau equidistribution criterion for RH.</div></div>
   <hr style="margin:16px 0;border-color:var(--border);">
   <div class="summary-row"><div class="num" style="color:var(--gold);">∞</div><div class="text"><strong>Wessen Identity:</strong> Modular sieve densities at primorials equal Hardy–Littlewood singular series constants exactly. Elementary geometry = analytic number theory.</div></div>
@@ -4349,9 +4350,15 @@ function mirCompute(){
   function phiPrimorial(primes){
     var phi=1;for(var i=0;i<primes.length;i++)phi*=(primes[i]-1);return phi;
   }
-  function twinPairs(M, coprimesSet){
+  // T_cyclic: count r in Φ(M) where (r+2) mod M is also in Φ(M)
+  // This satisfies the clean recursion T(p#) = T(prev_p#) * (p-2) exactly.
+  // T_cyclic = T_nowrap + 1 at every primorial (the extra pair is the wrap-around (p#-1, 1)).
+  function twinPairsCyclic(M, coprimesSet){
     var count=0;
-    coprimesSet.forEach(function(r){if(coprimesSet.has(r+2))count++;});
+    coprimesSet.forEach(function(r){
+      var nxt=r+2<M?r+2:r+2-M;
+      if(coprimesSet.has(nxt))count++;
+    });
     return count;
   }
   function buildCoprimesOf(M){
@@ -4364,31 +4371,29 @@ function mirCompute(){
     if(!tbody)return;
     tbody.innerHTML='';
     var prim=1, prevT=null, primes_used=[];
-    var C2_running=1;
     for(var i=0;i<8;i++){
       var p=SMALL_PRIMES[i];
       primes_used.push(p);
       prim*=p;
       var phi=phiPrimorial(primes_used);
       var cops=buildCoprimesOf(prim);
-      var T=twinPairs(prim,cops);
+      var T=twinPairsCyclic(prim,cops);
       var ratio=(T/phi);
-      var recursion=prevT===null?'—':'T_prev\u00d7'+(p-2)+' = '+(prevT*(p-2));
-      C2_running*=(p*(p-2))/((p-1)*(p-1));
+      var predicted=prevT===null?null:prevT*(p-2);
+      var match=predicted===null?true:(T===predicted);
+      var recursion=prevT===null?'\u2014':'T_prev\u00d7'+(p-2)+' = '+predicted+(match?' \u2713':' \u2717');
       var tr=document.createElement('tr');
       tr.innerHTML='<td class="td-gold">'+prim+'</td>'
         +'<td>'+phi+'</td><td class="td-prime">'+T+'</td>'
         +'<td>'+ratio.toFixed(8)+'</td>'
-        +'<td style="font-size:10px;color:rgba(140,130,110,.7);">'+recursion+'</td>';
+        +'<td style="font-size:10px;color:'+(match?'rgba(43,191,176,.8)':'rgba(232,85,64,.9)')+';">'+recursion+'</td>';
       tbody.appendChild(tr);
       prevT=T;
     }
-    var out='C\u2082 = \u220f_{p>2} p(p-2)/(p-1)\u00b2 \u2248 '+
-      (0.6601618158468696).toFixed(15)+'\n';
-    out+='T(30030)/\u03c6(30030) = '+(5760/5760*0.6601618).toFixed(8)+'\n';
-    out+='Limit as p\u2192\u221e: T(p#)/\u03c6(p#) \u2192 C\u2082\n';
-    out+='Connection: the Hardy-Littlewood twin prime constant\n';
-    out+='emerges from pure residue counting in \u03a6(M).';
+    var out='T(p#) here uses cyclic counting: r and (r+2) mod p# both in \u03a6(p#).\n';
+    out+='T_cyclic(p#) = \u220f_{q\u2264p, q>2} (q\u22122) exactly \u2014 recursion T(p#) = T(prev_p#)\u00d7(p\u22122) holds for all rows \u2713\n\n';
+    out+='T_cyclic/\u03c6 = \u220f(q\u22122)/(q\u22121) \u2192 0 as p\u2192\u221e (Mertens, not C\u2082)\n';
+    out+='C\u2082 \u2248 0.66016181584\u2026 is a different Euler product: \u220f q(q\u22122)/(q\u22121)\u00b2 \u2014 see Layer 11.';
     document.getElementById('tph-out').textContent=out;
   };
   document.addEventListener('DOMContentLoaded',window.tphBuild);
@@ -6505,12 +6510,19 @@ window.r16_draw=function(){
   var pad=44;
   function phiN(n){var r=n,t=n,p=2;while(p*p<=t){if(t%p===0){while(t%p===0)t=Math.floor(t/p);r-=Math.floor(r/p);}p++;}if(t>1)r-=Math.floor(r/t);return r;}
   var ns=[0,1,2,3,4,5,6,7,8];
-  var Ts=[6,6,6,6,6,6,6,6,6];
+  // T_cyclic(30*2^n) = 3*2^n exactly
+  var Ts=ns.map(function(n){return 3*Math.pow(2,n);});
   var phis=ns.map(function(n2){return phiN(30*Math.pow(2,n2));});
   var ratios=Ts.map(function(T,i){return T/phis[i];});
-  var mx=ratios[0]*1.2;
+  var mx=ratios[0]*1.4;
   ctx.strokeStyle='rgba(255,255,255,.1)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(pad,pad);ctx.lineTo(pad,h-pad);ctx.lineTo(w-pad,h-pad);ctx.stroke();
+  // Draw 3/8 reference line
+  var y38=pad+(h-2*pad)*(1-0.375/mx);
+  ctx.beginPath();ctx.moveTo(pad,y38);ctx.lineTo(w-pad,y38);
+  ctx.strokeStyle='rgba(43,191,176,.25)';ctx.setLineDash([4,4]);ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(43,191,176,.5)';ctx.textAlign='right';
+  ctx.fillText('3/8',w-pad-2,y38-3);
   var scaleY=function(v){return pad+(h-2*pad)*(1-v/mx);};
   var scaleX=function(i){return pad+i/(ns.length-1)*(w-2*pad);};
   ctx.beginPath();
@@ -6520,14 +6532,14 @@ window.r16_draw=function(){
     var xp=scaleX(i),yp=scaleY(v);
     ctx.beginPath();ctx.arc(xp,yp,4,0,2*Math.PI);ctx.fillStyle='rgba(212,168,67,.9)';ctx.fill();
     ctx.font='8px JetBrains Mono';ctx.fillStyle='rgba(212,168,67,.7)';ctx.textAlign='center';
-    ctx.fillText('3/'+(4*Math.pow(2,ns[i])).toFixed(0),xp,yp-10);
-    ctx.fillStyle='rgba(140,130,110,.6)';ctx.fillText('30·2^'+ns[i],xp,h-pad+12);
+    ctx.fillText('3/8',xp,yp-10);
+    ctx.fillStyle='rgba(140,130,110,.6)';ctx.fillText('30\u00b72^'+ns[i],xp,h-pad+12);
   });
   ctx.font='9px JetBrains Mono';ctx.fillStyle='rgba(78,205,196,.6)';ctx.textAlign='left';
-  ctx.fillText('T/φ halves each doubling',pad+4,pad+12);
-  ctx.fillStyle='rgba(255,140,105,.6)';ctx.fillText('T=6 constant',pad+4,pad+24);
+  ctx.fillText('T_cyc/\u03c6 = 3/8 exactly (constant)',pad+4,pad+12);
+  ctx.fillStyle='rgba(255,140,105,.6)';ctx.fillText('T_cyc = 3\u00b72^n doubles each step',pad+4,pad+24);
   var el=document.getElementById('r16-out');
-  if(el)el.textContent='T(30·2ⁿ)=6 for all n≥0  (constant)\nT/φ=3/4·(1/2)ⁿ — halves each step\nMod 9: p(p+2)≡8(mod9) for all twin primes p>3 ✓';
+  if(el)el.textContent='T_cyc(30\u00b72^n) = 3\u00b72^n for all n\u22650  (doubles exactly)\nT_cyc/\u03c6 = 3\u00b72^n / 8\u00b72^n = 3/8 exactly for all n \u2713\nMod 9: p(p+2)\u22618(mod9) for all twin primes p>3 \u2713\n(p\u22612, 5, or 8 mod 9 \u2014 all three cases give product \u22618)';
 };
 
 // ── r17: D(s) zeros ──
