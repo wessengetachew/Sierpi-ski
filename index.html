@@ -794,10 +794,10 @@ input[type=range] {
 
     <!-- Zoom slider -->
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(150,140,120,.7);">Zoom</span>
-    <input id="op-zoom-sl" type="range" min="0.3" max="4.0" value="2.0" step="0.05"
+    <input id="op-zoom-sl" type="range" min="0.3" max="4.0" value="1.0" step="0.05"
       oninput="opSetZoom(+this.value);document.getElementById('op-zoom-val').textContent=parseFloat(this.value).toFixed(1)+'x'"
       style="width:70px;accent-color:#d4a843;cursor:pointer;">
-    <span id="op-zoom-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#d4a843;min-width:30px;">2.0x</span>
+    <span id="op-zoom-val" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#d4a843;min-width:30px;">1.0x</span>
 
     <span style="color:rgba(80,70,55,.4);padding:0 2px;">|</span>
 
@@ -1877,20 +1877,34 @@ input[type=range] {
 <!-- ══ LAYER 11 · HARDY-LITTLEWOOD EXACT ══ -->
 <section class="section" id="layer11">
   <div class="layer-badge">Layer 11 — Combinatorial Bridge</div>
-  <h2 class="section-title">Hardy–Littlewood as <span>Exact Identities</span></h2>
-  <p class="section-lead">The Hardy–Littlewood singular series constants are not just asymptotic — they are exact combinatorial ratios in primitive polygon geometry, verified across all primorials.</p>
+  <h2 class="section-title">Hardy–Littlewood and the <span>Ring Count</span></h2>
+  <p class="section-lead">The Hardy–Littlewood constant C₂ emerges from a geometric count in primorial rings. The twin coprime count T(p#) has an exact closed form — and its ratio to φ(p#) converges to zero, not to C₂, but the Euler product structure linking both is exact.</p>
 
-  <p>The Hardy–Littlewood conjecture predicts the density of prime constellations using a singular series. What we discover is that these "analytic" constants are actually counting exact geometric ratios in Φ(M):</p>
+  <p>The Hardy–Littlewood twin prime conjecture predicts #{p ≤ n : p and p+2 both prime} ~ C₂ · n / (ln n)², where C₂ = ∏<sub>p&gt;2</sub> p(p−2)/(p−1)² ≈ 0.6602. What the ring geometry reveals is the exact counting formula behind this constant:</p>
 
   <div class="insight">
-    <strong>The Discovery:</strong> The ratio T(M)/φ(M) at primorial M is not approximately equal to the Hardy–Littlewood C₂ factor — it <em>is</em> the Hardy–Littlewood factor, exactly. Each prime p contributes the factor (p−2)/(p−1) to T/φ, which is precisely the p-factor in the HL singular series.
+    <strong>Exact Count Theorem:</strong> Let p# = 2·3·5·…·p be the primorial. Define T(p#) as the number of residues r ∈ Φ(p#) with r+2 also in Φ(p#) (gap-2 coprime pairs). Then:
+    \[T(p\#) = \frac{p\#}{2} \prod_{\substack{q \le p \\ q > 2}} \frac{q-2}{q} \;-\; 1\]
+    The "−1" is an exact boundary correction: the pair (p#−1, p#+1) would satisfy both coprimality conditions but p#+1 lies outside the ring [1, p#). This formula holds exactly for every primorial, with no error term.
+  </div>
+
+  <div class="formula-block">
+    <div class="formula-label">Exact T(p#) and the ratio to φ(p#)</div>
+    \[T(p\#) = \frac{p\#}{2} \prod_{\substack{q \le p \\ q > 2}} \frac{q-2}{q} - 1, \qquad \frac{T(p\#)}{\varphi(p\#)} = \prod_{\substack{q \le p \\ q > 2}} \frac{q-2}{q-1} \;-\; \frac{1}{\varphi(p\#)}\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">
+      Since φ(p#) → ∞, the correction 1/φ(p#) → 0, so T(p#)/φ(p#) ~ ∏(q−2)/(q−1). However, this partial product itself converges to <strong>0</strong> as p → ∞ — not to C₂. The ratio T(p#)/φ(p#) measures local twin density in the ring, which thins as more primes are sieved.
+    </p>
+  </div>
+
+  <div class="insight">
+    <strong>Where C₂ actually appears:</strong> C₂ is the limit of the Euler product ∏<sub>q&gt;2</sub> q(q−2)/(q−1)², which is a <em>different</em> combination of the same prime factors. The p-factor in C₂ is q(q−2)/(q−1)² = [(q−2)/(q−1)] · [q/(q−1)], whereas T/φ only sees (q−2)/(q−1). The extra q/(q−1) factor in C₂ accounts for the prime distribution normalisation in the Hardy–Littlewood heuristic. The geometric ring structure gives a direct construction of both quantities from the same prime ingredients.
   </div>
 
   <div class="interactive-block">
-    <h4>HL exact identity — verification across primorials</h4>
+    <h4>Exact count verification across primorials</h4>
     <table class="step-table">
       <thead><tr>
-        <th>M</th><th>T(M)/φ(M)</th><th>HL product ∏p(p-2)/(p-1)²</th><th>Match</th>
+        <th>p#</th><th>T(p#) exact</th><th>T(p#) formula</th><th>T/φ</th><th>∏(q−2)/(q−1)</th><th>Diff = 1/φ</th>
       </tr></thead>
       <tbody id="hl-body"></tbody>
     </table>
@@ -1903,9 +1917,11 @@ input[type=range] {
   </div>
 
   <div class="formula-block">
-    <div class="formula-label">The Exact Identity at primorial p# = 2·3·…·p</div>
-    \[\frac{T(p\#)}{\varphi(p\#)} = \prod_{q \le p,\; q>2} \frac{q-2}{q-1} = \frac{C_2}{\prod_{q>p} \frac{q(q-2)}{(q-1)^2}}\]
-    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">The HL constant C₂ is the infinite-primorial limit of this purely geometric ratio — no analysis required, just counting residues.</p>
+    <div class="formula-label">C₂ as an Euler product — the convergent combination</div>
+    \[C_2 = \prod_{p > 2} \frac{p(p-2)}{(p-1)^2} \approx 0.66016181584\ldots\]
+    <p style="margin-top:8px;font-size:.9rem;color:var(--ink3);">
+      This product converges (each factor is 1 − 1/(p−1)² &lt; 1 and the product of corrections converges). The ring geometry gives a combinatorial origin for every factor: q(q−2)/(q−1)² counts the proportion of admissible gap-2 pairs that survive the sieve at prime q, normalised by the squared density of coprime residues at q.
+    </p>
   </div>
 
   <button class="view-canvas-btn" onclick="covOpen('Hardy-Littlewood geometry — combined mod 30',30,0,{viewMode:0,colorMode:'residue6',showLifts:false,showGCDPoly:false,gapN:2})">View on Canvas — Twin pair geometry</button>
@@ -2630,7 +2646,7 @@ function ringRotOff(M, mmax){
 }
 var viewMode=0;     // 0=gcd1 only  1=non-gcd1 only  2=combined  3=no points
 var showDots=true;
-var zoomLevel=2.0;
+var zoomLevel=1.0;
 var ringSpacing=0.0;  // 0=spread, 1=unit circle (all same radius)
 window.opSetZoom=function(v){zoomLevel=Math.max(.3,Math.min(4,+v||2));};
 window.opSetSpacing=function(v){ringSpacing=Math.max(0,Math.min(1,+v||0));};
@@ -4183,17 +4199,32 @@ function mirCompute(){
 // ── HARDY-LITTLEWOOD EXACT IDENTITY ──
 (function(){
   function gcd2(a,b){while(b){var t=b;b=a%b;a=t;}return a;}
+
+  // Count gap-2 coprime pairs: #{r in Φ(M): r+2 in Φ(M)}
   function tRatio(M){
     var s=new Set();
     for(var r=1;r<M;r++)if(gcd2(r,M)===1)s.add(r);
     var T=0;s.forEach(function(r){if(s.has(r+2))T++;});
     return {T:T,phi:s.size,ratio:T/s.size};
   }
-  function hlProduct(primes){
+
+  // Exact formula: T(p#) = p#/2 * ∏_{q>2, q|p#} (q-2)/q  - 1
+  function tFormula(prim, primes){
+    var prod=prim/2;
+    for(var i=1;i<primes.length;i++){var q=primes[i];prod*=(q-2)/q;}
+    return prod-1;
+  }
+
+  // Partial product ∏_{q≤p, q>2} (q-2)/(q-1)
+  function partialRatioProd(primes){
     var prod=1;
-    for(var i=1;i<primes.length;i++){var p=primes[i];prod*=p*(p-2)/((p-1)*(p-1));}
+    for(var i=1;i<primes.length;i++){var q=primes[i];prod*=(q-2)/(q-1);}
     return prod;
   }
+
+  // C₂ Euler product ∏_{p>2} p(p-2)/(p-1)² (converges to ≈0.6602)
+  var C2=0.6601618158468696;
+
   var PR=[2,3,5,7,11,13,17,19];
   window.hlInit=function(){
     var tbody=document.getElementById('hl-body');
@@ -4202,26 +4233,43 @@ function mirCompute(){
     for(var i=0;i<6;i++){
       var p=PR[i];prUsed.push(p);prim*=p;
       var res=tRatio(prim);
-      var hl=hlProduct(prUsed);
-      var match=Math.abs(res.ratio-hl)<1e-10;
+      var tForm=tFormula(prim,prUsed);
+      var partProd=partialRatioProd(prUsed);
+      var correction=1/res.phi;
+      var formulaExact=Math.abs(tForm-res.T)<0.01;
       var tr=document.createElement('tr');
       tr.innerHTML='<td class="td-gold">'+prim+'</td>'
-        +'<td>'+res.ratio.toFixed(12)+'</td>'
-        +'<td>'+hl.toFixed(12)+'</td>'
-        +'<td class="'+(match?'td-prime':'td-coral')+'">'+(match?'Exact \u2713':'Diff')+'</td>';
+        +'<td class="td-prime">'+res.T+'</td>'
+        +'<td class="'+(formulaExact?'td-prime':'td-coral')+'">'+tForm.toFixed(2)+'</td>'
+        +'<td>'+res.ratio.toFixed(10)+'</td>'
+        +'<td>'+partProd.toFixed(10)+'</td>'
+        +'<td style="font-size:10px;color:rgba(140,130,110,.7);">\u2212'+correction.toFixed(10)+'</td>';
       tbody.appendChild(tr);
     }
   };
+
   window.hlCompute=function(){
     var M=+document.getElementById('hl-M').value||2310;
     M=Math.max(2,Math.min(30030,M));
     var res=tRatio(M);
+    var factors=[];var tmp=M;
+    for(var i=0;i<PR.length;i++){if(tmp%PR[i]===0){factors.push(PR[i]);while(tmp%PR[i]===0)tmp=Math.floor(tmp/PR[i]);}}
+    var tForm=M/2;
+    for(var i=1;i<factors.length;i++){tForm*=(factors[i]-2)/factors[i];}
+    tForm-=1;
+    var partProd=1;
+    for(var i=1;i<factors.length;i++){partProd*=(factors[i]-2)/(factors[i]-1);}
     var out='M = '+M+'\n';
     out+='\u03c6(M) = '+res.phi+'\n';
     out+='T(M) = '+res.T+' (gap-2 coprime pairs)\n';
-    out+='T(M)/\u03c6(M) = '+res.ratio.toFixed(15)+'\n\n';
-    out+='C\u2082 \u2248 0.660161815846869...\n';
-    out+='Ratio/C\u2082 = '+(res.ratio/0.6601618158468696).toFixed(12);
+    out+='Exact formula T = M/2\u00b7\u220f(q\u22122)/q \u2212 1 = '+tForm.toFixed(6)+'\n';
+    out+='  (formula gives exact integer: '+(Math.abs(tForm-res.T)<0.01?'\u2713 Yes':'\u2717 No (M not primorial)')+')\n\n';
+    out+='T/\u03c6 = '+res.ratio.toFixed(15)+'\n';
+    out+='\u220f(q\u22122)/(q\u22121) = '+partProd.toFixed(15)+'\n';
+    out+='Diff = 1/\u03c6 = '+(1/res.phi).toFixed(15)+'\n';
+    out+='  T/\u03c6 = \u220f(q\u22122)/(q\u22121) \u2212 1/\u03c6: '+(Math.abs(res.ratio-(partProd-1/res.phi))<1e-12?'\u2713 Exact':'\u2717')+'\n\n';
+    out+='C\u2082 \u2248 '+C2.toFixed(15)+'\n';
+    out+='T/\u03c6 / C\u2082 = '+(res.ratio/C2).toFixed(12)+' (\u2260 1; T/\u03c6 \u2192 0, not C\u2082)';
     document.getElementById('hl-out').textContent=out;
   };
   document.addEventListener('DOMContentLoaded',window.hlInit);
