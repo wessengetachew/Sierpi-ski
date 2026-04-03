@@ -10,6 +10,7 @@
 
 <script>MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]'],['$$','$$']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre']}};</script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root {
   --black: #05040a;
@@ -39,6 +40,238 @@ body {
   font-size: 18px;
   line-height: 1.75;
   overflow-x: hidden;
+}
+
+/* ══ THREE.JS BACKGROUND CANVAS ══ */
+#three-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+#three-bg.visible { opacity: 1; }
+
+/* ══ 3D SCENE CONTAINER ══ */
+#sidenav { z-index: 100; }
+#main { position: relative; z-index: 10; }
+#op-overlay { z-index: 950; }
+
+/* ══ 3D SECTION CARDS ══ */
+.section {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.section-inner-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.7s ease;
+  opacity: 0;
+  transform: perspective(1200px) rotateX(8deg) translateZ(-30px) translateY(20px);
+  will-change: transform, opacity;
+}
+.section-inner-3d.revealed {
+  opacity: 1;
+  transform: perspective(1200px) rotateX(0deg) translateZ(0px) translateY(0px);
+}
+
+/* ══ 3D FORMULA BLOCKS ══ */
+.formula-block {
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  cursor: default;
+}
+.formula-block:hover {
+  transform: perspective(800px) rotateX(-3deg) rotateY(1.5deg) translateZ(12px);
+  box-shadow: 0 20px 60px rgba(212,168,67,.15), 0 0 0 1px rgba(212,168,67,.35);
+}
+
+/* ══ 3D THEOREM BOXES ══ */
+.theorem-box {
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.theorem-box:hover {
+  transform: perspective(800px) rotateX(-2deg) rotateY(1deg) translateZ(10px);
+  box-shadow: 0 16px 48px rgba(74,128,240,.15);
+}
+
+/* ══ 3D INSIGHT BLOCKS ══ */
+.insight {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform-style: preserve-3d;
+}
+.insight:hover {
+  transform: perspective(800px) rotateX(-1.5deg) translateZ(8px);
+  box-shadow: 0 12px 40px rgba(43,191,176,.12);
+}
+
+/* ══ 3D CONST CARDS ══ */
+.const-card {
+  transition: border-color .3s, box-shadow .3s, transform .3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  transform-style: preserve-3d;
+}
+.const-card:hover {
+  transform: perspective(600px) rotateX(-6deg) rotateY(4deg) translateZ(16px) translateY(-4px) !important;
+}
+
+/* ══ 3D INTERACTIVE BLOCKS ══ */
+.interactive-block {
+  transform-style: preserve-3d;
+  transition: box-shadow 0.4s ease;
+}
+.interactive-block:hover {
+  box-shadow: 0 0 0 1px rgba(43,191,176,.2), 0 24px 64px rgba(43,191,176,.07);
+}
+
+/* ══ 3D HERO ELEMENTS ══ */
+#hero {
+  perspective: 1600px;
+  transform-style: preserve-3d;
+}
+.hero-title {
+  transition: transform 0.4s ease;
+  display: inline-block;
+}
+
+/* ══ 3D LAYER BADGE ══ */
+.layer-badge {
+  transition: letter-spacing 0.3s ease, color 0.3s ease;
+}
+.section:hover .layer-badge {
+  letter-spacing: .3em;
+  color: rgba(43,191,176,.9);
+}
+
+/* ══ 3D FLOATING DEPTH LABELS ══ */
+.depth-label {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: .25em;
+  color: rgba(212,168,67,.15);
+  text-transform: uppercase;
+  right: 0;
+  top: 50%;
+  transform: rotateY(90deg) translateX(40px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s;
+  transform-origin: right center;
+}
+
+/* ══ SCROLL DEPTH INDICATOR ══ */
+#depth-indicator {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  pointer-events: none;
+}
+#depth-indicator .di-node {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(212,168,67,.2);
+  transition: all 0.3s ease;
+}
+#depth-indicator .di-node.active {
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+  transform: scale(1.8);
+}
+
+/* ══ 3D STEP TABLE ══ */
+.step-table tr {
+  transition: transform 0.2s ease;
+  transform-style: preserve-3d;
+}
+.step-table tbody tr:hover {
+  transform: perspective(600px) translateZ(6px);
+}
+.step-table tbody tr:hover td {
+  background: rgba(212,168,67,.04);
+}
+
+/* ══ HOVER GLOW ON SECTION TITLE ══ */
+.section-title {
+  transition: text-shadow 0.4s ease;
+}
+.section:hover .section-title {
+  text-shadow: 0 0 60px rgba(237,230,216,.08);
+}
+
+/* ══ ROTATING 3D BADGE ══ */
+@keyframes float3d {
+  0%, 100% { transform: perspective(400px) rotateX(0deg) translateY(0px); }
+  50% { transform: perspective(400px) rotateX(3deg) translateY(-4px); }
+}
+.hero-const {
+  animation: float3d 4s ease-in-out infinite;
+}
+.hero-const:nth-child(2) { animation-delay: 0.5s; }
+.hero-const:nth-child(3) { animation-delay: 1s; }
+.hero-const:nth-child(4) { animation-delay: 1.5s; }
+
+/* ══ PRIME PARTICLE SYSTEM CANVAS ══ */
+#prime-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ══ 3D PERSPECTIVE WARP ON MAIN ══ */
+#main {
+  margin-left: 220px;
+  max-width: 860px;
+  padding: 0 60px 120px;
+  transform-style: preserve-3d;
+}
+
+/* ══ DEPTH RINGS ══ */
+.section::before {
+  content: '';
+  position: absolute;
+  left: -60px;
+  top: 50%;
+  width: 1px;
+  height: 0;
+  background: linear-gradient(180deg, transparent, rgba(212,168,67,.08), transparent);
+  transition: height 0.6s ease;
+  pointer-events: none;
+}
+.section:hover::before {
+  height: 80%;
+  top: 10%;
+}
+
+/* ══ WEBGL TORUS OVERLAY HINT ══ */
+#torus-hint {
+  position: fixed;
+  bottom: 60px;
+  left: 240px;
+  z-index: 500;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .2em;
+  color: rgba(43,191,176,.3);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1s ease;
+  text-transform: uppercase;
+}
+
+/* ══ MOUSE-PARALLAX LAYERS ══ */
+.parallax-layer {
+  transition: transform 0.1s linear;
+  will-change: transform;
 }
 
 /* ── PROGRESS BAR ── */
@@ -496,6 +729,13 @@ input[type=range] {
 </head>
 <body>
 
+<!-- ══ THREE.JS BACKGROUND ══ -->
+<canvas id="three-bg"></canvas>
+<canvas id="prime-particles"></canvas>
+
+<!-- ══ DEPTH INDICATOR ══ -->
+<div id="depth-indicator"></div>
+<div id="torus-hint">3D · WebGL · Modular Rings</div>
 
 <!-- ══ CANVAS OVERLAY ══ -->
 <div id="canvas-overlay">
@@ -6146,6 +6386,407 @@ window.addEventListener('resize',function(){
 })();
 
 })();
+</script>
+
+<!-- ══ THREE.JS 3D ENGINE ══ -->
+<script>
+(function() {
+  'use strict';
+
+  // ── Wait for Three.js to load ──
+  function init3D() {
+    if (typeof THREE === 'undefined') {
+      setTimeout(init3D, 100);
+      return;
+    }
+
+    var canvas = document.getElementById('three-bg');
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x000000, 0);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 60);
+
+    // ── Color palette ──
+    var GOLD = new THREE.Color(0xd4a843);
+    var TEAL = new THREE.Color(0x2bbfb0);
+    var PURPLE = new THREE.Color(0x9060d0);
+    var CORAL = new THREE.Color(0xe85540);
+
+    // ── Modular Rings (3D Tori) ──
+    var rings = [];
+    var primes = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];
+    var ringColors = [GOLD, TEAL, PURPLE, CORAL, GOLD, TEAL, PURPLE, CORAL, GOLD, TEAL, PURPLE, CORAL, GOLD, TEAL, PURPLE];
+
+    primes.forEach(function(p, i) {
+      var radius = 4 + i * 2.8;
+      var tube = 0.04 + (i % 3) * 0.02;
+      var geo = new THREE.TorusGeometry(radius, tube, 8, Math.max(48, p * 3));
+      var mat = new THREE.MeshBasicMaterial({
+        color: ringColors[i],
+        transparent: true,
+        opacity: 0.06 + (i < 5 ? 0.06 : 0),
+        wireframe: false
+      });
+      var torus = new THREE.Mesh(geo, mat);
+
+      // Random tilt per ring
+      torus.rotation.x = (Math.random() - 0.5) * 1.2;
+      torus.rotation.y = (Math.random() - 0.5) * 0.8;
+      torus.rotation.z = Math.random() * Math.PI * 2;
+
+      // Store rotation speeds
+      torus.userData.rx = (Math.random() - 0.5) * 0.0003;
+      torus.userData.ry = (Math.random() - 0.5) * 0.0002;
+      torus.userData.rz = (Math.random() - 0.5) * 0.0001;
+      torus.userData.baseOpacity = mat.opacity;
+
+      scene.add(torus);
+      rings.push(torus);
+    });
+
+    // ── Prime dots on rings ──
+    var primeDotsGroup = new THREE.Group();
+    primes.forEach(function(p, i) {
+      var radius = 4 + i * 2.8;
+      var dotGeo = new THREE.BufferGeometry();
+      var positions = [];
+      // Coprime residues only
+      for (var r = 1; r < p; r++) {
+        function gcd(a,b){return b===0?a:gcd(b,a%b);}
+        if (gcd(r, p) === 1) {
+          var angle = (2 * Math.PI * r) / p;
+          positions.push(radius * Math.cos(angle), radius * Math.sin(angle), 0);
+        }
+      }
+      if (positions.length === 0) return;
+      dotGeo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      var dotMat = new THREE.PointsMaterial({
+        color: ringColors[i],
+        size: 0.3,
+        transparent: true,
+        opacity: i < 6 ? 0.5 : 0.25
+      });
+      var dots = new THREE.Points(dotGeo, dotMat);
+      // Apply same initial tilt as its ring
+      if (rings[i]) {
+        dots.rotation.copy(rings[i].rotation);
+      }
+      dots.userData.ringIdx = i;
+      primeDotsGroup.add(dots);
+    });
+    scene.add(primeDotsGroup);
+
+    // ── Distant star field ──
+    var starGeo = new THREE.BufferGeometry();
+    var starPositions = [];
+    for (var s = 0; s < 800; s++) {
+      var theta = Math.random() * Math.PI * 2;
+      var phi = Math.acos(2 * Math.random() - 1);
+      var r = 80 + Math.random() * 120;
+      starPositions.push(
+        r * Math.sin(phi) * Math.cos(theta),
+        r * Math.sin(phi) * Math.sin(theta),
+        r * Math.cos(phi)
+      );
+    }
+    starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+    var starMat = new THREE.PointsMaterial({
+      color: 0xede6d8,
+      size: 0.3,
+      transparent: true,
+      opacity: 0.25
+    });
+    scene.add(new THREE.Points(starGeo, starMat));
+
+    // ── Spiral particle stream (prime gaps) ──
+    var spiralGeo = new THREE.BufferGeometry();
+    var spiralPos = [];
+    for (var t = 0; t < 600; t++) {
+      var angle = t * 0.12;
+      var rad = 0.8 + t * 0.07;
+      var z = (t - 300) * 0.08;
+      spiralPos.push(
+        rad * Math.cos(angle),
+        rad * Math.sin(angle),
+        z
+      );
+    }
+    spiralGeo.setAttribute('position', new THREE.Float32BufferAttribute(spiralPos, 3));
+    var spiralMat = new THREE.PointsMaterial({
+      color: TEAL,
+      size: 0.15,
+      transparent: true,
+      opacity: 0.18
+    });
+    var spiralPoints = new THREE.Points(spiralGeo, spiralMat);
+    spiralPoints.position.set(-20, 0, -10);
+    scene.add(spiralPoints);
+
+    // ── Mouse parallax ──
+    var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    document.addEventListener('mousemove', function(e) {
+      mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    // ── Scroll depth ──
+    var scrollY = 0;
+    window.addEventListener('scroll', function() {
+      scrollY = window.scrollY;
+    }, { passive: true });
+
+    // ── Animate ──
+    var clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      var t = clock.getElapsedTime();
+
+      // Smooth mouse follow
+      mouse.x += (mouse.tx - mouse.x) * 0.04;
+      mouse.y += (mouse.ty - mouse.y) * 0.04;
+
+      // Camera drift
+      camera.position.x = mouse.x * 3;
+      camera.position.y = -mouse.y * 2;
+      camera.lookAt(0, 0, 0);
+
+      // Scroll-based camera zoom
+      var scrollFraction = Math.min(scrollY / (document.body.scrollHeight - window.innerHeight || 1), 1);
+      camera.position.z = 60 + scrollFraction * 20;
+
+      // Rotate rings
+      rings.forEach(function(ring, i) {
+        ring.rotation.x += ring.userData.rx + Math.sin(t * 0.1 + i) * 0.0001;
+        ring.rotation.y += ring.userData.ry;
+        ring.rotation.z += ring.userData.rz;
+
+        // Pulse opacity
+        ring.material.opacity = ring.userData.baseOpacity * (0.7 + 0.3 * Math.sin(t * 0.3 + i * 0.7));
+      });
+
+      // Sync prime dots with ring rotations
+      primeDotsGroup.children.forEach(function(dots) {
+        var i = dots.userData.ringIdx;
+        if (rings[i]) {
+          dots.rotation.copy(rings[i].rotation);
+        }
+      });
+
+      // Rotate spiral
+      spiralPoints.rotation.z = t * 0.05;
+      spiralPoints.rotation.x = Math.sin(t * 0.02) * 0.3;
+
+      // Whole scene slow rotation
+      scene.rotation.y = t * 0.005 + mouse.x * 0.08;
+      scene.rotation.x = mouse.y * 0.04;
+
+      renderer.render(scene, camera);
+    }
+
+    // ── Fade in ──
+    setTimeout(function() {
+      canvas.classList.add('visible');
+    }, 800);
+
+    animate();
+
+    // ── Resize ──
+    window.addEventListener('resize', function() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  }
+
+  init3D();
+})();
+
+// ── 2D Prime Particle System ──
+(function() {
+  var cv = document.getElementById('prime-particles');
+  if (!cv) return;
+  var ctx = cv.getContext('2d');
+
+  function resize() {
+    cv.width = window.innerWidth;
+    cv.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var PRIMES_SMALL = [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71];
+  var particles = [];
+
+  // Spawn particles at prime positions
+  for (var i = 0; i < 60; i++) {
+    var p = PRIMES_SMALL[i % PRIMES_SMALL.length];
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: -0.08 - Math.random() * 0.12,
+      prime: p,
+      alpha: Math.random() * 0.12 + 0.03,
+      size: Math.random() * 1.2 + 0.4,
+      color: i % 4 === 0 ? '#d4a843' : i % 4 === 1 ? '#2bbfb0' : i % 4 === 2 ? '#9060d0' : '#e85540',
+      life: Math.random()
+    });
+  }
+
+  function animParticles() {
+    requestAnimationFrame(animParticles);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+
+    particles.forEach(function(p) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life += 0.002;
+
+      // Wrap around
+      if (p.y < -20) { p.y = cv.height + 10; p.x = Math.random() * cv.width; }
+      if (p.x < -10) { p.x = cv.width + 5; }
+      if (p.x > cv.width + 10) { p.x = -5; }
+
+      // Fade based on life cycle
+      var fade = Math.sin(p.life * Math.PI) * p.alpha;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, fade);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+  }
+  animParticles();
+})();
+
+// ── 3D Scroll Reveal ──
+(function() {
+  var sections = document.querySelectorAll('.section');
+  sections.forEach(function(sec) {
+    // Wrap content in 3d inner div
+    var inner = document.createElement('div');
+    inner.className = 'section-inner-3d';
+    while (sec.firstChild) {
+      inner.appendChild(sec.firstChild);
+    }
+    sec.appendChild(inner);
+  });
+
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        var inner = e.target.querySelector('.section-inner-3d');
+        if (inner) {
+          setTimeout(function() {
+            inner.classList.add('revealed');
+          }, 60);
+        }
+      }
+    });
+  }, { threshold: 0.08 });
+
+  sections.forEach(function(sec) { obs.observe(sec); });
+
+  // Immediately reveal any sections already in the viewport on load
+  // (IntersectionObserver may not re-fire for already-visible elements after delayed init)
+  function revealVisibleNow() {
+    sections.forEach(function(sec) {
+      var rect = sec.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        var inner = sec.querySelector('.section-inner-3d');
+        if (inner) inner.classList.add('revealed');
+      }
+    });
+  }
+  revealVisibleNow();
+  // Hard fallback: reveal everything after 1.5s in case observer misfires
+  setTimeout(function() {
+    sections.forEach(function(sec) {
+      var inner = sec.querySelector('.section-inner-3d');
+      if (inner) inner.classList.add('revealed');
+    });
+  }, 1500);
+})();
+
+// ── Depth Indicator ──
+(function() {
+  var di = document.getElementById('depth-indicator');
+  if (!di) return;
+  var layers = document.querySelectorAll('[id^="layer"], #hero, #open-questions, #summary');
+  layers.forEach(function() {
+    var node = document.createElement('div');
+    node.className = 'di-node';
+    di.appendChild(node);
+  });
+
+  function updateDepth() {
+    var nodes = di.querySelectorAll('.di-node');
+    var scrollMid = window.scrollY + window.innerHeight * 0.5;
+    var active = 0;
+    var minDist = Infinity;
+    layers.forEach(function(el, i) {
+      var rect = el.getBoundingClientRect();
+      var elCenter = rect.top + window.scrollY + rect.height * 0.5;
+      var dist = Math.abs(scrollMid - elCenter);
+      if (dist < minDist) { minDist = dist; active = i; }
+    });
+    nodes.forEach(function(n, i) {
+      n.classList.toggle('active', i === active);
+    });
+  }
+  window.addEventListener('scroll', updateDepth, { passive: true });
+  updateDepth();
+})();
+
+// ── Mouse parallax on hero ──
+(function() {
+  var hero = document.getElementById('hero');
+  if (!hero) return;
+  var title = hero.querySelector('.hero-title');
+  var sub = hero.querySelector('.hero-sub');
+  var label = hero.querySelector('.hero-label');
+  var constants = hero.querySelector('.hero-constants');
+
+  document.addEventListener('mousemove', function(e) {
+    var ox = (e.clientX / window.innerWidth - 0.5);
+    var oy = (e.clientY / window.innerHeight - 0.5);
+
+    if (title) title.style.transform = 'perspective(1000px) rotateY(' + (ox * 4) + 'deg) rotateX(' + (-oy * 2) + 'deg) translateZ(20px)';
+    if (sub) sub.style.transform = 'perspective(1000px) translateX(' + (ox * 10) + 'px) translateY(' + (oy * 5) + 'px)';
+    if (label) label.style.transform = 'perspective(1000px) translateX(' + (ox * 6) + 'px)';
+    if (constants) constants.style.transform = 'perspective(1000px) rotateX(' + (-oy * 1.5) + 'deg) translateZ(10px)';
+  });
+})();
+
+// ── Torus hint fade ──
+setTimeout(function() {
+  var hint = document.getElementById('torus-hint');
+  if (hint) {
+    hint.style.opacity = '1';
+    setTimeout(function() { hint.style.opacity = '0'; }, 3500);
+  }
+}, 2000);
+
+// ── 3D tilt on formula blocks (per-element mouse tracking) ──
+document.querySelectorAll('.formula-block, .theorem-box').forEach(function(el) {
+  el.addEventListener('mousemove', function(e) {
+    var rect = el.getBoundingClientRect();
+    var cx = rect.left + rect.width / 2;
+    var cy = rect.top + rect.height / 2;
+    var dx = (e.clientX - cx) / (rect.width / 2);
+    var dy = (e.clientY - cy) / (rect.height / 2);
+    el.style.transform = 'perspective(800px) rotateX(' + (-dy * 4) + 'deg) rotateY(' + (dx * 3) + 'deg) translateZ(12px)';
+  });
+  el.addEventListener('mouseleave', function() {
+    el.style.transform = '';
+  });
+});
 </script>
 </body>
 <div id="const-popup-overlay" onclick="if(event.target===this)closeConstPopup()">
